@@ -18,7 +18,7 @@ public class AlumnoService {
 
     @Transactional
     public void insertAlumno(Long id, EstadoPractica estadoPractica) {
-        Alumno alumno = new Alumno(id, estadoPractica);
+        Alumno alumno = new Alumno(estadoPractica);
         alumnoRepository.save(alumno);
     }
 }

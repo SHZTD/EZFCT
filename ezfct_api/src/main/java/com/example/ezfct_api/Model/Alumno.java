@@ -15,8 +15,7 @@ public class Alumno {
 
     public Alumno() {}
 
-    public Alumno(Long id, EstadoPractica estado) {
-        this.id = id;
+    public Alumno( EstadoPractica estado) {
         this.estado = estado;
     }
 
