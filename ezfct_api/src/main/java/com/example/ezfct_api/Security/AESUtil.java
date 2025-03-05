@@ -5,6 +5,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 
 public class AESUtil {
+
     private static final String ALGORITHM = "AES";
     private static final String SECRET_KEY = "xx_xxxx_xx_xxx!?";
 
