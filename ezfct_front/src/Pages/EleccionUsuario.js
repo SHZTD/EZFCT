@@ -1,5 +1,6 @@
 import "./EleccionUsuario.css"
 import logo from '../Pages/Imagenes/logo.gif';
+import {ButtonComp} from  "../Pages/Others/ButtonComp"
 
 
 const EleccionUsuario = () => {
@@ -11,8 +12,8 @@ const EleccionUsuario = () => {
       </div>
 
       <nav className="menu-options">
-        <button className="menu-button">Compañia</button>
-        <button className="menu-button">Profesores</button>
+      <ButtonComp className="menu-button" text="Empresas" route="/empresas/inicio"/>
+      <ButtonComp className="menu-button" text="Profesores" route="/profesores/inicio"/>
         <button className="menu-button">Alumnos</button>
         <button className="menu-button">Admin</button>
       </nav>
