@@ -1,18 +1,20 @@
 package com.example.ezfct_api.Controller;
 
+import com.example.ezfct_api.Service.LoginService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-// x-url-encoder (se tiene que mirar)
-@CrossOrigin(origins = "*") // CORS (no deberia estar aqui, esta por testing)
 @RestController
+@CrossOrigin(origins = "*")
+@RequestMapping("/api/auth")
 public class LoginController {
-    @GetMapping("/login")
+    @Autowired
+    private LoginService loginService;
+
+    @PostMapping("/login")
     public ResponseEntity<DtoString> checkPw(@RequestParam String user, @RequestParam String password) {
-        if (user.equals("admin") && password.equals("test")) {
+        if (loginService.checkCredentials(user, password)) {
             return ResponseEntity.ok(new DtoString("Login correcto"));
         } else {
             return ResponseEntity.status(401).body(new DtoString("Error, comprueba usuario o contraseña."));
