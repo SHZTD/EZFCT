@@ -15,9 +15,17 @@ public class LoginService {
 
     public boolean checkCredentials(String username, String rawPassword) {
         Optional<Login> user = loginRepository.findByUsername(username);
+        String v = null;
+        try {
+            v = AESUtil.encrypt(rawPassword);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(v);
         if (user.isPresent()) {
             try {
                 String encryptedInputPassword = AESUtil.encrypt(rawPassword);
+                System.out.println(encryptedInputPassword);
                 return encryptedInputPassword.equals(user.get().getPassword());
             } catch (Exception e) {
                 e.printStackTrace();
