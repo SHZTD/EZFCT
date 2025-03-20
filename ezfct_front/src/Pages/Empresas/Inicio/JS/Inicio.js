@@ -1,6 +1,7 @@
 import "../CSS/Inicio.css"
 import logoImage from "../../../Imagenes/logo.gif" // Replace with your actual logo path
 import backArrow from "../../../Imagenes/back.png" // Replace with your actual back arrow path
+import { ButtonComp } from "../../../Others/ButtonComp"
 
 
 const Inicio = () => {
@@ -18,8 +19,8 @@ const Inicio = () => {
       </div>
 
       <div className="buttons-container">
-        <button className="register-button">Register</button>
-        <button className="login-button">Login</button>
+        <ButtonComp className="register-button" text="Register" />
+        <ButtonComp className="login-button" text="Login" route="/empresa/login"/>
       </div>
     </div>
   )
