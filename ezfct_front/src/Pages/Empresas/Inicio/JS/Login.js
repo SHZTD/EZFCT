@@ -79,7 +79,7 @@ const LoginScreen = () => {
         <div className="register-section">
           <p className="register-text">
             Don't have an account?
-            <span className="register-link" onClick={() => console.log("Navigate to register page")}>
+            <span className="register-link" onClick={("/empresa/register")}>
               {" "}
               Register Now
             </span>

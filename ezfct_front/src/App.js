@@ -4,7 +4,9 @@ import React from "react";
 import EleccionUsuario from './Pages/EleccionUsuario';
 import InicioEmpresa from './Pages/Empresas/Inicio/JS/Inicio';
 import InicioProfesor from './Pages/Profesores/Inicio/JS/Inicio';
-import LoginEmpresa from './Pages/Empresas/Inicio/JS/Login'
+import LoginEmpresa from './Pages/Empresas/Inicio/JS/Login';
+import RegisterEmpresa from './Pages/Empresas/Inicio/JS/Register';
+
 
 
 function App() {
@@ -16,6 +18,8 @@ function App() {
           <Route path ="/empresas/inicio" element={<InicioEmpresa />} />
           <Route path ="/profesores/inicio" element={<InicioProfesor />} />
           <Route path ="/empresa/login" element={<LoginEmpresa/>} />
+          <Route path ="/empresa/register" element={<RegisterEmpresa/>} />
+          
 
         </Routes>
       </div>
