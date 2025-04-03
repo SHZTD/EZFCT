@@ -103,7 +103,6 @@
   transform: translateY(-2px);
 }
 
-/* Style for ButtonComp - these will be applied if ButtonComp accepts className prop */
 .register-button {
   width: 100%;
   padding: 1rem 1.5rem;
