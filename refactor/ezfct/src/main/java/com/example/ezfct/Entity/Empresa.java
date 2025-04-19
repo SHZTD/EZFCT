@@ -1,4 +1,5 @@
 package com.example.ezfct.Entity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -9,14 +10,16 @@ public class Empresa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idEmpresa;
     @Column(unique = true, nullable = false)
-    private String NIF;
+    private String nif;
     private String direccion;
     @Column(unique = true, nullable = false)
     private String emailContacto;
     private String telefono;
     private String nombre;
+    private String contrasenya;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Practicas> practicas;
 
     public int getIdEmpresa() {
@@ -28,11 +31,11 @@ public class Empresa {
     }
 
     public String getNIF() {
-        return NIF;
+        return nif;
     }
 
-    public void setNIF(String NIF) {
-        this.NIF = NIF;
+    public void setNIF(String nif) {
+        this.nif = nif;
     }
 
     public String getDireccion() {
@@ -73,5 +76,13 @@ public class Empresa {
 
     public void setPracticas(List<Practicas> practicas) {
         this.practicas = practicas;
+    }
+
+    public String getContrasenya() {
+        return contrasenya;
+    }
+
+    public void setContrasenya(String contrasenya) {
+        this.contrasenya = contrasenya;
     }
 }

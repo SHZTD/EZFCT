@@ -1,5 +1,6 @@
 package com.example.ezfct.Entity;
 import com.example.ezfct.Model.Enums.Modalidad;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -14,6 +15,7 @@ public class Practicas {
 
     @ManyToOne
     @JoinColumn(name = "id_empresa", nullable = false)
+    @JsonBackReference
     private Empresa empresa;
 
     private String descripcion;
