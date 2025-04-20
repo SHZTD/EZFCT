@@ -3,11 +3,11 @@ package com.example.ezfct.Controller;
 import com.example.ezfct.Entity.Empresa;
 import com.example.ezfct.Entity.Practicas;
 import com.example.ezfct.Repository.EmpresaRepository;
-import com.example.ezfct.Security.AESUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +19,9 @@ public class EmpresaController {
 
     @Autowired
     private EmpresaRepository empresaRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // esto hace una peticion GET
     @GetMapping
@@ -36,7 +39,7 @@ public class EmpresaController {
                 }
             }
 
-            String epw = AESUtil.encrypt(empresa.getContrasenya());
+            String epw = passwordEncoder.encode(empresa.getContrasenya());
             empresa.setContrasenya(epw);
 
             Empresa nuevaEmpresa = empresaRepository.save(empresa);
@@ -93,7 +96,7 @@ public class EmpresaController {
                     empresaActualizada.getContrasenya() != null &&
                     !empresaActualizada.getContrasenya().equals(empresaExistente.getContrasenya())
             ) {
-                String epw = AESUtil.encrypt(empresaActualizada.getContrasenya());
+                String epw = passwordEncoder.encode(empresaActualizada.getContrasenya());
                 empresaExistente.setContrasenya(epw);
             }
 

@@ -13,6 +13,6 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     public Optional<Usuario> findByEmail(String email) {
-        return Optional.ofNullable(usuarioRepository.findByEmail(email));
+        return usuarioRepository.findByEmail(email);
     }
 }

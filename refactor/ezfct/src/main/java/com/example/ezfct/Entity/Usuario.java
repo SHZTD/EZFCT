@@ -1,26 +1,29 @@
 package com.example.ezfct.Entity;
+
+import com.example.ezfct.Model.Enums.Rol;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Usuario")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idUsuario;
+
     private String nombre;
     private String apellido;
+
     @Column(unique = true, nullable = false)
     private String email;
+
     @Column(nullable = false)
     private String password;
+
     private String departamento;
 
-    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private Alumno alumno;
-
-    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private Profesor profesor;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Rol rol;
 
     public int getIdUsuario() {
         return idUsuario;
@@ -70,19 +73,11 @@ public class Usuario {
         this.departamento = departamento;
     }
 
-    public Alumno getAlumno() {
-        return alumno;
+    public Rol getRol() {
+        return rol;
     }
 
-    public void setAlumno(Alumno alumno) {
-        this.alumno = alumno;
-    }
-
-    public Profesor getProfesor() {
-        return profesor;
-    }
-
-    public void setProfesor(Profesor profesor) {
-        this.profesor = profesor;
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 }

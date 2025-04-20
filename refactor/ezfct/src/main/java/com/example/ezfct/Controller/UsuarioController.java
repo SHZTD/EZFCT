@@ -1,12 +1,13 @@
 package com.example.ezfct.Controller;
 
 import com.example.ezfct.Entity.Usuario;
+import com.example.ezfct.Model.Enums.Rol;
 import com.example.ezfct.Repository.UsuarioRepository;
-import com.example.ezfct.Security.AESUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,9 @@ public class UsuarioController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // esto hace una peticion GET
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping
     public List<Usuario> getAllUsuarios() {
         return usuarioRepository.findAll();
@@ -31,11 +34,11 @@ public class UsuarioController {
         return usuarioRepository.findById(id);
     }
 
-    // esto hace una peticion POST
     @PostMapping
     public ResponseEntity<?> createUsuario(@RequestBody Usuario usuario) {
         try {
-            String epw = AESUtil.encrypt(usuario.getPassword());
+            // migrado a bcrypt
+            String epw = passwordEncoder.encode(usuario.getPassword());
             usuario.setPassword(epw);
             Usuario nuevoUsuario = usuarioRepository.save(usuario);
             return ResponseEntity.ok(nuevoUsuario);
