@@ -15,6 +15,7 @@ import java.util.Optional;
 @CrossOrigin("*")
 public class AuthController {
 
+    String localHostUrl = "http://localhost:8080";
     @Autowired
     private UsuarioRepository usuarioRepository;
 
@@ -32,7 +33,7 @@ public class AuthController {
         Usuario usuario = usuarioOpt.get();
 
         if (passwordEncoder.matches(loginRequest.getPassword(), usuario.getPassword())) {
-            // Determinar la URL de redirección basada en el rol
+            // determinar la URL de redirección basada en el rol
             String redirectUrl = determinarUrl(usuario.getRol());
             return ResponseEntity.ok().body(new LoginResponse(
                     usuario.getRol().toString(),
@@ -43,7 +44,7 @@ public class AuthController {
         }
     }
 
-    // Clases internas para request/response
+    // clases internas para request/response
     static class LoginRequest {
         private String email;
         private String password;
@@ -57,13 +58,13 @@ public class AuthController {
     private String determinarUrl(Rol rol) {
         switch (rol) {
             case ALUMNO:
-                return "http://192.168.1.139:8080/alumno/alumno.html";
+                return localHostUrl + "/alumno/alumno.html";
             case PROFESOR:
-                return "http://192.168.1.139:8080/profe/profe.html";
+                return localHostUrl + "/profe/profe.html";
             case ADMIN:
-                return "http://192.168.1.139:8080/admin/admin.html";
+                return localHostUrl + "/admin/admin.html";
             default:
-                return "http://192.168.1.139:8080/error.html";
+                return localHostUrl + "/error.html";
         }
     }
 
