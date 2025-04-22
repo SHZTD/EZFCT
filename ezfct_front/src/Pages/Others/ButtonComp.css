@@ -1,0 +1,49 @@
+/* Estructura básica del botón */
+.btn {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+/* Brillo animado */
+.btn__shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.8s ease;
+  pointer-events: none;
+}
+
+.btn--hover .btn__shine,
+.btn:hover .btn__shine {
+  transform: translateX(100%);
+}
+
+/* Icono y flecha */
+.btn__icon {
+  margin-right: 12px;
+  transition: transform 0.3s ease;
+}
+
+.btn__arrow {
+  margin-left: 12px;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.btn--hover .btn__arrow,
+.btn:hover .btn__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
