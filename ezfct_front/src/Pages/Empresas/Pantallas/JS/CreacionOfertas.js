@@ -6,7 +6,7 @@ import '../CSS/CreacionOfertas.css';
 import paperIcon from '../../../Imagenes/paper.png';
 import usersIcon from '../../../Imagenes/users.png';
 import questionIcon from '../../../Imagenes/question.png';
-import logo from '../../../Imagenes/logo.gif'; 
+import logo from '../../../Imagenes/logo.gif'; // Asumiendo que tienes el logo en esta ruta
 
 const CreacionOfertas = () => {
   const [activeTab, setActiveTab] = useState('offers');
