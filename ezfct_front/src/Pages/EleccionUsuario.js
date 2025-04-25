@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../Pages/Imagenes/logo.gif';
-import ButtonComp from './Others/ButtonComp';
+import ButtonComp from '../Components/ButtonComp.js';
 import './EleccionUsuario.css';
 
 const EleccionUsuario = () => {

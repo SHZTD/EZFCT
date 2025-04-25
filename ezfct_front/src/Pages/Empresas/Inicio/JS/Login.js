@@ -1,20 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import ButtonComp from '../../../Others/ButtonComp.js';
-import logo from '../../../Imagenes/logo.gif';
-
+import ButtonComp from '../../../../Components/ButtonComp.js';
+import LogoDefault from '../../../Imagenes/logo.gif';
+import { useNavigate } from 'react-router-dom';
 import '../CSS/Login.css';
 
-/**
- * LoginForm - Componente de formulario de login con efectos visuales avanzados
- * 
- * Props:
- * - onLogin: función que se ejecuta al enviar el formulario
- * - onBack: función para volver a la pantalla anterior
- * - logoSrc: ruta a la imagen del logo
- */
+
 const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
   // Estados para el formulario
+  const navigate = useNavigate(); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -121,7 +115,7 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
   // Manejar clic en botón de volver
   const handleBack = () => {
     createExplosionEffect(50, 50, '#f43f5e');
-    setTimeout(() => onBack(), 300);
+    setTimeout(() => navigate(-1), 300);
   };
   
   return (
@@ -172,7 +166,7 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
           
           {/* Logo con animación */}
           <div className={`logo-container ${loaded ? 'loaded' : ''}`}>
-            <img src={logo || "/placeholder.svg"} alt="Logo" className="logo" />
+            <img src={logo || LogoDefault} className="logo" />
           </div>
           
           {/* Título y subtítulo */}
@@ -235,7 +229,7 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
             <ButtonComp
               className="btn--login"
               icon="🔑"
-              type="submit"
+              onClick={() => navigate('/empresas/OfertasE')}
               transitionDelay="1.6s"
             >
               Iniciar Sesión
@@ -244,7 +238,7 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
           
           {/* Texto adicional */}
           <div className={`additional-text ${loaded ? 'loaded' : ''}`}>
-            <p>¿No tienes una cuenta? <a href="#">Regístrate</a></p>
+            <p>¿No tienes una cuenta? <a href="#" onClick={() => navigate('/empresas/register')}>Regístrate</a></p>
           </div>
         </form>
         
