@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import './ButtonComp.css';
+import '../CSS/ButtonComp.css';
 
 /**
  * ButtonComp - un componente de botón reutilizable con variantes y animaciones.

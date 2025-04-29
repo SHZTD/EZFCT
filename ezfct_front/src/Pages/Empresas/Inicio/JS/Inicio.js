@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../Imagenes/logo.gif';
-import ButtonComp from '../../../../Components/ButtonComp.js';
+import ButtonComp from '../../../../Components/JSX/ButtonComp.js';
 import '../CSS/Inicio.css';
 
 const Inicio = () => {

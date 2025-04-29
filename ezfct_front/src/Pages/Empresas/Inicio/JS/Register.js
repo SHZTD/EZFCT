@@ -1,73 +1,75 @@
-import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
-import ButtonComp from '../../../../Components/ButtonComp.js';
-import '../CSS/Register.css';
-import logo from '../../../Imagenes/logo.gif'
-import { useNavigate } from 'react-router-dom';
+"use client"
 
+import { useState, useEffect, useRef } from "react"
+import PropTypes from "prop-types"
+import ButtonComp from "../../../../Components/JSX/ButtonComp.js"
+import "../CSS/Register.css"
+import logo from "../../../Imagenes/logo.gif"
+import { useNavigate } from "react-router-dom"
 
-
-const RegisterForm = ({ onRegister = () => {}, onBack = () => {}, logoSrc}) => {
+const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) => {
   // Estados para el formulario
-  const [formData, setFormData] = useState({
-    nif: '',
-    nombre: '',
-    direccion: '',
-    telefono: '',
-    email: '',
-    password: ''
-  });
-  const navigate = useNavigate(); 
-  const [showPassword, setShowPassword] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const [particles, setParticles] = useState([]);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [currentStep, setCurrentStep] = useState(1); // Para dividir el formulario en pasos
-  
-  const particlesContainerRef = useRef(null);
-  const formRef = useRef(null);
-  
+  const [empresa, setEmpresa] = useState({
+    nif: "",
+    nombre: "",
+    direccion: "",
+    telefono: "",
+    emailContacto: "",
+    contrasenya: "",
+  })
+
+  const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+  const [particles, setParticles] = useState([])
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [currentStep, setCurrentStep] = useState(1) // Para dividir el formulario en pasos
+  const [respuesta, setRespuesta] = useState(null)
+
+  const particlesContainerRef = useRef(null)
+  const formRef = useRef(null)
+
   // Efecto para la animación de entrada
   useEffect(() => {
     // Marcar como cargado para iniciar animaciones
-    setTimeout(() => setLoaded(true), 100);
-    
+    setTimeout(() => setLoaded(true), 100)
+
     // Crear partículas iniciales
-    createInitialParticles();
-    
+    createInitialParticles()
+
     // Seguimiento del ratón
     const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    
-    window.addEventListener('mousemove', handleMouseMove);
-    
+      setMousePosition({ x: e.clientX, y: e.clientY })
+    }
+
+    window.addEventListener("mousemove", handleMouseMove)
+
     // Intervalo para animar partículas
     const interval = setInterval(() => {
-      setParticles(prevParticles => 
-        prevParticles.map(particle => ({
+      setParticles((prevParticles) =>
+        prevParticles.map((particle) => ({
           ...particle,
           x: (particle.x + particle.speedX + window.innerWidth) % window.innerWidth,
           y: (particle.y + particle.speedY + window.innerHeight) % window.innerHeight,
-        }))
-      );
-    }, 50);
-    
+        })),
+      )
+    }, 50)
+
     // Ajustar partículas al cambiar el tamaño de la ventana
     const handleResize = () => {
-      createInitialParticles();
-    };
-    
-    window.addEventListener('resize', handleResize);
-    
+      createInitialParticles()
+    }
+
+    window.addEventListener("resize", handleResize)
+
     // Limpieza al desmontar
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', handleResize);
-      clearInterval(interval);
-    };
-  }, []);
-  
+      window.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("resize", handleResize)
+      clearInterval(interval)
+    }
+  }, [])
+
   // Función para crear partículas iniciales
   const createInitialParticles = () => {
     const newParticles = Array.from({ length: 50 }, () => ({
@@ -79,11 +81,11 @@ const RegisterForm = ({ onRegister = () => {}, onBack = () => {}, logoSrc}) => {
       speedY: (Math.random() - 0.5) * 2,
       opacity: Math.random() * 0.5 + 0.1,
       color: ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6"][Math.floor(Math.random() * 4)],
-    }));
-    
-    setParticles(newParticles);
-  };
-  
+    }))
+
+    setParticles(newParticles)
+  }
+
   // Función para crear efecto de explosión de partículas
   const createExplosionEffect = (x, y, color) => {
     const explosionParticles = Array.from({ length: 30 }, () => ({
@@ -95,103 +97,120 @@ const RegisterForm = ({ onRegister = () => {}, onBack = () => {}, logoSrc}) => {
       speedY: (Math.random() - 0.5) * 15,
       opacity: 1,
       color,
-    }));
-    
-    setParticles(prev => [...prev, ...explosionParticles]);
-    
+    }))
+
+    setParticles((prev) => [...prev, ...explosionParticles])
+
     // Eliminar partículas de explosión después de un tiempo
     setTimeout(() => {
-      setParticles(prev => prev.slice(0, 50));
-    }, 1000);
-  };
-  
+      setParticles((prev) => prev.slice(0, 50))
+    }, 1000)
+  }
+
   // Manejar cambios en los campos del formulario
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
+  const handleEmpresaChange = (e) => {
+    const { name, value } = e.target
+    setEmpresa((prev) => ({
       ...prev,
-      [name]: value
-    }));
-  };
-  
+      [name]: value,
+    }))
+  }
+
   // Validar el formulario
   const validateForm = () => {
     // Validar que todos los campos estén completos
-    const { nif, nombre, direccion, telefono, email, password } = formData;
-    
+    const { nif, nombre, direccion, telefono, emailContacto, contrasenya } = empresa
+
     if (currentStep === 1) {
       if (!nif || !nombre || !direccion) {
-        return false;
+        return false
       }
     } else {
-      if (!telefono || !email || !password) {
-        return false;
+      if (!telefono || !emailContacto || !contrasenya) {
+        return false
       }
     }
-    
-    return true;
-  };
-  
+
+    return true
+  }
+
   // Manejar el cambio de paso
   const handleNextStep = (e) => {
-    e.preventDefault();
-    
+    e.preventDefault()
+
     if (!validateForm()) {
       // Efecto de vibración si faltan campos
-      formRef.current.classList.add('shake');
+      formRef.current.classList.add("shake")
       setTimeout(() => {
-        formRef.current.classList.remove('shake');
-      }, 500);
-      return;
+        formRef.current.classList.remove("shake")
+      }, 500)
+      return
     }
-    
+
     // Efecto de explosión de partículas
-    createExplosionEffect(mousePosition.x, mousePosition.y, '#10b981');
-    
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+
     // Cambiar al siguiente paso
-    setCurrentStep(2);
-  };
-  
+    setCurrentStep(2)
+  }
+
   // Manejar envío del formulario
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
+  const enviarFormulario = (e) => {
+    e.preventDefault()
+
     if (!validateForm()) {
       // Efecto de vibración si faltan campos
-      formRef.current.classList.add('shake');
+      formRef.current.classList.add("shake")
       setTimeout(() => {
-        formRef.current.classList.remove('shake');
-      }, 500);
-      return;
+        formRef.current.classList.remove("shake")
+      }, 500)
+      return
     }
-    
+
     // Efecto de explosión de partículas
-    createExplosionEffect(mousePosition.x, mousePosition.y, '#8b5cf6');
-    
-    // Llamar a la función de registro
-    setTimeout(() => {
-      onRegister(formData);
-    }, 300);
-  };
-  
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6")
+
+    // Preparar payload para enviar
+    const payload = {
+      ...empresa,
+    }
+
+    // Enviar datos a la API
+    fetch("http://192.168.22.115:7484/empresa", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then((res) => {
+        if (!res.ok) return res.text().then((text) => Promise.reject(text))
+        return res.json()
+      })
+      .then((data) => {
+        setRespuesta({ tipo: "success", data })
+        // Redirigir después de un registro exitoso
+        setTimeout(() => navigate("/empresas/OfertasE"), 1500)
+      })
+      .catch((err) => setRespuesta({ tipo: "error", message: err }))
+  }
+
   // Manejar clic en botón de volver
   const handleBack = () => {
     if (currentStep === 2) {
       // Si estamos en el paso 2, volver al paso 1
-      createExplosionEffect(mousePosition.x, mousePosition.y, '#f59e0b');
-      setCurrentStep(1);
+      createExplosionEffect(mousePosition.x, mousePosition.y, "#f59e0b")
+      setCurrentStep(1)
     } else {
       // Si estamos en el paso 1, volver a la pantalla anterior
-      createExplosionEffect(50, 50, '#f43f5e');
-      setTimeout(() => navigate(-1), 300);
+      createExplosionEffect(50, 50, "#f43f5e")
+      setTimeout(() => navigate(-1), 300)
     }
-  };
-  
+  }
+
   return (
     <div className="register-container">
       {/* Partículas de fondo */}
       <div className="particles-container" ref={particlesContainerRef}>
-        {particles.map(particle => (
+        {particles.map((particle) => (
           <div
             key={particle.id}
             className="particle"
@@ -206,131 +225,122 @@ const RegisterForm = ({ onRegister = () => {}, onBack = () => {}, logoSrc}) => {
           />
         ))}
       </div>
-      
+
       {/* Efecto de luz que sigue al cursor */}
-      <div 
+      <div
         className="cursor-light"
         style={{
           left: `${mousePosition.x}px`,
           top: `${mousePosition.y}px`,
         }}
       />
-      
+
       {/* Botón de volver atrás */}
-      <button 
-        className={`back-button ${loaded ? 'loaded' : ''}`}
-        onClick={handleBack}
-        aria-label="Volver"
-      >
+      <button className={`back-button ${loaded ? "loaded" : ""}`} onClick={handleBack} aria-label="Volver">
         ←
       </button>
-      
+
       {/* Contenedor principal */}
-      <div className={`register-card ${loaded ? 'loaded' : ''}`}>
+      <div className={`register-card ${loaded ? "loaded" : ""}`}>
         {/* Sección del logo */}
         <div className="logo-section">
           {/* Círculos decorativos */}
           <div className="decorative-circle circle-1" />
           <div className="decorative-circle circle-2" />
-          
+
           {/* Logo con animación */}
-          <div className={`logo-container ${loaded ? 'loaded' : ''}`}>
-            <img src={logo } alt="Logo" className="logo" />
+          <div className={`logo-container ${loaded ? "loaded" : ""}`}>
+            <img src={logo || "/placeholder.svg"} alt="Logo" className="logo" />
           </div>
-          
+
           {/* Título y subtítulo */}
-          <h1 className={`title ${loaded ? 'loaded' : ''}`}>EasyFCT</h1>
-          <div className={`divider ${loaded ? 'loaded' : ''}`} />
-          <p className={`subtitle ${loaded ? 'loaded' : ''}`}>
-            {currentStep === 1 ? 'Crea tu cuenta - Paso 1/2' : 'Crea tu cuenta - Paso 2/2'}
+          <h1 className={`title ${loaded ? "loaded" : ""}`}>EasyFCT</h1>
+          <div className={`divider ${loaded ? "loaded" : ""}`} />
+          <p className={`subtitle ${loaded ? "loaded" : ""}`}>
+            {currentStep === 1 ? "Registro de Empresa - Paso 1/2" : "Registro de Empresa - Paso 2/2"}
           </p>
-          
+
           {/* Indicador de pasos */}
-          <div className={`steps-indicator ${loaded ? 'loaded' : ''}`}>
-            <div className={`step ${currentStep === 1 ? 'active' : 'completed'}`}>1</div>
+          <div className={`steps-indicator ${loaded ? "loaded" : ""}`}>
+            <div className={`step ${currentStep === 1 ? "active" : "completed"}`}>1</div>
             <div className="step-line"></div>
-            <div className={`step ${currentStep === 2 ? 'active' : ''}`}>2</div>
+            <div className={`step ${currentStep === 2 ? "active" : ""}`}>2</div>
           </div>
-          
+
           {/* Línea decorativa */}
-          <div className={`gradient-line ${loaded ? 'loaded' : ''}`} />
+          <div className={`gradient-line ${loaded ? "loaded" : ""}`} />
         </div>
-        
+
         {/* Formulario */}
-        <form className="form-container" ref={formRef} onSubmit={currentStep === 1 ? handleNextStep : handleSubmit}>
-          {/* Paso 1: Datos personales */}
+        <form className="form-container" ref={formRef} onSubmit={currentStep === 1 ? handleNextStep : enviarFormulario}>
+          {/* Paso 1: Datos de la empresa */}
           {currentStep === 1 && (
             <>
               {/* Campo de NIF */}
-              <div className={`input-group ${loaded ? 'loaded' : ''}`} style={{ transitionDelay: '1.3s' }}>
-                <label htmlFor="nif">NIF/NIE</label>
+              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.3s" }}>
+                <label htmlFor="nif">NIF/CIF</label>
                 <div className="input-wrapper">
-                  <span className="input-icon">🆔</span>
+                  <span className="input-icon">🏢</span>
                   <input
                     type="text"
                     id="nif"
                     name="nif"
-                    placeholder="12345678A"
-                    value={formData.nif}
-                    onChange={handleChange}
+                    placeholder="B12345678"
+                    value={empresa.nif}
+                    onChange={handleEmpresaChange}
                     required
                   />
                 </div>
               </div>
-              
+
               {/* Campo de Nombre */}
-              <div className={`input-group ${loaded ? 'loaded' : ''}`} style={{ transitionDelay: '1.4s' }}>
-                <label htmlFor="nombre">Nombre completo</label>
+              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.4s" }}>
+                <label htmlFor="nombre">Nombre de la empresa</label>
                 <div className="input-wrapper">
-                  <span className="input-icon">👤</span>
+                  <span className="input-icon">🏭</span>
                   <input
                     type="text"
                     id="nombre"
                     name="nombre"
-                    placeholder="Juan Pérez García"
-                    value={formData.nombre}
-                    onChange={handleChange}
+                    placeholder="Empresa S.L."
+                    value={empresa.nombre}
+                    onChange={handleEmpresaChange}
                     required
                   />
                 </div>
               </div>
-              
+
               {/* Campo de Dirección */}
-              <div className={`input-group ${loaded ? 'loaded' : ''}`} style={{ transitionDelay: '1.5s' }}>
+              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.5s" }}>
                 <label htmlFor="direccion">Dirección</label>
                 <div className="input-wrapper">
-                  <span className="input-icon">🏠</span>
+                  <span className="input-icon">📍</span>
                   <input
                     type="text"
                     id="direccion"
                     name="direccion"
                     placeholder="Calle Ejemplo, 123"
-                    value={formData.direccion}
-                    onChange={handleChange}
+                    value={empresa.direccion}
+                    onChange={handleEmpresaChange}
                     required
                   />
                 </div>
               </div>
-              
+
               {/* Botón de siguiente paso */}
-              <div className={`button-container ${loaded ? 'loaded' : ''}`}>
-                <ButtonComp
-                  className="btn--next"
-                  icon="➡️"
-                  type="submit"
-                  transitionDelay="1.6s"
-                >
+              <div className={`button-container ${loaded ? "loaded" : ""}`}>
+                <ButtonComp className="btn--next" icon="➡️" type="submit" transitionDelay="1.6s">
                   Siguiente
                 </ButtonComp>
               </div>
             </>
           )}
-          
+
           {/* Paso 2: Datos de contacto y acceso */}
           {currentStep === 2 && (
             <>
               {/* Campo de Teléfono */}
-              <div className={`input-group ${loaded ? 'loaded' : ''}`} style={{ transitionDelay: '1.3s' }}>
+              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.3s" }}>
                 <label htmlFor="telefono">Teléfono</label>
                 <div className="input-wrapper">
                   <span className="input-icon">📱</span>
@@ -338,89 +348,98 @@ const RegisterForm = ({ onRegister = () => {}, onBack = () => {}, logoSrc}) => {
                     type="tel"
                     id="telefono"
                     name="telefono"
-                    placeholder="612345678"
-                    value={formData.telefono}
-                    onChange={handleChange}
+                    placeholder="912345678"
+                    value={empresa.telefono}
+                    onChange={handleEmpresaChange}
                     required
                   />
                 </div>
               </div>
-              
+
               {/* Campo de Email */}
-              <div className={`input-group ${loaded ? 'loaded' : ''}`} style={{ transitionDelay: '1.4s' }}>
-                <label htmlFor="email">Email</label>
+              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.4s" }}>
+                <label htmlFor="emailContacto">Email de contacto</label>
                 <div className="input-wrapper">
                   <span className="input-icon">✉️</span>
                   <input
                     type="email"
-                    id="email"
-                    name="email"
-                    placeholder="tu@email.com"
-                    value={formData.email}
-                    onChange={handleChange}
+                    id="emailContacto"
+                    name="emailContacto"
+                    placeholder="contacto@empresa.com"
+                    value={empresa.emailContacto}
+                    onChange={handleEmpresaChange}
                     required
                   />
                 </div>
               </div>
-              
+
               {/* Campo de Contraseña */}
-              <div className={`input-group ${loaded ? 'loaded' : ''}`} style={{ transitionDelay: '1.5s' }}>
-                <label htmlFor="password">Contraseña</label>
+              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.5s" }}>
+                <label htmlFor="contrasenya">Contraseña</label>
                 <div className="input-wrapper">
                   <span className="input-icon">🔒</span>
                   <input
-                    type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    id="contrasenya"
+                    name="contrasenya"
                     placeholder="••••••••"
-                    value={formData.password}
-                    onChange={handleChange}
+                    value={empresa.contrasenya}
+                    onChange={handleEmpresaChange}
                     required
                   />
-                  <button
-                    type="button"
-                    className="toggle-password"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? '🔒' : '👁️'}
+                  <button type="button" className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? "🔒" : "👁️"}
                   </button>
                 </div>
               </div>
-              
+
               {/* Botón de registro */}
-              <div className={`button-container ${loaded ? 'loaded' : ''}`}>
-                <ButtonComp
-                  className="btn--register"
-                  icon="✨"
-                  type="submit"
-                  transitionDelay="1.6s"
-                  onClick={() => navigate('/empresas/OfertasE')}
-                >
+              <div className={`button-container ${loaded ? "loaded" : ""}`}>
+                <ButtonComp className="btn--register" icon="✨" type="submit" transitionDelay="1.6s">
                   Completar Registro
                 </ButtonComp>
               </div>
             </>
           )}
-          
+
           {/* Texto adicional */}
-          <div className={`additional-text ${loaded ? 'loaded' : ''}`}>
-            <p>¿Ya tienes una cuenta? <a href="#" onClick={() => navigate('/empresas/login')}>Inicia sesión</a></p>
+          <div className={`additional-text ${loaded ? "loaded" : ""}`}>
+            <p>
+              ¿Ya tienes una cuenta?{" "}
+              <a href="#" onClick={() => navigate("/empresas/login")}>
+                Inicia sesión
+              </a>
+            </p>
           </div>
         </form>
-        
+
+        {/* Mensaje de respuesta */}
+        {respuesta && (
+          <div className={`respuesta ${respuesta.tipo} ${loaded ? "loaded" : ""}`}>
+            {respuesta.tipo === "success" ? (
+              <>
+                <p style={{ color: "green" }}>Empresa registrada con éxito!</p>
+                <pre>{JSON.stringify(respuesta.data, null, 2)}</pre>
+              </>
+            ) : (
+              <p style={{ color: "red" }}>Error: {respuesta.message}</p>
+            )}
+          </div>
+        )}
+
         {/* Pie de página */}
         <div className="footer">
-          <p className={loaded ? 'loaded' : ''}>© 2025 EasyFCT - Innovación Educativa</p>
+          <p className={loaded ? "loaded" : ""}>© 2025 EasyFCT - Innovación Educativa</p>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-RegisterForm.propTypes = {
+RegistroEmpresa.propTypes = {
   onRegister: PropTypes.func,
   onBack: PropTypes.func,
   logoSrc: PropTypes.string,
-};
+}
 
-export default RegisterForm;
+export default RegistroEmpresa

@@ -6,8 +6,9 @@ import InicioEmpresa from './Pages/Empresas/Inicio/JS/Inicio';
 import InicioProfesor from './Pages/Profesores/Inicio/JS/Inicio';
 import LoginEmpresa from './Pages/Empresas/Inicio/JS/Login';
 import RegisterEmpresa from './Pages/Empresas/Inicio/JS/Register';
-import CreacionOfertas from './Pages/Empresas/Pantallas/JS/CreacionOfertas.js'
-import OfertasPublicadas from './Pages/Empresas/Pantallas/JS/OfertasPublicadas.js'
+import CreacionOfertas from './Pages/Empresas/Pantallas/JS/CreacionOfertas.js';
+import OfertasPublicadas from './Pages/Empresas/Pantallas/JS/OfertasPublicadas.js';
+import EstudiantesEmpresa from './Pages/Empresas/Pantallas/JS/Estudiantes.js';
 
 
 
@@ -23,7 +24,7 @@ function App() {
           <Route path ="/empresas/register" element={<RegisterEmpresa/>} />
           <Route path= "/empresas/OfertasE" element={<CreacionOfertas/>}/>
           <Route path= "/empresas/OfertasP" element={<OfertasPublicadas/>}/>
-          
+          <Route path= "/empresas/Estudiantes" elememt={<EstudiantesEmpresa/>}/>
 
         </Routes>
       </div>

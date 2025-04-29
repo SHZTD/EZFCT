@@ -200,21 +200,21 @@ const CreacionOfertas = () => {
             className={`tab-button ${activeTab === 'offers' ? 'active' : ''}`}
             onClick={() => setActiveTab('offers')}
           >
-            <img src={paperIcon || "/placeholder.svg"} alt="Offers" className="tab-icon"/>
+            <img src={paperIcon} alt="Offers" className="tab-icon"/>
             <span>Offers</span>
           </button>
           <button 
             className={`tab-button ${activeTab === 'students' ? 'active' : ''}`}
-            onClick={() => navigateTo('empresa/Estudiantes')}
+            onClick={() => navigateTo('/empresas/Estudiantes')}
           >
-            <img src={usersIcon || "/placeholder.svg"} alt="Students" className="tab-icon"/>
+            <img src={usersIcon } alt="Students" className="tab-icon"/>
             <span>Students</span>
           </button>
           <button 
             className={`tab-button ${activeTab === 'help' ? 'active' : ''}`}
-            onClick={() => navigateTo('empresa/Help')}
+            onClick={() => navigateTo('/empresa/Help')}
           >
-            <img src={questionIcon || "/placeholder.svg"} alt="Help" className="tab-icon"/>
+            <img src={questionIcon} alt="Help" className="tab-icon"/>
             <span>Help</span>
           </button>
         </div>
@@ -326,7 +326,6 @@ const CreacionOfertas = () => {
           
         </div>
         
-        {/* Footer */}
         <div className="footer">
           <p className={loaded ? 'loaded' : ''}>© 2025 EasyFCT - Innovación Educativa</p>
         </div>

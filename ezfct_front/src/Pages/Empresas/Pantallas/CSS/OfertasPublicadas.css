@@ -56,7 +56,6 @@
   
   /* Estilos del encabezado */
   .offers-header {
-    background: url('/nubes.gif') center/cover no-repeat; 
     height: 150px;
     display: flex;
     align-items: center;

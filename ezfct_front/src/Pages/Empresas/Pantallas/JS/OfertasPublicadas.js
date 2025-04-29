@@ -3,9 +3,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import '../CSS/OfertasPublicadas.css';
 
 // Importamos las imágenes
-import paperIcon from '/paper.png';
-import usersIcon from '/users.png';
-import questionIcon from '/question.png';
+import paperIcon from '../../../Imagenes/paper.png';
+import usersIcon from '../../../Imagenes/users.png';
+import questionIcon from '../../../Imagenes/question.png';
 
 const OfertasPublicadas = () => {
   const [activeTab, setActiveTab] = useState('offers');

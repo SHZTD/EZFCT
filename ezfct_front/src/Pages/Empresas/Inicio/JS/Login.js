@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import ButtonComp from '../../../../Components/ButtonComp.js';
+import ButtonComp from '../../../../Components/JSX/ButtonComp.js';
 import LogoDefault from '../../../Imagenes/logo.gif';
 import { useNavigate } from 'react-router-dom';
 import '../CSS/Login.css';
