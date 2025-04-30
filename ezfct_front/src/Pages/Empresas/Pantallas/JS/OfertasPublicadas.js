@@ -106,7 +106,7 @@ const OfertasPublicadas = () => {
     // Efecto de explosión de partículas
     createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6");
     setTimeout(() => {
-      navigate('/empresa/Inicio');
+      navigate('/empresas/OfertasE');
     }, 300);
   };
 

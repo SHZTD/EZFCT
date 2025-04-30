@@ -322,7 +322,6 @@
   transform: rotateX(20deg) scale(0.9);
   opacity: 0;
   transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 1s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .form-card.loaded {
@@ -339,7 +338,7 @@
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Estilos de los grupos de formulario */
+/* Estilos de los grupos de formulario */  
 .form-group {
   margin-bottom: 1.5rem;
   opacity: 0;
@@ -353,30 +352,20 @@
 }
 
 /* Estilos de los inputs */
-.input-container, .textarea-container, .select-container {
-  display: flex;
-  flex-direction: column;
+.input-container, .textarea-container, .select-container { 
+  display: flex; flex-direction: column; 
 }
 
 .input-container label, .textarea-container label, .select-container label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 0.5rem;
-  text-align: left;
+  font-size: 0.875rem; font-weight: 500; color: rgba(255,255,255,0.9); margin-bottom: 0.5rem;
 }
 
 .input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
+  position: relative; display: flex; align-items: center;
 }
 
 .input-icon {
-  position: absolute;
-  left: 15px;
-  font-size: 16px;
-  z-index: 1;
+  position: absolute; left: 15px; font-size: 16px; z-index: 1;
 }
 
 .textarea-icon {
@@ -384,211 +373,134 @@
 }
 
 .custom-input, .custom-textarea, .custom-select {
-  width: 100%;
-  padding: 15px 15px 15px 45px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background-color: rgba(255, 255, 255, 0.07);
-  color: white;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%; padding: 15px 15px 15px 45px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.2); background-color: rgba(255,255,255,0.07);
+  color: white; font-size: 16px; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .custom-input:focus, .custom-textarea:focus, .custom-select:focus {
-  outline: none;
-  border-color: rgba(59, 130, 246, 0.5);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), 0 4px 10px rgba(0, 0, 0, 0.1);
-  background-color: rgba(255, 255, 255, 0.1);
+  outline: none; border-color: rgba(59,130,246,0.5);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.25),0 4px 10px rgba(0,0,0,0.1);
+  background-color: rgba(255,255,255,0.1);
 }
 
 .custom-input::placeholder, .custom-textarea::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255,255,255,0.4);
 }
 
 .custom-textarea {
-  resize: vertical;
-  min-height: 120px;
+  resize: vertical; min-height: 120px;
 }
 
 .custom-select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg … %3e");
   background-position: right 15px center;
-  background-repeat: no-repeat;
-  background-size: 20px 20px;
-  padding-right: 45px;
+  background-repeat: no-repeat; background-size:20px 20px; padding-right:45px;
 }
 
 /* Estilos del botón de publicar */
 .button-container {
-  display: flex;
-  justify-content: center;
-  padding-top: 1rem;
-  opacity: 0;
-  transform: translateY(20px);
+  display: flex; justify-content: center; padding-top: 1rem;
+  opacity: 0; transform: translateY(20px);
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
 .button-container.loaded {
-  opacity: 1;
-  transform: translateY(0);
+  opacity: 1; transform: translateY(0);
 }
 
 .publish-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
-  position: relative;
-  overflow: hidden;
+  display: inline-flex; align-items:center; gap:0.5rem;
+  padding:0.75rem 1.5rem; background-color:#3b82f6; color:white;
+  border:none; border-radius:12px; font-weight:600; font-size:1rem;
+  cursor:pointer; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow:0 8px 20px rgba(0,0,0,0.2),0 0 0 1px rgba(255,255,255,0.1);
+  position:relative; overflow:hidden;
 }
 
 .publish-button:hover {
-  background-color: #2563eb;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.2), 0 0 20px #3b82f6;
-  transform: translateY(-2px);
+  background-color:#2563eb;
+  box-shadow:0 10px 25px rgba(0,0,0,0.3),0 0 0 2px rgba(255,255,255,0.2),0 0 20px #3b82f6;
+  transform:translateY(-2px);
 }
 
 .publish-button:active {
-  transform: translateY(1px);
+  transform:translateY(1px);
 }
 
 .publish-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.8s ease;
+  content:''; position:absolute; top:0; left:-100%;
+  width:100%; height:100%;
+  background: linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
+  transition:left 0.8s ease;
 }
 
 .publish-button:hover::before {
-  left: 100%;
+  left:100%;
 }
 
 .button-icon {
-  display: flex;
-  align-items: center;
-  font-size: 18px;
+  display:flex; align-items:center; font-size:18px;
 }
 
 /* Pie de página */
 .footer {
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 16px 24px;
-  text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  margin-top: 20px;
-  border-radius: 0 0 24px 24px;
+  background-color: rgba(255,255,255,0.05);
+  padding: 16px 24px; text-align: center;
+  border-top:1px solid rgba(255,255,255,0.1);
+  margin-top:20px; border-radius:0 0 24px 24px;
 }
 
 .footer p {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
-  opacity: 0;
-  transition: opacity 0.8s ease 1.8s;
+  font-size:14px; color:rgba(255,255,255,0.7);
+  opacity:0; transition: opacity 0.8s ease 1.8s;
 }
 
 .footer p.loaded {
-  opacity: 1;
+  opacity:1;
 }
 
 /* Animaciones */
 @keyframes float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(5deg); }
+  0%,100%{transform: translateY(0) rotate(0deg);}
+  50%{transform: translateY(-20px) rotate(5deg);}
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.05);}
 }
 
 /* Animación de vibración para validación */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-  20%, 40%, 60%, 80% { transform: translateX(5px); }
+  0%,100%{transform: translateX(0);}
+  10%,30%,50%,70%,90%{transform: translateX(-5px);}
+  20%,40%,60%,80%{transform: translateX(5px);}
 }
 
 .shake {
-  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  animation: shake 0.5s cubic-bezier(0.36,0.07,0.19,0.97) both;
 }
 
 /* Estilos responsivos */
 @media (max-width: 768px) {
-  .offers-header {
-    padding: 30px 20px 15px;
-  }
-  
-  .title {
-    font-size: 28px;
-  }
-  
-  .logo {
-    height: 60px;
-    width: 60px;
-  }
-  
-  .form-card {
-    padding: 1.5rem;
-  }
-  
-  .nav-tabs {
-    padding: 0.75rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .tab-button {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
-  }
-  
-  .tab-icon {
-    width: 18px;
-    height: 18px;
-  }
+  .offers-header { padding:30px 20px 15px; }
+  .title { font-size:28px; }
+  .logo { height:60px; width:60px; }
+  .form-card { padding:1.5rem; }
+  .nav-tabs { padding:0.75rem; flex-wrap:wrap; justify-content:center; gap:10px; }
+  .tab-button { padding:0.5rem 0.75rem; font-size:0.875rem; }
+  .tab-icon { width:18px; height:18px; }
 }
 
 @media (max-width: 480px) {
-  .offers-page {
-    padding: 12px;
-  }
-  
-  .form-content {
-    padding: 1rem;
-  }
-  
-  .form-title {
-    font-size: 1.25rem;
-  }
-  
+  .offers-page { padding:12px; }
+  .form-content { padding:1rem; }
+  .form-title { font-size:1.25rem; }
   .custom-input, .custom-textarea, .custom-select {
-    font-size: 14px;
-    padding: 12px 12px 12px 40px;
+    font-size:14px; padding:12px 12px 12px 40px;
   }
-  
-  .input-icon {
-    font-size: 14px;
-    left: 12px;
-  }
-  
-  .publish-button {
-    width: 100%;
-  }
+  .input-icon { font-size:14px; left:12px; }
+  .publish-button { width:100%; }
 }

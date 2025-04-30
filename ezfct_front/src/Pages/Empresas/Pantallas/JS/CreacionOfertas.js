@@ -135,7 +135,7 @@ const CreacionOfertas = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      navigate('/empresa/ofertase');
+      navigate('/empresas/ofertasP');
     }, 1500);
   };
 
@@ -205,7 +205,7 @@ const CreacionOfertas = () => {
           </button>
           <button 
             className={`tab-button ${activeTab === 'students' ? 'active' : ''}`}
-            onClick={() => navigateTo('/empresas/Estudiantes')}
+            onClick={() => navigateTo('empresas/Estudiantes')}
           >
             <img src={usersIcon } alt="Students" className="tab-icon"/>
             <span>Students</span>

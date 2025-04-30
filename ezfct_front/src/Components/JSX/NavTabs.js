@@ -1,26 +1,31 @@
-import { NavLink } from 'react-router-dom';
-import paperIcon from '../../Imagenes/paper.png';
-import usersIcon from '../../Imagenes/users.png';
-import questionIcon from '../../Imagenes/question.png';
-import '../CSS/NavTabs.css'; // crea o importa un CSS común
+// src/pages/empresa/NavTabs.jsx
+import React from 'react';
+import PropTypes from 'prop-types';
+import ButtonComp from './ButtonComp.js';
 
-const NavTabs = ({ activeTab }) => {
-  return (
-    <div className="nav-tabs">
-      <NavLink to="/empresas/OfertasE" className={({ isActive }) => `tab-button ${isActive ? 'active' : ''}`}>
-        <img src={paperIcon} alt="Offers" className="tab-icon" />
-        <span>Offers</span>
-      </NavLink>
-      <NavLink to="/empresas/Estudiantes" className={({ isActive }) => `tab-button ${isActive ? 'active' : ''}`}>
-        <img src={usersIcon} alt="Students" className="tab-icon" />
-        <span>Students</span>
-      </NavLink>
-      <NavLink to="/empresas/Help" className={({ isActive }) => `tab-button ${isActive ? 'active' : ''}`}>
-        <img src={questionIcon} alt="Help" className="tab-icon" />
-        <span>Help</span>
-      </NavLink>
-    </div>
-  );
+const NavTabs = ({ activeTab, loaded, tabs, onTabChange }) => (
+  <div className={`nav-tabs ${loaded?'loaded':''}`}>
+    {tabs.map(tab => (
+      <ButtonComp
+        key={tab.key}
+        className={`tab-button ${activeTab===tab.key?'active':''}`}
+        icon={<img src={tab.icon} alt={tab.label} className="tab-icon" />}
+        onClick={() => onTabChange(tab.key, tab.route)}
+      >
+        {tab.label}
+      </ButtonComp>
+    ))}
+  </div>
+);
+
+NavTabs.propTypes = {
+  activeTab: PropTypes.string.isRequired,
+  loaded: PropTypes.bool.isRequired,
+  tabs: PropTypes.arrayOf(PropTypes.shape({
+    key: PropTypes.string, icon: PropTypes.string,
+    label: PropTypes.string, route: PropTypes.string
+  })).isRequired,
+  onTabChange: PropTypes.func.isRequired,
 };
 
 export default NavTabs;
