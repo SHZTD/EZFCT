@@ -10,22 +10,19 @@ import CreacionOfertas from './Pages/Empresas/Pantallas/JS/CreacionOfertas.js';
 import OfertasPublicadas from './Pages/Empresas/Pantallas/JS/OfertasPublicadas.js';
 import EstudiantesEmpresa from './Pages/Empresas/Pantallas/JS/Estudiantes.js';
 
-
-
 function App() {
   return (
     <BrowserRouter> 
       <div className="App">
         <Routes>
           <Route path="/" element={<EleccionUsuario />} />
-          <Route path ="/empresas/inicio" element={<InicioEmpresa />} />
-          <Route path ="/profesores/inicio" element={<InicioProfesor />} />
-          <Route path ="/empresas/login" element={<LoginEmpresa/>} />
-          <Route path ="/empresas/register" element={<RegisterEmpresa/>} />
-          <Route path= "/empresas/OfertasE" element={<CreacionOfertas/>}/>
-          <Route path= "/empresas/OfertasP" element={<OfertasPublicadas/>}/>
-          <Route path= "/empresas/Estudiantes" elememt={<EstudiantesEmpresa/>}/>
-
+          <Route path="/empresas/inicio" element={<InicioEmpresa />} />
+          <Route path="/profesores/inicio" element={<InicioProfesor />} />
+          <Route path="/empresas/login" element={<LoginEmpresa />} />
+          <Route path="/empresas/register" element={<RegisterEmpresa />} />
+          <Route path="/empresas/OfertasE" element={<CreacionOfertas />} />
+          <Route path="/empresas/OfertasP" element={<OfertasPublicadas />} />
+          <Route path="/empresas/Estudiantes" element={<EstudiantesEmpresa />} />
         </Routes>
       </div>
     </BrowserRouter>
