@@ -159,14 +159,14 @@ const OfertasPublicadas = () => {
           </button>
           <button 
             className={`tab-button ${activeTab === 'students' ? 'active' : ''}`}
-            onClick={() => navigateTo('empresa/Estudiantes')}
+            onClick={() => navigateTo('empresas/Estudiantes')}
           >
             <img src={usersIcon || "/placeholder.svg"} alt="Students" className="tab-icon"/>
             <span className="tab-text">Students</span>
           </button>
           <button 
             className={`tab-button ${activeTab === 'help' ? 'active' : ''}`}
-            onClick={() => navigateTo('empresa/Help')}
+            onClick={() => navigateTo('empresas/Help')}
           >
             <img src={questionIcon || "/placeholder.svg"} alt="Help" className="tab-icon"/>
             <span className="tab-text">Help</span>

@@ -9,7 +9,8 @@ import RegisterEmpresa from './Pages/Empresas/Inicio/JS/Register';
 import CreacionOfertas from './Pages/Empresas/Pantallas/JS/CreacionOfertas.js';
 import OfertasPublicadas from './Pages/Empresas/Pantallas/JS/OfertasPublicadas.js';
 import EstudiantesEmpresa from './Pages/Empresas/Pantallas/JS/Estudiantes.js';
-
+import InfoEstudianteEmpresa from './Pages/Empresas/Pantallas/JS/InfoEstudiante.js'
+import HelpEmpresa from './Pages/Empresas/Pantallas/JS/HelpEmpresa.js'
 function App() {
   return (
     <BrowserRouter> 
@@ -23,6 +24,8 @@ function App() {
           <Route path="/empresas/OfertasE" element={<CreacionOfertas />} />
           <Route path="/empresas/OfertasP" element={<OfertasPublicadas />} />
           <Route path="/empresas/Estudiantes" element={<EstudiantesEmpresa />} />
+          <Route path="/empresas/InfoEstudiantes/:id" element={<InfoEstudianteEmpresa />} />
+          <Route path="/empresas/HelpEmpresa" element={<HelpEmpresa />} />
         </Routes>
       </div>
     </BrowserRouter>
