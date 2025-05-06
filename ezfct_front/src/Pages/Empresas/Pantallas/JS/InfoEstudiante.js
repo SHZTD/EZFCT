@@ -133,7 +133,7 @@ const InfoEstudiante = () => {
       id: Math.random().toString(36).substr(2, 9),
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight + window.innerHeight, // Empiezan debajo de la pantalla
-      size: Math.random() * 60 + 20, // Burbujas más grandes
+      size: Math.random() * 30, // Burbujas más grandes
       speedX: (Math.random() - 0.5) * 1, // Movimiento horizontal lento
       speedY: Math.random() * 1 + 0.5, // Movimiento vertical hacia arriba
       opacity: Math.random() * 0.3 + 0.1,
@@ -150,7 +150,7 @@ const InfoEstudiante = () => {
       id: Math.random().toString(36).substr(2, 9),
       x,
       y,
-      size: Math.random() * 40 + 10,
+      size: Math.random() * 20,
       speedX: (Math.random() - 0.5) * 3,
       speedY: Math.random() * 3 + 1,
       opacity: 0.7,
@@ -183,7 +183,7 @@ const InfoEstudiante = () => {
   const handleBackClick = () => {
     createBubbleEffect(mousePosition.x, mousePosition.y, "#84cc16");
     setTimeout(() => {
-      navigate('/empresa/Estudiantes');
+      navigate('/empresas/Estudiantes');
     }, 300);
   };
 
@@ -191,7 +191,7 @@ const InfoEstudiante = () => {
   const tabs = [
     { key: 'offers', label: 'Offers', icon: paperIcon, route: '/empresas/OfertasE' },
     { key: 'students', label: 'Students', icon: usersIcon, route: '/empresas/Estudiantes' },
-    { key: 'help', label: 'Help', icon: questionIcon, route: '/empresas/Help' }
+    { key: 'help', label: 'Help', icon: questionIcon, route: '/empresas/HelpEmpresa' }
   ];
 
   if (!student) {

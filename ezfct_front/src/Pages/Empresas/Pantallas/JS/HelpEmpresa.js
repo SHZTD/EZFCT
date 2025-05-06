@@ -162,9 +162,9 @@ const Help = () => {
   
     // Configuración de las pestañas
     const tabs = [
-      { key: 'offers', label: 'Offers', icon: paperIcon, route: '/empresa/inicio' },
-      { key: 'students', label: 'Students', icon: usersIcon, route: '/empresa/Estudiantes' },
-      { key: 'help', label: 'Help', icon: questionIcon, route: '/empresa/Help' }
+      { key: 'offers', label: 'Offers', icon: paperIcon, route: '/empresas/OfertasE' },
+      { key: 'students', label: 'Students', icon: usersIcon, route: '/empresas/Estudiantes' },
+      { key: 'help', label: 'Help', icon: questionIcon, route: '/empresas/HelpEmpresa' }
     ];
   
     return (

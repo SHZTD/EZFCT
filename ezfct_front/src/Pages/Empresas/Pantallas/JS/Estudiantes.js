@@ -16,7 +16,7 @@ const Students = () => {
   const [students, setStudents] = useState([
     { id: 1, name: 'Michal Jack', time: '28 mins ago', avatar: '/usuario1.jpg', selected: false },
     { id: 2, name: 'Sarah Johnson', time: '45 mins ago', avatar: '/usuario2.jpg', selected: false },
-    { id: 3, name: 'Alex Rivera', time: '1 hour ago', avatar: '/usuario3.png', selected: true },
+    { id: 3, name: 'Alex Rivera', time: '1 hour ago', avatar: '/usuario3.png', selected: false},
     { id: 4, name: 'Emma Wilson', time: '2 hours ago', avatar: '/usuario4.jpeg', selected: false },
     { id: 5, name: 'David Chen', time: '3 hours ago', avatar: '/usuario2.jpg', selected: false },
     { id: 6, name: 'Olivia Martinez', time: 'Yesterday', avatar: '/usuario3.png', selected: false },
@@ -139,8 +139,8 @@ const Students = () => {
 
   // Configuración de las pestañas
   const tabs = [
-    { key: 'offers', label: 'Offers', icon: paperIcon, route: '/empresa/inicio' },
-    { key: 'students', label: 'Students', icon: usersIcon, route: '/empresa/Estudiantes' },
+    { key: 'offers', label: 'Offers', icon: paperIcon, route: '/empresas/OfertasE' },
+    { key: 'students', label: 'Students', icon: usersIcon, route: '/empresas/Estudiantes' },
     { key: 'help', label: 'Help', icon: questionIcon, route: '/empresas/HelpEmpresa' }
   ];
 
