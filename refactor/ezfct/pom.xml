@@ -41,7 +41,7 @@
 
 		<!-- Swagger no funciona asi que fuera -->
 
-		<!-- JWT STUFF
+		<!-- JWT STUFF -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
@@ -59,13 +59,7 @@
 			<version>0.11.5</version>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>4.0.1</version>
-			<scope>provided</scope>
-		</dependency>
-		-->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>

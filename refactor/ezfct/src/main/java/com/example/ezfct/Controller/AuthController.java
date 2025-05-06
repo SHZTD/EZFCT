@@ -3,6 +3,7 @@ package com.example.ezfct.Controller;
 import com.example.ezfct.Entity.Usuario;
 import com.example.ezfct.Model.Enums.Rol;
 import com.example.ezfct.Repository.UsuarioRepository;
+import com.example.ezfct.Security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +23,9 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(loginRequest.getEmail());
@@ -33,11 +37,9 @@ public class AuthController {
         Usuario usuario = usuarioOpt.get();
 
         if (passwordEncoder.matches(loginRequest.getPassword(), usuario.getPassword())) {
-            // determinar la URL de redirección basada en el rol
-            String redirectUrl = determinarUrl(usuario.getRol());
+            String token = jwtUtil.generateToken(usuario.getEmail()); // generar token
             return ResponseEntity.ok().body(new LoginResponse(
-                    usuario.getRol().toString(),
-                    redirectUrl
+                    token.toString()
             ));
         } else {
             return ResponseEntity.status(401).body("Contraseña incorrecta");
@@ -55,30 +57,14 @@ public class AuthController {
         public void setPassword(String password) { this.password = password; }
     }
 
-    private String determinarUrl(Rol rol) {
-        switch (rol) {
-            case ALUMNO:
-                return localHostUrl + "/alumno/alumno.html";
-            case PROFESOR:
-                return localHostUrl + "/profe/profe.html";
-            case ADMIN:
-                return localHostUrl + "/admin/admin.html";
-            default:
-                return localHostUrl + "/error.html";
-        }
-    }
-
+    // internal dto LoginResponse
     static class LoginResponse {
-        private String rol;
-        private String redirectUrl;
+        private String token; // token ahora
 
-        public LoginResponse(String rol, String redirectUrl) {
-            this.rol = rol;
-            this.redirectUrl = redirectUrl;
+        public LoginResponse(String token) {
+            this.token = token;
         }
 
-        // getters
-        public String getRol() { return rol; }
-        public String getRedirectUrl() { return redirectUrl; }
+        public String getToken() { return token; }
     }
 }

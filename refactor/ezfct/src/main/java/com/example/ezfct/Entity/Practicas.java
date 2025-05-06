@@ -18,6 +18,7 @@ public class Practicas {
     @JsonBackReference
     private Empresa empresa;
 
+    private String titulo;
     private String descripcion;
     private String requisitos;
     private Date fechaInicio;

@@ -63,6 +63,7 @@ public class UsuarioController {
             // devolvemos solo el dto, nada de passwords y eso
             return ResponseEntity.ok(dto);
 
+            // requiere fix ahora
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("El email ya está en uso. Por favor, usa otro.");

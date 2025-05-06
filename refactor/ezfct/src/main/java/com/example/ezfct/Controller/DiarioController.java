@@ -8,6 +8,7 @@ import com.example.ezfct.Repository.AlumnoRepository;
 import com.example.ezfct.Repository.PracticasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,12 @@ public class DiarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/diarios")
+    public ResponseEntity<?> getMisDiarios(Authentication auth) {
+        String email = auth.getName();
+        return ResponseEntity.ok(email);
+    }
+
     @PostMapping
     public ResponseEntity<?> createDiario(@RequestBody Diario diario) {
         try {
@@ -45,7 +52,7 @@ public class DiarioController {
             Practicas practica = practicasRepository.findById(diario.getPractica().getIdPractica()).orElse(null);
 
             if (alumno == null || practica == null) {
-                return ResponseEntity.badRequest().body("Alumno o Práctica no encontrados.");
+                return ResponseEntity.badRequest().body("Alumno o practica no encontrados.");
             }
 
             diario.setAlumno(alumno);

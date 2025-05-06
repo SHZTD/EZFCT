@@ -144,4 +144,53 @@ public class EmpresaController {
                     .body("Error al actualizar la empresa.");
         }
     }
+
+    // ns si esta bien de por si
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> patchEmpresa(@PathVariable int id, @RequestBody Empresa cambiosParciales) {
+        try {
+            Empresa empresaExistente = empresaRepository.findById(id).orElse(null);
+            if (empresaExistente == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Empresa no encontrada.");
+            }
+
+            // solo actualizamos aquellos que no son nulos
+            if (cambiosParciales.getNIF() != null)
+                empresaExistente.setNIF(cambiosParciales.getNIF());
+
+            if (cambiosParciales.getDireccion() != null)
+                empresaExistente.setDireccion(cambiosParciales.getDireccion());
+
+            if (cambiosParciales.getEmailContacto() != null)
+                empresaExistente.setEmailContacto(cambiosParciales.getEmailContacto());
+
+            if (cambiosParciales.getTelefono() != null)
+                empresaExistente.setTelefono(cambiosParciales.getTelefono());
+
+            if (cambiosParciales.getNombre() != null)
+                empresaExistente.setNombre(cambiosParciales.getNombre());
+
+            if (cambiosParciales.getContrasenya() != null) {
+                String epw = passwordEncoder.encode(cambiosParciales.getContrasenya());
+                empresaExistente.setContrasenya(epw);
+            }
+
+            Empresa actualizada = empresaRepository.save(empresaExistente);
+
+            EmpresaDTO dto = new EmpresaDTO(
+                    actualizada.getNIF(),
+                    actualizada.getNombre(),
+                    actualizada.getDireccion(),
+                    actualizada.getEmailContacto(),
+                    actualizada.getTelefono()
+            );
+
+            return ResponseEntity.ok(dto);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al aplicar cambios a la empresa.");
+        }
+    }
 }

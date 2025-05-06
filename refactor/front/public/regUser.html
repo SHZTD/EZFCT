@@ -45,9 +45,11 @@
 
     <script>
         function enviarFormulario() {
+            const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqZW4xQGdtYWlsLmNvbSIsImlhdCI6MTc0NjUzOTg3OCwiZXhwIjoxNzQ2NjI2Mjc4fQ.UPJ5yR0OZqdJzqZ_uf8CTW8bZcOkx957TAbLBapuhtc';
+
             const form = document.getElementById('usuarioForm');
             const formData = new FormData(form);
-            
+
             const usuario = {
                 nombre: formData.get('nombre'),
                 apellido: formData.get('apellido'),
@@ -57,10 +59,11 @@
                 rol: formData.get('rol')
             };
 
-            fetch('http://localhost:7484/usuarios', {  // Ajusta esta URL según tu endpoint
+            fetch('http://localhost:7484/usuarios', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(usuario)
             })
