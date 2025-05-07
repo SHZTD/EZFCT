@@ -102,16 +102,10 @@
 /* Contenedor principal */
 .offers-container {
   width: 100%;
-  max-width: 1200px; /* Cambiado de 1000px a 1200px para igualar al primer archivo */
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
   z-index: 2;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px); /* Añadido para igualar el estilo */
-  border-radius: 24px; 
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1); /* Añadido */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Añadido */
-  overflow: hidden; /* Añadido */
 }
 
 /* Estilos del encabezado */
@@ -302,77 +296,7 @@
   object-fit: contain;
 }
 
-/* Pestañas de sección (crear/ver ofertas) */
-.section-tabs {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 1rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transform: translateY(-20px);
-  opacity: 0;
-  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s, opacity 0.8s ease 0.3s;
-}
-
-.section-tabs.loaded {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.section-tab {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  font-weight: 600;
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.8);
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.section-tab:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.section-tab.active {
-  background-color: rgba(59, 130, 246, 0.2);
-  color: white;
-  border-color: rgba(59, 130, 246, 0.3);
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
-}
-
-.section-icon {
-  font-size: 1.25rem;
-}
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 6px;
-  border-radius: 11px;
-  background-color: #3b82f6;
-  color: white;
-  font-size: 0.75rem;
-  font-weight: 700;
-  margin-left: 8px;
-}
-
-/* Contenido principal */
+/* Diseño de dos columnas */
 .main-content {
   background-color: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(5px);
@@ -383,9 +307,86 @@
   overflow: hidden;
 }
 
+.split-layout {
+  display: flex;
+  flex-direction: row;
+  min-height: 600px;
+}
+
+.split-column {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 800px;
+  position: relative;
+}
+
+.create-column {
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.view-column {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Borde superior para cada slide */
+.slide-content {
+  border-top: 3px solid #3b82f6;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  animation: fadeIn 0.5s ease forwards;
+  height: 100%;
+}
+
+.create-column .slide-content {
+  border-top-color: #10b981;
+}
+
+.view-column .slide-content {
+  border-top-color: #3b82f6;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Título de sección */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.section-title .section-icon {
+  font-size: 28px;
+  background-color: rgba(59, 130, 246, 0.2);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.create-column .section-title .section-icon {
+  background-color: rgba(16, 185, 129, 0.2);
+}
+
 /* Estilos del formulario */
 .form-content {
-  padding: 2rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -397,9 +398,8 @@
   -webkit-backdrop-filter: blur(10px);
   border-radius: 16px;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1);
-  padding: 2rem;
+  padding: 1.5rem;
   width: 100%;
-  max-width: 600px;
   transform: rotateX(20deg) scale(0.9);
   opacity: 0;
   transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 1s ease;
@@ -410,18 +410,9 @@
   opacity: 1;
 }
 
-.form-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
 /* Estilos de los grupos de formulario */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.8s ease, transform 0.8s ease;
@@ -430,6 +421,24 @@
 .form-group.loaded {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Grupo de fechas */
+.date-group {
+  margin-bottom: 1.25rem;
+}
+
+.date-inputs {
+  display: flex;
+  gap: 10px;
+}
+
+.date-inputs .input-container {
+  flex: 1;
+}
+
+.date-input {
+  padding-right: 10px;
 }
 
 /* Estilos de los inputs */
@@ -512,7 +521,7 @@
 .button-container {
   display: flex;
   justify-content: center;
-  padding-top: 1rem;
+  padding-top: 0.5rem;
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.8s ease, transform 0.8s ease;
@@ -528,7 +537,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background-color: #3b82f6;
+  background-color: #10b981;
   color: white;
   border: none;
   border-radius: 12px;
@@ -539,11 +548,12 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
+  width: 100%;
 }
 
 .publish-button:hover {
-  background-color: #2563eb;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.2), 0 0 20px #3b82f6;
+  background-color: #059669;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.2), 0 0 20px #10b981;
   transform: translateY(-2px);
 }
 
@@ -573,14 +583,9 @@
 }
 
 /* Estilos para la lista de ofertas */
-.offers-list-container {
-  padding: 2rem;
-}
-
 .offers-list-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   margin-bottom: 1.5rem;
   opacity: 0;
   transform: translateY(20px);
@@ -592,16 +597,10 @@
   transform: translateY(0);
 }
 
-.section-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: white;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
 .offers-stats {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .stat-item {
@@ -609,9 +608,10 @@
   flex-direction: column;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.1);
-  padding: 0.75rem 1.25rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  flex: 1;
 }
 
 .stat-value {
@@ -630,11 +630,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
+  padding: 3rem 1rem;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
   border: 1px dashed rgba(255, 255, 255, 0.2);
   text-align: center;
+  height: calc(100% - 100px);
 }
 
 .no-offers-icon {
@@ -655,9 +656,30 @@
 }
 
 .offers-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: calc(100% - 100px);
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.offers-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.offers-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.offers-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.offers-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .offer-card {
@@ -666,7 +688,7 @@
   -webkit-backdrop-filter: blur(10px);
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1.5rem;
+  padding: 1.25rem;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   opacity: 0;
@@ -739,7 +761,7 @@
   font-size: 0.875rem;
   line-height: 1.5;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -769,6 +791,15 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.modality-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
 }
 
 .offer-stats {
@@ -855,7 +886,7 @@
   padding: 16px 24px;
   text-align: center;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  margin-top: 20px;
+  margin-top: 0;
   border-radius: 0 0 24px 24px;
 }
 
@@ -928,6 +959,25 @@
 }
 
 /* Estilos responsivos */
+@media (max-width: 992px) {
+  .split-layout {
+    flex-direction: column;
+  }
+
+  .split-column {
+    max-height: none;
+  }
+
+  .create-column {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .offers-list {
+    max-height: 500px;
+  }
+}
+
 @media (max-width: 768px) {
   .offers-header {
     padding: 30px 20px 15px;
@@ -940,7 +990,7 @@
     width: 60px;
   }
   .form-card {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
   .nav-tabs {
     padding: 0.75rem;
@@ -956,24 +1006,20 @@
     width: 18px;
     height: 18px;
   }
-  .section-tabs {
-    flex-direction: column;
-    gap: 10px;
+  .section-title {
+    font-size: 20px;
   }
-  .section-tab {
-    width: 100%;
+  .section-title .section-icon {
+    font-size: 24px;
+    width: 36px;
+    height: 36px;
   }
-  .offers-list-header {
+  .date-inputs {
     flex-direction: column;
     gap: 1rem;
-    align-items: flex-start;
-  }
-  .offers-stats {
-    width: 100%;
-    justify-content: space-between;
   }
   .offers-list {
-    grid-template-columns: 1fr;
+    max-height: 400px;
   }
 }
 
@@ -983,11 +1029,17 @@
   }
   .form-content,
   .offers-list-container {
-    padding: 1rem;
+    padding: 0.5rem;
   }
   .form-title,
   .section-title {
-    font-size: 1.25rem;
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  .section-title .section-icon {
+    font-size: 20px;
+    width: 30px;
+    height: 30px;
   }
   .custom-input,
   .custom-textarea,
@@ -1005,5 +1057,18 @@
   }
   .offer-actions {
     flex-direction: column;
+    gap: 0.5rem;
+  }
+  .slide-content {
+    padding: 10px;
+  }
+  .offers-stats {
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    min-width: 45%;
+  }
+  .offers-list {
+    max-height: 350px;
   }
 }
