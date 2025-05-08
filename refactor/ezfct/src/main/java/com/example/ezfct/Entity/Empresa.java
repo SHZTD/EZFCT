@@ -1,4 +1,5 @@
 package com.example.ezfct.Entity;
+import com.example.ezfct.Model.Enums.Rol;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
@@ -16,7 +17,10 @@ public class Empresa {
     private String emailContacto;
     private String telefono;
     private String nombre;
-    private String contrasenya;
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private final Rol rol = Rol.EMPRESA;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -78,11 +82,11 @@ public class Empresa {
         this.practicas = practicas;
     }
 
-    public String getContrasenya() {
-        return contrasenya;
+    public String getPassword() {
+        return password;
     }
 
     public void setContrasenya(String contrasenya) {
-        this.contrasenya = contrasenya;
+        this.password = contrasenya;
     }
 }

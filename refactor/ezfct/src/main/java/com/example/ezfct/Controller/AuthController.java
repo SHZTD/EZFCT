@@ -16,7 +16,6 @@ import java.util.Optional;
 @CrossOrigin("*")
 public class AuthController {
 
-    String localHostUrl = "http://localhost:8080";
     @Autowired
     private UsuarioRepository usuarioRepository;
 
@@ -37,7 +36,7 @@ public class AuthController {
         Usuario usuario = usuarioOpt.get();
 
         if (passwordEncoder.matches(loginRequest.getPassword(), usuario.getPassword())) {
-            String token = jwtUtil.generateToken(usuario.getEmail()); // generar token
+            String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getRol()); // generar token
             return ResponseEntity.ok().body(new LoginResponse(
                     token.toString()
             ));

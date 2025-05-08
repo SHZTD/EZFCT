@@ -23,7 +23,8 @@ public class Practicas {
     private String requisitos;
     private Date fechaInicio;
     private Date fechaFin;
-    private BigDecimal salario;
+    private int vacantes;
+    private int vecesPostulada;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -79,16 +80,16 @@ public class Practicas {
         return fechaFin;
     }
 
+    public int getVecesPostulada() {
+        return vecesPostulada;
+    }
+
+    public void setVecesPostulada(int vecesPostulada) {
+        this.vecesPostulada = vecesPostulada;
+    }
+
     public void setFechaFin(Date fechaFin) {
         this.fechaFin = fechaFin;
-    }
-
-    public BigDecimal getSalario() {
-        return salario;
-    }
-
-    public void setSalario(BigDecimal salario) {
-        this.salario = salario;
     }
 
     public Modalidad getModalidad() {
@@ -97,6 +98,22 @@ public class Practicas {
 
     public void setModalidad(Modalidad modalidad) {
         this.modalidad = modalidad;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public int getVacantes() {
+        return vacantes;
+    }
+
+    public void setVacantes(int vacantes) {
+        this.vacantes = vacantes;
     }
 
     public List<Postulacion> getPostulaciones() {
