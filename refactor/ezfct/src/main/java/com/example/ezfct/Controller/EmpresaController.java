@@ -42,17 +42,27 @@ public class EmpresaController {
         return ResponseEntity.ok(empresasDTO);
     }
 
-    // POST
     @PostMapping
     public ResponseEntity<?> createEmpresa(@RequestBody Empresa empresa) {
         try {
+            boolean emailExists = empresaRepository.existsByEmailContacto(empresa.getEmailContacto());
+            if (emailExists) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("El email ya está en uso. Por favor, usa otro.");
+            }
+            boolean nifExists = empresaRepository.existsByNif(empresa.getNIF());
+            if (nifExists) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("El NIF ya está registrado. Por favor, usa otro.");
+            }
+
             if (empresa.getPracticas() != null) {
                 for (Practicas p : empresa.getPracticas()) {
                     p.setEmpresa(empresa);
                 }
             }
 
-            String epw = passwordEncoder.encode(empresa.getContrasenya());
+            String epw = passwordEncoder.encode(empresa.getPassword());
             empresa.setContrasenya(epw);
 
             Empresa nuevaEmpresa = empresaRepository.save(empresa);
@@ -66,9 +76,7 @@ public class EmpresaController {
             );
 
             return ResponseEntity.ok(dto);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("El email ya está en uso. Por favor, usa otro.");
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -113,10 +121,10 @@ public class EmpresaController {
             empresaExistente.setNombre(empresaActualizada.getNombre());
 
             if (
-                    empresaActualizada.getContrasenya() != null &&
-                            !empresaActualizada.getContrasenya().equals(empresaExistente.getContrasenya())
+                    empresaActualizada.getPassword() != null &&
+                            !empresaActualizada.getPassword().equals(empresaExistente.getPassword())
             ) {
-                String epw = passwordEncoder.encode(empresaActualizada.getContrasenya());
+                String epw = passwordEncoder.encode(empresaActualizada.getPassword());
                 empresaExistente.setContrasenya(epw);
             }
 
@@ -170,8 +178,8 @@ public class EmpresaController {
             if (cambiosParciales.getNombre() != null)
                 empresaExistente.setNombre(cambiosParciales.getNombre());
 
-            if (cambiosParciales.getContrasenya() != null) {
-                String epw = passwordEncoder.encode(cambiosParciales.getContrasenya());
+            if (cambiosParciales.getPassword() != null) {
+                String epw = passwordEncoder.encode(cambiosParciales.getPassword());
                 empresaExistente.setContrasenya(epw);
             }
 

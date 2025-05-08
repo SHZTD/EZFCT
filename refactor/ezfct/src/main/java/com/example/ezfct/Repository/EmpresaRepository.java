@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmpresaRepository extends JpaRepository<Empresa, Integer> {
     Empresa findByNif(String nif);
+    boolean existsByEmailContacto(String email);
+    boolean existsByNif(String nif);
 }

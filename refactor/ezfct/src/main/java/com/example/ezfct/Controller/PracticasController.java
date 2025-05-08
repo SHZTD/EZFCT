@@ -59,11 +59,12 @@ public class PracticasController {
                 return ResponseEntity.notFound().build();
             }
 
+            practicaExistente.setTitulo(practicaActualizada.getTitulo());
             practicaExistente.setDescripcion(practicaActualizada.getDescripcion());
             practicaExistente.setRequisitos(practicaActualizada.getRequisitos());
             practicaExistente.setFechaInicio(practicaActualizada.getFechaInicio());
             practicaExistente.setFechaFin(practicaActualizada.getFechaFin());
-            practicaExistente.setSalario(practicaActualizada.getSalario());
+            practicaExistente.setVacantes(practicaActualizada.getVacantes());
             practicaExistente.setModalidad(practicaActualizada.getModalidad());
 
             practicasRepository.save(practicaExistente);
