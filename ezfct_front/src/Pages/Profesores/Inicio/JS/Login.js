@@ -229,7 +229,7 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
             <ButtonComp
               className="btn--login"
               icon="🔑"
-              onClick={() => navigate('/empresas/OfertasE')}
+              onClick={() => navigate('/profesores/Ofertas')}
               transitionDelay="1.6s"
             >
               Iniciar Sesión
@@ -238,7 +238,7 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
           
           {/* Texto adicional */}
           <div className={`additional-text ${loaded ? 'loaded' : ''}`}>
-            <p>¿No tienes una cuenta? <a href="#" onClick={() => navigate('/empresas/register')}>Regístrate</a></p>
+            <p>¿No tienes una cuenta? <a href="#" onClick={() => navigate('/profesores/register')}>Regístrate</a></p>
           </div>
         </form>
         

@@ -19,6 +19,9 @@ import HelpEmpresa from './Pages/Empresas/Pantallas/JS/HelpEmpresa.js'
 
 import InicioProfesor from './Pages/Profesores/Inicio/JS/Inicio.js';
 import LoginProfesor from './Pages/Profesores/Inicio/JS/Login.js';
+import OfertasProfesor from './Pages/Profesores/Pantallas/JS/OfertasProfesor.js';
+import DetallesOferta from './Pages/Profesores/Pantallas/JS/DetallesOferta.js';
+
 
 function App() {
   return (
@@ -37,7 +40,10 @@ function App() {
 
           /* Routes Profesor  */
           <Route path="/profesores/inicio" element={<InicioProfesor />} />
-          <Route path="/profesores/login" element={<LoginEmpresa />} />
+          <Route path="/profesores/login" element={<LoginProfesor />} />
+          <Route path="/profesores/Ofertas" element={<OfertasProfesor />} />
+          <Route path="/profesores/detalles/:id" element={<DetallesOferta />} />
+
 
         </Routes>
       </div>

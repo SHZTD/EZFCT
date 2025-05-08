@@ -170,9 +170,9 @@ const OfertasPage = () => {
     // Validar que todos los campos estén completos
     if (!formData.title || !formData.description || !formData.skills || !formData.startDate || !formData.endDate) {
       // Efecto de vibración si faltan campos
-      document.querySelector(".form-card").classList.add("shake")
+      document.querySelector(".empresa-form-card").classList.add("empresa-shake")
       setTimeout(() => {
-        document.querySelector(".form-card").classList.remove("shake")
+        document.querySelector(".empresa-form-card").classList.remove("empresa-shake")
       }, 500)
       return
     }
@@ -259,9 +259,9 @@ const OfertasPage = () => {
 
   if (isLoading) {
     return (
-      <div className="loading-screen">
-        <div className="loading-container">
-          <div className="spinner"></div>
+      <div className="empresa-loading-screen">
+        <div className="empresa-loading-container">
+          <div className="empresa-spinner"></div>
           <p>Publicando . . .</p>
         </div>
       </div>
@@ -269,13 +269,13 @@ const OfertasPage = () => {
   }
 
   return (
-    <div className="offers-page">
+    <div className="empresa-offers-page">
       {/* Partículas de fondo */}
-      <div className="particles-container">
+      <div className="empresa-particles-container">
         {particles.map((particle) => (
           <div
             key={particle.id}
-            className="particle"
+            className="empresa-particle"
             style={{
               left: `${particle.x}px`,
               top: `${particle.y}px`,
@@ -290,75 +290,78 @@ const OfertasPage = () => {
 
       {/* Efecto de luz que sigue al cursor */}
       <div
-        className="cursor-light"
+        className="empresa-cursor-light"
         style={{
           left: `${mousePosition.x}px`,
           top: `${mousePosition.y}px`,
         }}
       />
 
-      <div className="offers-container">
+      <div className="empresa-offers-container">
         {/* Header con logo */}
-        <div className={`offers-header ${loaded ? "loaded" : ""}`}>
-          <div className="decorative-circle circle-1"></div>
-          <div className="decorative-circle circle-2"></div>
+        <div className={`empresa-offers-header ${loaded ? "empresa-loaded" : ""}`}>
+          <div className="empresa-decorative-circle empresa-circle-1"></div>
+          <div className="empresa-decorative-circle empresa-circle-2"></div>
 
-          <div className={`logo-container ${loaded ? "loaded" : ""}`}>
-            <img src={logo || "/placeholder.svg"} alt="Logo" className="logo" />
+          <div className={`empresa-logo-container ${loaded ? "empresa-loaded" : ""}`}>
+            <img src={logo || "/placeholder.svg"} alt="Logo" className="empresa-logo" />
           </div>
 
-          <h1 className={`title ${loaded ? "loaded" : ""}`}>OFFERS</h1>
-          <div className={`divider ${loaded ? "loaded" : ""}`}></div>
-          <p className={`subtitle ${loaded ? "loaded" : ""}`}>Create and manage your job offers</p>
+          <h1 className={`empresa-title ${loaded ? "empresa-loaded" : ""}`}>OFFERS</h1>
+          <div className={`empresa-divider ${loaded ? "empresa-loaded" : ""}`}></div>
+          <p className={`empresa-subtitle ${loaded ? "empresa-loaded" : ""}`}>Create and manage your job offers</p>
         </div>
 
         {/* Navigation Tabs */}
-        <div className={`nav-tabs ${loaded ? "loaded" : ""}`}>
+        <div className={`empresa-nav-tabs ${loaded ? "empresa-loaded" : ""}`}>
           <button
-            className={`tab-button ${activeTab === "offers" ? "active" : ""}`}
+            className={`empresa-tab-button ${activeTab === "offers" ? "empresa-active" : ""}`}
             onClick={() => setActiveTab("offers")}
           >
-            <img src={paperIcon || "/placeholder.svg"} alt="Offers" className="tab-icon" />
+            <img src={paperIcon || "/placeholder.svg"} alt="Offers" className="empresa-tab-icon" />
             <span>Offers</span>
           </button>
           <button
-            className={`tab-button ${activeTab === "students" ? "active" : ""}`}
+            className={`empresa-tab-button ${activeTab === "students" ? "empresa-active" : ""}`}
             onClick={() => navigateTo("empresas/Estudiantes")}
           >
-            <img src={usersIcon || "/placeholder.svg"} alt="Students" className="tab-icon" />
+            <img src={usersIcon || "/placeholder.svg"} alt="Students" className="empresa-tab-icon" />
             <span>Students</span>
           </button>
           <button
-            className={`tab-button ${activeTab === "help" ? "active" : ""}`}
+            className={`empresa-tab-button ${activeTab === "help" ? "empresa-active" : ""}`}
             onClick={() => navigateTo("empresas/HelpEmpresa")}
           >
-            <img src={questionIcon || "/placeholder.svg"} alt="Help" className="tab-icon" />
+            <img src={questionIcon || "/placeholder.svg"} alt="Help" className="empresa-tab-icon" />
             <span>Help</span>
           </button>
         </div>
 
         {/* Contenido principal con dos columnas */}
-        <div className="main-content">
-          <div className="split-layout">
+        <div className="empresa-main-content">
+          <div className="empresa-split-layout">
             {/* Columna izquierda: Creación de ofertas */}
-            <div className="split-column create-column">
-              <div className="slide-content">
-                <h2 className="section-title">
-                  <span className="section-icon">✏️</span>
+            <div className="empresa-split-column empresa-create-column">
+              <div className="empresa-slide-content">
+                <h2 className="empresa-section-title">
+                  <span className="empresa-section-icon">✏️</span>
                   Create New Offer
                 </h2>
-                <div className="form-content">
-                  <div className={`form-card ${loaded ? "loaded" : ""}`}>
-                    <div className={`form-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.3s" }}>
-                      <div className="input-container">
+                <div className="empresa-form-content">
+                  <div className={`empresa-form-card ${loaded ? "empresa-loaded" : ""}`}>
+                    <div
+                      className={`empresa-form-group ${loaded ? "empresa-loaded" : ""}`}
+                      style={{ transitionDelay: "0.3s" }}
+                    >
+                      <div className="empresa-input-container">
                         <label htmlFor="title">Title of Offer</label>
-                        <div className="input-wrapper">
-                          <span className="input-icon">📝</span>
+                        <div className="empresa-input-wrapper">
+                          <span className="empresa-input-icon">📝</span>
                           <input
                             type="text"
                             id="title"
                             name="title"
-                            className="custom-input"
+                            className="empresa-custom-input"
                             placeholder="Enter the title of your offer"
                             value={formData.title}
                             onChange={handleInputChange}
@@ -367,15 +370,18 @@ const OfertasPage = () => {
                       </div>
                     </div>
 
-                    <div className={`form-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.4s" }}>
-                      <div className="textarea-container">
+                    <div
+                      className={`empresa-form-group ${loaded ? "empresa-loaded" : ""}`}
+                      style={{ transitionDelay: "0.4s" }}
+                    >
+                      <div className="empresa-textarea-container">
                         <label htmlFor="description">Description</label>
-                        <div className="input-wrapper">
-                          <span className="input-icon textarea-icon">📄</span>
+                        <div className="empresa-input-wrapper">
+                          <span className="empresa-input-icon empresa-textarea-icon">📄</span>
                           <textarea
                             id="description"
                             name="description"
-                            className="custom-textarea"
+                            className="empresa-custom-textarea"
                             placeholder="Describe the offer in detail"
                             rows="4"
                             value={formData.description}
@@ -385,16 +391,19 @@ const OfertasPage = () => {
                       </div>
                     </div>
 
-                    <div className={`form-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.5s" }}>
-                      <div className="input-container">
+                    <div
+                      className={`empresa-form-group ${loaded ? "empresa-loaded" : ""}`}
+                      style={{ transitionDelay: "0.5s" }}
+                    >
+                      <div className="empresa-input-container">
                         <label htmlFor="skills">Skills Required</label>
-                        <div className="input-wrapper">
-                          <span className="input-icon">🔧</span>
+                        <div className="empresa-input-wrapper">
+                          <span className="empresa-input-icon">🔧</span>
                           <input
                             type="text"
                             id="skills"
                             name="skills"
-                            className="custom-input"
+                            className="empresa-custom-input"
                             placeholder="e.g. JavaScript, React, CSS"
                             value={formData.skills}
                             onChange={handleInputChange}
@@ -404,31 +413,34 @@ const OfertasPage = () => {
                     </div>
 
                     {/* Fechas de inicio y fin */}
-                    <div className={`form-group date-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.6s" }}>
-                      <div className="date-inputs">
-                        <div className="input-container">
+                    <div
+                      className={`empresa-form-group empresa-date-group ${loaded ? "empresa-loaded" : ""}`}
+                      style={{ transitionDelay: "0.6s" }}
+                    >
+                      <div className="empresa-date-inputs">
+                        <div className="empresa-input-container">
                           <label htmlFor="startDate">Start Date</label>
-                          <div className="input-wrapper">
-                            <span className="input-icon">📅</span>
+                          <div className="empresa-input-wrapper">
+                            <span className="empresa-input-icon">📅</span>
                             <input
                               type="date"
                               id="startDate"
                               name="startDate"
-                              className="custom-input date-input"
+                              className="empresa-custom-input empresa-date-input"
                               value={formData.startDate}
                               onChange={handleInputChange}
                             />
                           </div>
                         </div>
-                        <div className="input-container">
+                        <div className="empresa-input-container">
                           <label htmlFor="endDate">End Date</label>
-                          <div className="input-wrapper">
-                            <span className="input-icon">📅</span>
+                          <div className="empresa-input-wrapper">
+                            <span className="empresa-input-icon">📅</span>
                             <input
                               type="date"
                               id="endDate"
                               name="endDate"
-                              className="custom-input date-input"
+                              className="empresa-custom-input empresa-date-input"
                               value={formData.endDate}
                               onChange={handleInputChange}
                             />
@@ -438,15 +450,18 @@ const OfertasPage = () => {
                     </div>
 
                     {/* Campo de modalidad */}
-                    <div className={`form-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.7s" }}>
-                      <div className="select-container">
+                    <div
+                      className={`empresa-form-group ${loaded ? "empresa-loaded" : ""}`}
+                      style={{ transitionDelay: "0.7s" }}
+                    >
+                      <div className="empresa-select-container">
                         <label htmlFor="modality">Modality</label>
-                        <div className="input-wrapper">
-                          <span className="input-icon">🌐</span>
+                        <div className="empresa-input-wrapper">
+                          <span className="empresa-input-icon">🌐</span>
                           <select
                             id="modality"
                             name="modality"
-                            className="custom-select"
+                            className="empresa-custom-select"
                             value={formData.modality}
                             onChange={handleInputChange}
                           >
@@ -458,15 +473,18 @@ const OfertasPage = () => {
                       </div>
                     </div>
 
-                    <div className={`form-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.8s" }}>
-                      <div className="select-container">
+                    <div
+                      className={`empresa-form-group ${loaded ? "empresa-loaded" : ""}`}
+                      style={{ transitionDelay: "0.8s" }}
+                    >
+                      <div className="empresa-select-container">
                         <label htmlFor="vacancies">Vacancies</label>
-                        <div className="input-wrapper">
-                          <span className="input-icon">👥</span>
+                        <div className="empresa-input-wrapper">
+                          <span className="empresa-input-icon">👥</span>
                           <select
                             id="vacancies"
                             name="vacancies"
-                            className="custom-select"
+                            className="empresa-custom-select"
                             value={formData.vacancies}
                             onChange={handleInputChange}
                           >
@@ -478,9 +496,12 @@ const OfertasPage = () => {
                       </div>
                     </div>
 
-                    <div className={`button-container ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.9s" }}>
-                      <button className="publish-button" onClick={publishOffer}>
-                        <span className="button-icon">✈️</span>
+                    <div
+                      className={`empresa-button-container ${loaded ? "empresa-loaded" : ""}`}
+                      style={{ transitionDelay: "0.9s" }}
+                    >
+                      <button className="empresa-publish-button" onClick={publishOffer}>
+                        <span className="empresa-button-icon">✈️</span>
                         Publish Offer
                       </button>
                     </div>
@@ -490,114 +511,120 @@ const OfertasPage = () => {
             </div>
 
             {/* Columna derecha: Visualización de ofertas */}
-            <div className="split-column view-column">
-              <div className="slide-content">
-                <div className={`offers-list-header ${loaded ? "loaded" : ""}`}>
-                  <h2 className="section-title">
-                    <span className="section-icon">👁️</span>
+            <div className="empresa-split-column empresa-view-column">
+              <div className="empresa-slide-content">
+                <div className={`empresa-offers-list-header ${loaded ? "empresa-loaded" : ""}`}>
+                  <h2 className="empresa-section-title">
+                    <span className="empresa-section-icon">👁️</span>
                     Your Published Offers
                   </h2>
-                  <div className="offers-stats">
-                    <div className="stat-item">
-                      <span className="stat-value">{offers.length}</span>
-                      <span className="stat-label">Total</span>
+                  <div className="empresa-offers-stats">
+                    <div className="empresa-stat-item">
+                      <span className="empresa-stat-value">{offers.length}</span>
+                      <span className="empresa-stat-label">Total</span>
                     </div>
-                    <div className="stat-item">
-                      <span className="stat-value">{offers.filter((o) => o.status === "active").length}</span>
-                      <span className="stat-label">Active</span>
+                    <div className="empresa-stat-item">
+                      <span className="empresa-stat-value">{offers.filter((o) => o.status === "active").length}</span>
+                      <span className="empresa-stat-label">Active</span>
                     </div>
-                    <div className="stat-item">
-                      <span className="stat-value">
+                    <div className="empresa-stat-item">
+                      <span className="empresa-stat-value">
                         {offers.reduce((acc, curr) => acc + Number.parseInt(curr.applications || 0), 0)}
                       </span>
-                      <span className="stat-label">Applications</span>
+                      <span className="empresa-stat-label">Applications</span>
                     </div>
                   </div>
                 </div>
 
                 {offers.length === 0 ? (
-                  <div className="no-offers">
-                    <div className="no-offers-icon">📭</div>
+                  <div className="empresa-no-offers">
+                    <div className="empresa-no-offers-icon">📭</div>
                     <h3>No offers published yet</h3>
                     <p>Create your first job offer to start receiving applications</p>
                   </div>
                 ) : (
-                  <div className="offers-list">
+                  <div className="empresa-offers-list">
                     {offers.map((offer, index) => (
                       <div
                         key={offer.id}
-                        className={`offer-card ${offer.status !== "active" ? "paused" : ""}`}
+                        className={`empresa-offer-card ${offer.status !== "active" ? "empresa-paused" : ""}`}
                         style={{
                           animationDelay: `${0.1 + index * 0.05}s`,
                           transitionDelay: `${0.1 + index * 0.05}s`,
                         }}
                       >
-                        <div className="offer-header">
-                          <h3 className="offer-title">{offer.title}</h3>
-                          <div className="offer-badges">
-                            <span className={`status-badge ${offer.status}`}>
+                        <div className="empresa-offer-header">
+                          <h3 className="empresa-offer-title">{offer.title}</h3>
+                          <div className="empresa-offer-badges">
+                            <span className={`empresa-status-badge empresa-${offer.status}`}>
                               {offer.status === "active" ? "Active" : "Paused"}
                             </span>
-                            <span className="date-badge">{offer.date}</span>
+                            <span className="empresa-date-badge">{offer.date}</span>
                           </div>
                         </div>
 
-                        <div className="offer-description">
+                        <div className="empresa-offer-description">
                           <p>{offer.description}</p>
                         </div>
 
-                        <div className="offer-details">
-                          <div className="detail-item">
-                            <span className="detail-icon">🔧</span>
-                            <span className="detail-text">{offer.skills}</span>
+                        <div className="empresa-offer-details">
+                          <div className="empresa-detail-item">
+                            <span className="empresa-detail-icon">🔧</span>
+                            <span className="empresa-detail-text">{offer.skills}</span>
                           </div>
-                          <div className="detail-item">
-                            <span className="detail-icon">📅</span>
-                            <span className="detail-text">
+                          <div className="empresa-detail-item">
+                            <span className="empresa-detail-icon">📅</span>
+                            <span className="empresa-detail-text">
                               {offer.startDate} to {offer.endDate}
                             </span>
                           </div>
-                          <div className="detail-item">
-                            <span className="detail-icon">{getModalityIcon(offer.modality)}</span>
-                            <span 
-                              className="detail-text modality-badge"
+                          <div className="empresa-detail-item">
+                            <span className="empresa-detail-icon">{getModalityIcon(offer.modality)}</span>
+                            <span
+                              className="empresa-detail-text empresa-modality-badge"
                               style={{
                                 backgroundColor: `${getModalityColor(offer.modality)}20`,
-                                color: getModalityColor(offer.modality)
+                                color: getModalityColor(offer.modality),
                               }}
                             >
                               {offer.modality}
                             </span>
                           </div>
-                          <div className="detail-item">
-                            <span className="detail-icon">👥</span>
-                            <span className="detail-text">
+                          <div className="empresa-detail-item">
+                            <span className="empresa-detail-icon">👥</span>
+                            <span className="empresa-detail-text">
                               {offer.vacancies} {Number.parseInt(offer.vacancies) === 1 ? "vacancy" : "vacancies"}
                             </span>
                           </div>
                         </div>
 
-                        <div className="offer-stats">
-                          <div className="stat">
-                            <span className="stat-number">{offer.applications}</span>
-                            <span className="stat-label">Applications</span>
+                        <div className="empresa-offer-stats">
+                          <div className="empresa-stat">
+                            <span className="empresa-stat-number">{offer.applications}</span>
+                            <span className="empresa-stat-label">Applications</span>
                           </div>
                         </div>
 
-                        <div className="offer-actions">
+                        <div className="empresa-offer-actions">
                           <button
-                            className="action-button view"
+                            className="empresa-action-button empresa-view"
                             onClick={() => createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")}
                           >
-                            <span className="action-icon">👁️</span>
+                            <span className="empresa-action-icon">👁️</span>
                             View Details
                           </button>
-                          <button className="action-button toggle" onClick={() => toggleOfferStatus(offer.id)}>
-                            <span className="action-icon">{offer.status === "active" ? "⏸️" : "▶️"}</span>
+                          <button
+                            className="empresa-action-button empresa-toggle"
+                            onClick={() => toggleOfferStatus(offer.id)}
+                          >
+                            <span className="empresa-action-icon">{offer.status === "active" ? "⏸️" : "▶️"}</span>
                             {offer.status === "active" ? "Pause" : "Activate"}
                           </button>
-                          <button className="action-button delete" onClick={() => deleteOffer(offer.id)}>
-                            <span className="action-icon">🗑️</span>
+                          <button
+                            className="empresa-action-button empresa-delete"
+                            onClick={() => deleteOffer(offer.id)}
+                          >
+                            <span className="empresa-action-icon">🗑️</span>
                             Delete
                           </button>
                         </div>
@@ -610,8 +637,8 @@ const OfertasPage = () => {
           </div>
         </div>
 
-        <div className="footer">
-          <p className={loaded ? "loaded" : ""}>© 2025 EasyFCT - Innovación Educativa</p>
+        <div className="empresa-footer">
+          <p className={loaded ? "empresa-loaded" : ""}>© 2025 EasyFCT - Innovación Educativa</p>
         </div>
       </div>
     </div>

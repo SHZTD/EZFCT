@@ -5,7 +5,7 @@
   padding: 0;
 }
 
-.offers-page {
+.empresa-offers-page {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   min-height: 100vh;
@@ -19,7 +19,7 @@
 }
 
 /* Partículas de fondo */
-.particles-container {
+.empresa-particles-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -29,7 +29,7 @@
   pointer-events: none;
 }
 
-.particle {
+.empresa-particle {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
@@ -37,7 +37,7 @@
 }
 
 /* Efecto de luz que sigue al cursor */
-.cursor-light {
+.empresa-cursor-light {
   position: absolute;
   width: 300px;
   height: 300px;
@@ -49,7 +49,7 @@
 }
 
 /* Pantalla de carga */
-.loading-screen {
+.empresa-loading-screen {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -63,7 +63,7 @@
   z-index: 1000;
 }
 
-.loading-container {
+.empresa-loading-container {
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -74,33 +74,33 @@
   align-items: center;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  animation: pulse 2s infinite ease-in-out;
+  animation: empresa-pulse 2s infinite ease-in-out;
 }
 
-.spinner {
+.empresa-spinner {
   width: 60px;
   height: 60px;
   border: 4px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   border-top-color: #3b82f6;
-  animation: spin 1s ease-in-out infinite;
+  animation: empresa-spin 1s ease-in-out infinite;
   margin-bottom: 20px;
 }
 
-@keyframes spin {
+@keyframes empresa-spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-.loading-screen p {
+.empresa-loading-screen p {
   font-size: 1.5rem;
   color: white;
   letter-spacing: 1px;
 }
 
 /* Contenedor principal */
-.offers-container {
+.empresa-offers-container {
   width: 100%;
   max-width: 1200px;
   display: flex;
@@ -109,7 +109,7 @@
 }
 
 /* Estilos del encabezado */
-.offers-header {
+.empresa-offers-header {
   padding: 40px 32px 20px;
   display: flex;
   flex-direction: column;
@@ -128,52 +128,52 @@
   transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 1s ease;
 }
 
-.offers-header.loaded {
+.empresa-offers-header.empresa-loaded {
   transform: translateY(0);
   opacity: 1;
 }
 
 /* Círculos decorativos */
-.decorative-circle {
+.empresa-decorative-circle {
   position: absolute;
   border-radius: 50%;
 }
 
-.circle-1 {
+.empresa-circle-1 {
   width: 150px;
   height: 150px;
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%);
   top: -50px;
   left: -50px;
-  animation: float 8s infinite ease-in-out;
+  animation: empresa-float 8s infinite ease-in-out;
 }
 
-.circle-2 {
+.empresa-circle-2 {
   width: 100px;
   height: 100px;
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
   bottom: -30px;
   right: -30px;
-  animation: float 6s infinite ease-in-out reverse;
+  animation: empresa-float 6s infinite ease-in-out reverse;
 }
 
 /* Logo */
-.logo-container {
+.empresa-logo-container {
   background-color: rgba(255, 255, 255, 0.9);
   padding: 20px;
   border-radius: 50%;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 0 0 15px rgba(255, 255, 255, 0.1);
   margin-bottom: 20px;
-  animation: pulse 2s infinite ease-in-out;
+  animation: empresa-pulse 2s infinite ease-in-out;
   transform: scale(0);
   transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s;
 }
 
-.logo-container.loaded {
+.empresa-logo-container.empresa-loaded {
   transform: scale(1);
 }
 
-.logo {
+.empresa-logo {
   height: 80px;
   width: 80px;
   object-fit: contain;
@@ -181,7 +181,7 @@
 }
 
 /* Título y subtítulo */
-.title {
+.empresa-title {
   font-size: 36px;
   font-weight: bold;
   color: white;
@@ -193,12 +193,12 @@
   margin-bottom: 5px;
 }
 
-.title.loaded {
+.empresa-title.empresa-loaded {
   opacity: 1;
   transform: translateY(0);
 }
 
-.divider {
+.empresa-divider {
   width: 60px;
   height: 4px;
   background: rgba(255, 255, 255, 0.7);
@@ -209,12 +209,12 @@
   transition: transform 0.8s ease 0.8s, opacity 0.8s ease 0.8s;
 }
 
-.divider.loaded {
+.empresa-divider.empresa-loaded {
   opacity: 1;
   transform: scaleX(1);
 }
 
-.subtitle {
+.empresa-subtitle {
   color: rgba(255, 255, 255, 0.9);
   font-size: 16px;
   text-align: center;
@@ -224,13 +224,13 @@
   margin-bottom: 15px;
 }
 
-.subtitle.loaded {
+.empresa-subtitle.empresa-loaded {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* Estilos de las pestañas de navegación */
-.nav-tabs {
+.empresa-nav-tabs {
   display: flex;
   justify-content: space-between;
   padding: 1rem 1.5rem;
@@ -243,12 +243,12 @@
   transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s, opacity 0.8s ease 0.2s;
 }
 
-.nav-tabs.loaded {
+.empresa-nav-tabs.empresa-loaded {
   transform: translateY(0);
   opacity: 1;
 }
 
-.tab-button {
+.empresa-tab-button {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -264,18 +264,18 @@
   overflow: hidden;
 }
 
-.tab-button:hover {
+.empresa-tab-button:hover {
   background-color: rgba(255, 255, 255, 0.1);
   color: white;
 }
 
-.tab-button.active {
+.empresa-tab-button.empresa-active {
   background-color: rgba(59, 130, 246, 0.2);
   color: white;
   box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
 }
 
-.tab-button::before {
+.empresa-tab-button::before {
   content: "";
   position: absolute;
   top: 0;
@@ -286,18 +286,18 @@
   transition: left 0.8s ease;
 }
 
-.tab-button:hover::before {
+.empresa-tab-button:hover::before {
   left: 100%;
 }
 
-.tab-icon {
+.empresa-tab-icon {
   width: 20px;
   height: 20px;
   object-fit: contain;
 }
 
 /* Diseño de dos columnas */
-.main-content {
+.empresa-main-content {
   background-color: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
@@ -307,45 +307,45 @@
   overflow: hidden;
 }
 
-.split-layout {
+.empresa-split-layout {
   display: flex;
   flex-direction: row;
   min-height: 600px;
 }
 
-.split-column {
+.empresa-split-column {
   flex: 1;
   overflow-y: auto;
   max-height: 800px;
   position: relative;
 }
 
-.create-column {
+.empresa-create-column {
   border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.view-column {
+.empresa-view-column {
   background-color: rgba(255, 255, 255, 0.02);
 }
 
 /* Borde superior para cada slide */
-.slide-content {
+.empresa-slide-content {
   border-top: 3px solid #3b82f6;
   background-color: rgba(255, 255, 255, 0.05);
   padding: 20px;
-  animation: fadeIn 0.5s ease forwards;
+  animation: empresa-fadeIn 0.5s ease forwards;
   height: 100%;
 }
 
-.create-column .slide-content {
+.empresa-create-column .empresa-slide-content {
   border-top-color: #10b981;
 }
 
-.view-column .slide-content {
+.empresa-view-column .empresa-slide-content {
   border-top-color: #3b82f6;
 }
 
-@keyframes fadeIn {
+@keyframes empresa-fadeIn {
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -357,7 +357,7 @@
 }
 
 /* Título de sección */
-.section-title {
+.empresa-section-title {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -369,7 +369,7 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.section-title .section-icon {
+.empresa-section-title .empresa-section-icon {
   font-size: 28px;
   background-color: rgba(59, 130, 246, 0.2);
   width: 40px;
@@ -380,19 +380,19 @@
   border-radius: 50%;
 }
 
-.create-column .section-title .section-icon {
+.empresa-create-column .empresa-section-title .empresa-section-icon {
   background-color: rgba(16, 185, 129, 0.2);
 }
 
 /* Estilos del formulario */
-.form-content {
+.empresa-form-content {
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.form-card {
+.empresa-form-card {
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -405,79 +405,79 @@
   transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 1s ease;
 }
 
-.form-card.loaded {
+.empresa-form-card.empresa-loaded {
   transform: rotateX(0deg) scale(1);
   opacity: 1;
 }
 
 /* Estilos de los grupos de formulario */
-.form-group {
+.empresa-form-group {
   margin-bottom: 1.25rem;
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
-.form-group.loaded {
+.empresa-form-group.empresa-loaded {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* Grupo de fechas */
-.date-group {
+.empresa-date-group {
   margin-bottom: 1.25rem;
 }
 
-.date-inputs {
+.empresa-date-inputs {
   display: flex;
   gap: 10px;
 }
 
-.date-inputs .input-container {
+.empresa-date-inputs .empresa-input-container {
   flex: 1;
 }
 
-.date-input {
+.empresa-date-input {
   padding-right: 10px;
 }
 
 /* Estilos de los inputs */
-.input-container,
-.textarea-container,
-.select-container {
+.empresa-input-container,
+.empresa-textarea-container,
+.empresa-select-container {
   display: flex;
   flex-direction: column;
 }
 
-.input-container label,
-.textarea-container label,
-.select-container label {
+.empresa-input-container label,
+.empresa-textarea-container label,
+.empresa-select-container label {
   font-size: 0.875rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.9);
   margin-bottom: 0.5rem;
 }
 
-.input-wrapper {
+.empresa-input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.input-icon {
+.empresa-input-icon {
   position: absolute;
   left: 15px;
   font-size: 16px;
   z-index: 1;
 }
 
-.textarea-icon {
+.empresa-textarea-icon {
   top: 15px;
 }
 
-.custom-input,
-.custom-textarea,
-.custom-select {
+.empresa-custom-input,
+.empresa-custom-textarea,
+.empresa-custom-select {
   width: 100%;
   padding: 15px 15px 15px 45px;
   border-radius: 12px;
@@ -489,26 +489,26 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.custom-input:focus,
-.custom-textarea:focus,
-.custom-select:focus {
+.empresa-custom-input:focus,
+.empresa-custom-textarea:focus,
+.empresa-custom-select:focus {
   outline: none;
   border-color: rgba(59, 130, 246, 0.5);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), 0 4px 10px rgba(0, 0, 0, 0.1);
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.custom-input::placeholder,
-.custom-textarea::placeholder {
+.empresa-custom-input::placeholder,
+.empresa-custom-textarea::placeholder {
   color: rgba(255, 255, 255, 0.4);
 }
 
-.custom-textarea {
+.empresa-custom-textarea {
   resize: vertical;
   min-height: 120px;
 }
 
-.custom-select {
+.empresa-custom-select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
   background-position: right 15px center;
@@ -518,7 +518,7 @@
 }
 
 /* Estilos del botón de publicar */
-.button-container {
+.empresa-button-container {
   display: flex;
   justify-content: center;
   padding-top: 0.5rem;
@@ -527,12 +527,12 @@
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
-.button-container.loaded {
+.empresa-button-container.empresa-loaded {
   opacity: 1;
   transform: translateY(0);
 }
 
-.publish-button {
+.empresa-publish-button {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -551,17 +551,17 @@
   width: 100%;
 }
 
-.publish-button:hover {
+.empresa-publish-button:hover {
   background-color: #059669;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.2), 0 0 20px #10b981;
   transform: translateY(-2px);
 }
 
-.publish-button:active {
+.empresa-publish-button:active {
   transform: translateY(1px);
 }
 
-.publish-button::before {
+.empresa-publish-button::before {
   content: "";
   position: absolute;
   top: 0;
@@ -572,18 +572,18 @@
   transition: left 0.8s ease;
 }
 
-.publish-button:hover::before {
+.empresa-publish-button:hover::before {
   left: 100%;
 }
 
-.button-icon {
+.empresa-button-icon {
   display: flex;
   align-items: center;
   font-size: 18px;
 }
 
 /* Estilos para la lista de ofertas */
-.offers-list-header {
+.empresa-offers-list-header {
   display: flex;
   flex-direction: column;
   margin-bottom: 1.5rem;
@@ -592,18 +592,18 @@
   transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
 }
 
-.offers-list-header.loaded {
+.empresa-offers-list-header.empresa-loaded {
   opacity: 1;
   transform: translateY(0);
 }
 
-.offers-stats {
+.empresa-offers-stats {
   display: flex;
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
 
-.stat-item {
+.empresa-stat-item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -614,18 +614,18 @@
   flex: 1;
 }
 
-.stat-value {
+.empresa-stat-value {
   font-size: 1.25rem;
   font-weight: 700;
   color: white;
 }
 
-.stat-label {
+.empresa-stat-label {
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.7);
 }
 
-.no-offers {
+.empresa-no-offers {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -638,24 +638,24 @@
   height: calc(100% - 100px);
 }
 
-.no-offers-icon {
+.empresa-no-offers-icon {
   font-size: 3rem;
   margin-bottom: 1rem;
 }
 
-.no-offers h3 {
+.empresa-no-offers h3 {
   font-size: 1.25rem;
   font-weight: 600;
   color: white;
   margin-bottom: 0.5rem;
 }
 
-.no-offers p {
+.empresa-no-offers p {
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 1.5rem;
 }
 
-.offers-list {
+.empresa-offers-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -664,25 +664,25 @@
   padding-right: 5px;
 }
 
-.offers-list::-webkit-scrollbar {
+.empresa-offers-list::-webkit-scrollbar {
   width: 6px;
 }
 
-.offers-list::-webkit-scrollbar-track {
+.empresa-offers-list::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 3px;
 }
 
-.offers-list::-webkit-scrollbar-thumb {
+.empresa-offers-list::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 3px;
 }
 
-.offers-list::-webkit-scrollbar-thumb:hover {
+.empresa-offers-list::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
-.offer-card {
+.empresa-offer-card {
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -693,41 +693,41 @@
   transition: all 0.3s ease;
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeIn 0.5s forwards;
+  animation: empresa-fadeIn 0.5s forwards;
 }
 
-.offer-card:hover {
+.empresa-offer-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
   border-color: rgba(59, 130, 246, 0.3);
 }
 
-.offer-card.paused {
+.empresa-offer-card.empresa-paused {
   opacity: 0.7;
 }
 
-.offer-header {
+.empresa-offer-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1rem;
 }
 
-.offer-title {
+.empresa-offer-title {
   font-size: 1.25rem;
   font-weight: 600;
   color: white;
   margin-right: 1rem;
 }
 
-.offer-badges {
+.empresa-offer-badges {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   align-items: flex-end;
 }
 
-.status-badge {
+.empresa-status-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -737,26 +737,26 @@
   font-weight: 600;
 }
 
-.status-badge.active {
+.empresa-status-badge.empresa-active {
   background-color: rgba(16, 185, 129, 0.2);
   color: #10b981;
 }
 
-.status-badge.paused {
+.empresa-status-badge.empresa-paused {
   background-color: rgba(245, 158, 11, 0.2);
   color: #f59e0b;
 }
 
-.date-badge {
+.empresa-date-badge {
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.6);
 }
 
-.offer-description {
+.empresa-offer-description {
   margin-bottom: 1rem;
 }
 
-.offer-description p {
+.empresa-offer-description p {
   color: rgba(255, 255, 255, 0.9);
   font-size: 0.875rem;
   line-height: 1.5;
@@ -766,7 +766,7 @@
   overflow: hidden;
 }
 
-.offer-details {
+.empresa-offer-details {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -775,17 +775,17 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.detail-item {
+.empresa-detail-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.detail-icon {
+.empresa-detail-icon {
   font-size: 1rem;
 }
 
-.detail-text {
+.empresa-detail-text {
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.9);
   white-space: nowrap;
@@ -793,7 +793,7 @@
   text-overflow: ellipsis;
 }
 
-.modality-badge {
+.empresa-modality-badge {
   display: inline-block;
   padding: 2px 8px;
   border-radius: 4px;
@@ -802,13 +802,13 @@
   text-transform: capitalize;
 }
 
-.offer-stats {
+.empresa-offer-stats {
   display: flex;
   justify-content: flex-start;
   margin-bottom: 1rem;
 }
 
-.stat {
+.empresa-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -817,24 +817,24 @@
   border-radius: 8px;
 }
 
-.stat-number {
+.empresa-stat-number {
   font-size: 1.25rem;
   font-weight: 700;
   color: white;
 }
 
-.stat-label {
+.empresa-stat-label {
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.7);
 }
 
-.offer-actions {
+.empresa-offer-actions {
   display: flex;
   justify-content: space-between;
   gap: 0.5rem;
 }
 
-.action-button {
+.empresa-action-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -849,39 +849,39 @@
   flex: 1;
 }
 
-.action-button.view {
+.empresa-action-button.empresa-view {
   background-color: rgba(59, 130, 246, 0.2);
   color: #3b82f6;
 }
 
-.action-button.view:hover {
+.empresa-action-button.empresa-view:hover {
   background-color: rgba(59, 130, 246, 0.3);
 }
 
-.action-button.toggle {
+.empresa-action-button.empresa-toggle {
   background-color: rgba(245, 158, 11, 0.2);
   color: #f59e0b;
 }
 
-.action-button.toggle:hover {
+.empresa-action-button.empresa-toggle:hover {
   background-color: rgba(245, 158, 11, 0.3);
 }
 
-.action-button.delete {
+.empresa-action-button.empresa-delete {
   background-color: rgba(239, 68, 68, 0.2);
   color: #ef4444;
 }
 
-.action-button.delete:hover {
+.empresa-action-button.empresa-delete:hover {
   background-color: rgba(239, 68, 68, 0.3);
 }
 
-.action-icon {
+.empresa-action-icon {
   font-size: 1rem;
 }
 
 /* Pie de página */
-.footer {
+.empresa-footer {
   background-color: rgba(255, 255, 255, 0.05);
   padding: 16px 24px;
   text-align: center;
@@ -890,19 +890,19 @@
   border-radius: 0 0 24px 24px;
 }
 
-.footer p {
+.empresa-footer p {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.7);
   opacity: 0;
   transition: opacity 0.8s ease 1.8s;
 }
 
-.footer p.loaded {
+.empresa-footer p.empresa-loaded {
   opacity: 1;
 }
 
 /* Animaciones */
-@keyframes float {
+@keyframes empresa-float {
   0%,
   100% {
     transform: translateY(0) rotate(0deg);
@@ -912,7 +912,7 @@
   }
 }
 
-@keyframes pulse {
+@keyframes empresa-pulse {
   0%,
   100% {
     transform: scale(1);
@@ -922,7 +922,7 @@
   }
 }
 
-@keyframes fadeIn {
+@keyframes empresa-fadeIn {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -934,7 +934,7 @@
 }
 
 /* Animación de vibración para validación */
-@keyframes shake {
+@keyframes empresa-shake {
   0%,
   100% {
     transform: translateX(0);
@@ -954,121 +954,121 @@
   }
 }
 
-.shake {
-  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+.empresa-shake {
+  animation: empresa-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
 /* Estilos responsivos */
 @media (max-width: 992px) {
-  .split-layout {
+  .empresa-split-layout {
     flex-direction: column;
   }
 
-  .split-column {
+  .empresa-split-column {
     max-height: none;
   }
 
-  .create-column {
+  .empresa-create-column {
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .offers-list {
+  .empresa-offers-list {
     max-height: 500px;
   }
 }
 
 @media (max-width: 768px) {
-  .offers-header {
+  .empresa-offers-header {
     padding: 30px 20px 15px;
   }
-  .title {
+  .empresa-title {
     font-size: 28px;
   }
-  .logo {
+  .empresa-logo {
     height: 60px;
     width: 60px;
   }
-  .form-card {
+  .empresa-form-card {
     padding: 1.25rem;
   }
-  .nav-tabs {
+  .empresa-nav-tabs {
     padding: 0.75rem;
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
   }
-  .tab-button {
+  .empresa-tab-button {
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
   }
-  .tab-icon {
+  .empresa-tab-icon {
     width: 18px;
     height: 18px;
   }
-  .section-title {
+  .empresa-section-title {
     font-size: 20px;
   }
-  .section-title .section-icon {
+  .empresa-section-title .empresa-section-icon {
     font-size: 24px;
     width: 36px;
     height: 36px;
   }
-  .date-inputs {
+  .empresa-date-inputs {
     flex-direction: column;
     gap: 1rem;
   }
-  .offers-list {
+  .empresa-offers-list {
     max-height: 400px;
   }
 }
 
 @media (max-width: 480px) {
-  .offers-page {
+  .empresa-offers-page {
     padding: 12px;
   }
-  .form-content,
-  .offers-list-container {
+  .empresa-form-content,
+  .empresa-offers-list-container {
     padding: 0.5rem;
   }
-  .form-title,
-  .section-title {
+  .empresa-form-title,
+  .empresa-section-title {
     font-size: 18px;
     margin-bottom: 15px;
   }
-  .section-title .section-icon {
+  .empresa-section-title .empresa-section-icon {
     font-size: 20px;
     width: 30px;
     height: 30px;
   }
-  .custom-input,
-  .custom-textarea,
-  .custom-select {
+  .empresa-custom-input,
+  .empresa-custom-textarea,
+  .empresa-custom-select {
     font-size: 14px;
     padding: 12px 12px 12px 40px;
   }
-  .input-icon {
+  .empresa-input-icon {
     font-size: 14px;
     left: 12px;
   }
-  .publish-button,
-  .action-button {
+  .empresa-publish-button,
+  .empresa-action-button {
     width: 100%;
   }
-  .offer-actions {
+  .empresa-offer-actions {
     flex-direction: column;
     gap: 0.5rem;
   }
-  .slide-content {
+  .empresa-slide-content {
     padding: 10px;
   }
-  .offers-stats {
+  .empresa-offers-stats {
     flex-wrap: wrap;
   }
-  .stat-item {
+  .empresa-stat-item {
     min-width: 45%;
   }
-  .offers-list {
+  .empresa-offers-list {
     max-height: 350px;
   }
 }
