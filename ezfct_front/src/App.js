@@ -21,6 +21,8 @@ import InicioProfesor from './Pages/Profesores/Inicio/JS/Inicio.js';
 import LoginProfesor from './Pages/Profesores/Inicio/JS/Login.js';
 import OfertasProfesor from './Pages/Profesores/Pantallas/JS/OfertasProfesor.js';
 import DetallesOferta from './Pages/Profesores/Pantallas/JS/DetallesOferta.js';
+import AlumnosProfesor from './Pages/Profesores/Pantallas/JS/AlumnosProfesor.js';
+import DatosAlumnosProfesor from './Pages/Profesores/Pantallas/JS/DatosAlumno.js';
 
 
 function App() {
@@ -38,11 +40,14 @@ function App() {
           <Route path="/empresas/InfoEstudiantes/:id" element={<InfoEstudianteEmpresa />} />
           <Route path="/empresas/HelpEmpresa" element={<HelpEmpresa />} />
 
-          /* Routes Profesor  */
+          {/* Routes Profesor  */}
           <Route path="/profesores/inicio" element={<InicioProfesor />} />
           <Route path="/profesores/login" element={<LoginProfesor />} />
           <Route path="/profesores/Ofertas" element={<OfertasProfesor />} />
           <Route path="/profesores/detalles/:id" element={<DetallesOferta />} />
+          <Route path="/profesores/alumnos" element={<AlumnosProfesor />} />
+          <Route path="/profesores/datosAlumno" element={<DatosAlumnosProfesor />} />
+
 
 
         </Routes>
