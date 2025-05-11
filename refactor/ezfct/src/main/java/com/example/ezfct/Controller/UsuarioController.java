@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/api/usuarios")
 @CrossOrigin("*")
 public class UsuarioController {
 
@@ -46,30 +46,4 @@ public class UsuarioController {
         UsuarioDTO dto = new UsuarioDTO(u.getNombre(), u.getApellido(), u.getEmail());
         return ResponseEntity.ok(dto);
     }
-
-    @PostMapping
-    public ResponseEntity<?> createUsuario(@RequestBody Usuario usuario) {
-        try {
-            String epw = passwordEncoder.encode(usuario.getPassword());
-            usuario.setPassword(epw);
-            Usuario nuevoUsuario = usuarioRepository.save(usuario);
-            // construimos el DTO
-            UsuarioDTO dto = new UsuarioDTO(
-                    nuevoUsuario.getNombre(),
-                    nuevoUsuario.getApellido(),
-                    nuevoUsuario.getEmail()
-            );
-
-            // devolvemos solo el dto, nada de passwords y eso
-            return ResponseEntity.ok(dto);
-
-            // requiere fix ahora
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("El email ya está en uso. Por favor, usa otro.");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/postulaciones")
+@RequestMapping("/api/postulaciones")
 @CrossOrigin("*")
 public class PostulacionController {
 
@@ -45,20 +45,25 @@ public class PostulacionController {
             Practicas practica = practicasRepository.findById(postulacion.getPractica().getIdPractica()).orElse(null);
 
             if (alumno == null || practica == null) {
-                return ResponseEntity.badRequest().body("Alumno o Práctica no encontrados.");
+                return ResponseEntity.badRequest().body("Alumno o practica no encontrados.");
             }
 
             postulacion.setAlumno(alumno);
             postulacion.setPractica(practica);
 
             Postulacion nuevaPostulacion = postulacionRepository.save(postulacion);
+
+            practica.setVecesPostulada(practica.getVecesPostulada() + 1);
+            practicasRepository.save(practica);
+
             return ResponseEntity.ok(nuevaPostulacion);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Error al crear la postulación.");
+            return ResponseEntity.internalServerError().body("Error al crear la postulacion.");
         }
     }
 
+    // no se comprueba duplicidad :skull:
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePostulacion(@PathVariable int id) {
         try {
@@ -67,13 +72,20 @@ public class PostulacionController {
                 return ResponseEntity.notFound().build();
             }
 
+            Practicas practica = postulacion.getPractica();
             postulacionRepository.delete(postulacion);
+
+            // intenta restar el contador
+            practica.setVecesPostulada(Math.max(0, practica.getVecesPostulada() - 1));
+            practicasRepository.save(practica);
+
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Error al eliminar la postulación.");
+            return ResponseEntity.internalServerError().body("Error al eliminar la postulacion.");
         }
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updatePostulacion(@PathVariable int id, @RequestBody Postulacion postulacionActualizada) {
@@ -91,7 +103,7 @@ public class PostulacionController {
             return ResponseEntity.ok(postulacionExistente);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Error al actualizar la postulación.");
+            return ResponseEntity.internalServerError().body("Error al actualizar la postulacion.");
         }
     }
 }

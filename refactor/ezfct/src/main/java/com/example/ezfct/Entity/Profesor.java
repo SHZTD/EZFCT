@@ -2,6 +2,7 @@ package com.example.ezfct.Entity;
 import jakarta.persistence.*;
 
 @Entity
+
 @Table(name = "Profesor")
 public class Profesor {
     @Id

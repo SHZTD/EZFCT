@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/practicas")
+@RequestMapping("/api/practicas")
 @CrossOrigin("*")
 public class PracticasController {
 
@@ -54,6 +54,7 @@ public class PracticasController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updatePractica(@PathVariable int id, @RequestBody Practicas practicaActualizada) {
         try {
+            // null puajajaja, optionals no
             Practicas practicaExistente = practicasRepository.findById(id).orElse(null);
             if (practicaExistente == null) {
                 return ResponseEntity.notFound().build();
@@ -61,6 +62,8 @@ public class PracticasController {
 
             practicaExistente.setTitulo(practicaActualizada.getTitulo());
             practicaExistente.setDescripcion(practicaActualizada.getDescripcion());
+
+
             practicaExistente.setRequisitos(practicaActualizada.getRequisitos());
             practicaExistente.setFechaInicio(practicaActualizada.getFechaInicio());
             practicaExistente.setFechaFin(practicaActualizada.getFechaFin());

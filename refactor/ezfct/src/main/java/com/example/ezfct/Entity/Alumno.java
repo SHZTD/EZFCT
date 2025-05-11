@@ -21,6 +21,13 @@ public class Alumno {
     @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
     private List<Postulacion> postulaciones;
 
+    @Lob private String biografia;
+    private String habilidades;
+    private String educacion;
+    private String experiencia;
+    private String disponibilidad;
+    private String portfolio;
+
     @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
     private List<Diario> diarios;
 
@@ -62,5 +69,56 @@ public class Alumno {
 
     public void setDiarios(List<Diario> diarios) {
         this.diarios = diarios;
+    }
+
+    // jdr
+
+
+    public String getBiografia() {
+        return biografia;
+    }
+
+    public void setBiografia(String biografia) {
+        this.biografia = biografia;
+    }
+
+    public String getHabilidades() {
+        return habilidades;
+    }
+
+    public void setHabilidades(String habilidades) {
+        this.habilidades = habilidades;
+    }
+
+    public String getEducacion() {
+        return educacion;
+    }
+
+    public void setEducacion(String educacion) {
+        this.educacion = educacion;
+    }
+
+    public String getExperiencia() {
+        return experiencia;
+    }
+
+    public void setExperiencia(String experiencia) {
+        this.experiencia = experiencia;
+    }
+
+    public String getDisponibilidad() {
+        return disponibilidad;
+    }
+
+    public void setDisponibilidad(String disponibilidad) {
+        this.disponibilidad = disponibilidad;
+    }
+
+    public String getPortfolio() {
+        return portfolio;
+    }
+
+    public void setPortfolio(String portfolio) {
+        this.portfolio = portfolio;
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/empresa")
+@RequestMapping("/api/empresa")
 @CrossOrigin("*")
 public class EmpresaController {
 
@@ -41,49 +41,6 @@ public class EmpresaController {
 
         return ResponseEntity.ok(empresasDTO);
     }
-
-    @PostMapping
-    public ResponseEntity<?> createEmpresa(@RequestBody Empresa empresa) {
-        try {
-            boolean emailExists = empresaRepository.existsByEmailContacto(empresa.getEmailContacto());
-            if (emailExists) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("El email ya está en uso. Por favor, usa otro.");
-            }
-            boolean nifExists = empresaRepository.existsByNif(empresa.getNIF());
-            if (nifExists) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("El NIF ya está registrado. Por favor, usa otro.");
-            }
-
-            if (empresa.getPracticas() != null) {
-                for (Practicas p : empresa.getPracticas()) {
-                    p.setEmpresa(empresa);
-                }
-            }
-
-            String epw = passwordEncoder.encode(empresa.getPassword());
-            empresa.setContrasenya(epw);
-
-            Empresa nuevaEmpresa = empresaRepository.save(empresa);
-
-            EmpresaDTO dto = new EmpresaDTO(
-                    nuevaEmpresa.getNIF(),
-                    nuevaEmpresa.getNombre(),
-                    nuevaEmpresa.getDireccion(),
-                    nuevaEmpresa.getEmailContacto(),
-                    nuevaEmpresa.getTelefono()
-            );
-
-            return ResponseEntity.ok(dto);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error interno al guardar la empresa.");
-        }
-    }
-
 
     // eliminar la empresa
     @DeleteMapping("/{id}")

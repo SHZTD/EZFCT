@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/diarios")
+@RequestMapping("/api/diario")
 @CrossOrigin("*")
 public class DiarioController {
 
@@ -39,12 +39,14 @@ public class DiarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // obtener todos los diarios
     @GetMapping("/diarios")
     public ResponseEntity<?> getMisDiarios(Authentication auth) {
         String email = auth.getName();
         return ResponseEntity.ok(email);
     }
 
+    // crear el diario
     @PostMapping
     public ResponseEntity<?> createDiario(@RequestBody Diario diario) {
         try {
@@ -66,6 +68,7 @@ public class DiarioController {
         }
     }
 
+    // delete
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteDiario(@PathVariable int id) {
         try {
@@ -82,6 +85,7 @@ public class DiarioController {
         }
     }
 
+    // put
     @PutMapping("/{id}")
     public ResponseEntity<?> updateDiario(@PathVariable int id, @RequestBody Diario diarioActualizado) {
         try {
@@ -90,7 +94,7 @@ public class DiarioController {
                 return ResponseEntity.notFound().build();
             }
 
-            // Actualizar solo el resumen y la fecha
+            // actualizar solo el resumen y la fecha
             diarioExistente.setResumen(diarioActualizado.getResumen());
             diarioExistente.setFecha(diarioActualizado.getFecha());
 
