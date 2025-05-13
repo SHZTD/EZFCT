@@ -63,7 +63,7 @@ const EleccionUsuario = () => {
   const buttons = [
     { text: 'Empresas', route: '/empresas/inicio', icon: '🏢' },
     { text: 'Profesores', route: '/profesores/inicio', icon: '👨‍🏫' },
-    { text: 'Alumnos', route: '/alumnos/inicio', icon: '👨‍🎓' },
+    { text: 'Alumnos', route: '/alumnos/login', icon: '👨‍🎓' },
     { text: 'Admin', route: '/admin/inicio', icon: '⚙️' },
   ];
 

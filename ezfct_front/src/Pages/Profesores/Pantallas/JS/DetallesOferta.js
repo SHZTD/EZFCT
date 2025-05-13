@@ -351,7 +351,7 @@ const OfertaDetalleProfesor = () => {
 
   const handleNavigateToHelp = () => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")
-    setTimeout(() => navigate("/profesores/help"), 300)
+    setTimeout(() => navigate("/profesores/areaContacto"), 300)
   }
 
   if (!oferta) {
@@ -398,7 +398,6 @@ const OfertaDetalleProfesor = () => {
         {/* Botón de volver */}
         <button className={`back-button ${loaded ? "loaded" : ""}`} onClick={handleNavigateBack}>
           <ArrowLeft size={20} />
-          <span>Back to Offers</span>
         </button>
 
         {/* Cabecera de la oferta */}

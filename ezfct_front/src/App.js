@@ -24,6 +24,15 @@ import OfertasProfesor from './Pages/Profesores/Pantallas/JS/OfertasProfesor.js'
 import DetallesOferta from './Pages/Profesores/Pantallas/JS/DetallesOferta.js';
 import AlumnosProfesor from './Pages/Profesores/Pantallas/JS/AlumnosProfesor.js';
 import DatosAlumnosProfesor from './Pages/Profesores/Pantallas/JS/DatosAlumno.js';
+import AreaContactoProfesor from './Pages/Profesores/Pantallas/JS/AreaContacto.js';
+
+
+/* Imports alumnos*/
+
+import LoginAlumno from './Pages/Alumno/Inicio/JS/Login.js';
+import DiarioAlumno from './Pages/Alumno/Pantallas/JS/Diario.js';
+import DatosAlumno from './Pages/Alumno/Pantallas/JS/DatosAlumno.js';
+
 
 
 function App() {
@@ -31,6 +40,9 @@ function App() {
     <BrowserRouter> 
       <div className="App">
         <Routes>
+          
+          {/* Routes Empresa  */}
+
           <Route path="/" element={<EleccionUsuario />} />
           <Route path="/empresas/inicio" element={<InicioEmpresa />} />
           <Route path="/empresas/login" element={<LoginEmpresa />} />
@@ -49,6 +61,14 @@ function App() {
           <Route path="/profesores/detalles/:id" element={<DetallesOferta />} />
           <Route path="/profesores/alumnos" element={<AlumnosProfesor />} />
           <Route path="/profesores/datosAlumno" element={<DatosAlumnosProfesor />} />
+          <Route path="/profesores/areaContacto" element={<AreaContactoProfesor />} />
+
+          {/* Routes Alumnos  */}
+
+          <Route path="/alumnos/login" element={<LoginAlumno />} />
+          <Route path="/alumnos/diario" element={<DiarioAlumno />} />
+          <Route path="/alumnos/datosAlumno" element={<DatosAlumno />} />
+
 
 
 

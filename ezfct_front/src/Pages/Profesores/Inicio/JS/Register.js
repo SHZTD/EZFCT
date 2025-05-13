@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useRef } from "react"
 import PropTypes from "prop-types"
 import ButtonComp from "../../../../Components/JSX/ButtonComp.js"
@@ -190,7 +188,7 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
       .then((data) => {
         setRespuesta({ tipo: "success", data })
         // Redirigir después de un registro exitoso
-        setTimeout(() => navigate("/profesores/inicio"), 1500)
+        setTimeout(() => navigate("/profesores/login"), 1500)
       })
       .catch((err) => setRespuesta({ tipo: "error", message: err }))
   }
