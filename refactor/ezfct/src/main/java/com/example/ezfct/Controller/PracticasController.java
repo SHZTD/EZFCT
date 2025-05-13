@@ -1,5 +1,6 @@
 package com.example.ezfct.Controller;
 
+import com.example.ezfct.DTO.PracticaDTO;
 import com.example.ezfct.Entity.Practicas;
 import com.example.ezfct.Entity.Empresa;
 import com.example.ezfct.Repository.PracticasRepository;
@@ -8,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/practicas")
@@ -32,6 +35,32 @@ public class PracticasController {
                 .map(practica -> ResponseEntity.ok(practica))
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/estimado/{id}")
+    public ResponseEntity<Long> doEstimado(@PathVariable int id) {
+        // obtener la practica por el id de la base de datos
+        Optional<Practicas> practicaOpt = practicasRepository.findById(id);
+
+        if (practicaOpt.isPresent()) {
+            Practicas practica = practicaOpt.get();
+
+            // estimacion en dias
+            Date fechaInicio = practica.getFechaInicio();
+            Date fechaFin = practica.getFechaFin();
+
+            if (fechaInicio != null && fechaFin != null) {
+                long durationInMillis = fechaFin.getTime() - fechaInicio.getTime();
+                long durationInDays = durationInMillis / (1000 * 60 * 60 * 24); // to ms
+
+                return ResponseEntity.ok(durationInDays); // a dias
+            } else {
+                return ResponseEntity.badRequest().body(null);
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
     @PostMapping
     public ResponseEntity<?> createPractica(@RequestBody Practicas practica) {

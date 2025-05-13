@@ -19,7 +19,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtUtil jwtUtil) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Desactivar CSRF para simplificar
+                .csrf(csrf -> csrf.disable()) // desactivar CSRF para simplificar
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -32,7 +32,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

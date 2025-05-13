@@ -45,14 +45,13 @@ public class AuthController {
         Usuario usuario = usuarioOpt.get();
 
         if (passwordEncoder.matches(loginRequest.getPassword(), usuario.getPassword())) {
-            String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getRol()); // generar token
-            return ResponseEntity.ok().body(new LoginResponse(
-                    token.toString()
-            ));
+            String token = jwtUtil.generateToken((long)usuario.getIdUsuario(), usuario.getEmail(), usuario.getRol());
+            return ResponseEntity.ok().body(new LoginResponse(token));
         } else {
             return ResponseEntity.status(401).body("Contraseña incorrecta");
         }
     }
+
 
     @PostMapping("/registeruser")
     public ResponseEntity<?> createUsuario(@RequestBody Usuario usuario) {
@@ -137,14 +136,13 @@ public class AuthController {
         Empresa empresa = empresaOpt.get();
 
         if (passwordEncoder.matches(loginRequest.getPassword(), empresa.getPassword())) {
-            String token = jwtUtil.generateToken(empresa.getEmailContacto(), Rol.EMPRESA); // generar token
-            return ResponseEntity.ok().body(new LoginResponse(
-                    token.toString()
-            ));
+            String token = jwtUtil.generateToken((long)empresa.getIdEmpresa(), empresa.getEmailContacto(), Rol.EMPRESA);
+            return ResponseEntity.ok().body(new LoginResponse(token));
         } else {
             return ResponseEntity.status(401).body("Contraseña incorrecta");
         }
     }
+
 
     // internal dto LoginResponse
     static class LoginResponse {

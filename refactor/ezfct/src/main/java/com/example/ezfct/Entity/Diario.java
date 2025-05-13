@@ -8,7 +8,7 @@ public class Diario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idDiario;
-
+    
     @ManyToOne
     @JoinColumn(name = "id_practica", nullable = false)
     private Practicas practica;

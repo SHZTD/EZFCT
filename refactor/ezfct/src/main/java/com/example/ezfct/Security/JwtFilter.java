@@ -35,9 +35,10 @@ public class JwtFilter extends OncePerRequestFilter {
                         .getBody();
 
                 String rol = claims.get("rol", String.class);
+                int id = claims.get("id", Integer.class);
 
                 // debug en consola
-                System.out.println("Peticion hecha por: " + email + " con rol: " + rol);
+                System.out.println("Peticion hecha por: " + email + " con rol: " + rol + ". \nUser id: " + id);
 
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                         email, null, Collections.emptyList()

@@ -16,10 +16,10 @@ public class JwtUtil {
         return SECRET_KEY;
     }
 
-    // por email + claim de rol
-    public String generateToken(String email, Rol rol) {
+    public String generateToken(Long id, String email, Rol rol) {
         return Jwts.builder()
                 .setSubject(email)
+                .claim("id", id)
                 .claim("rol", rol.name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -27,10 +27,12 @@ public class JwtUtil {
                 .compact();
     }
 
-
     public String extractEmail(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
     public String extractRol(String token) {
@@ -39,6 +41,14 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody()
                 .get("rol", String.class);
+    }
+
+    public Long extractId(String token) {
+        return Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody()
+                .get("id", Long.class);
     }
 
     public boolean validateToken(String token) {
