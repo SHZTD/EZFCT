@@ -1,3 +1,4 @@
+"use client"
 
 import { useState, useEffect } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
@@ -10,7 +11,21 @@ const DatosEstudianteProfesor = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const navigate = useNavigate()
   const location = useLocation()
-  const student = location.state || {}
+
+  // Aseguramos que student tenga valores predeterminados para evitar errores
+  const student = {
+    id: "",
+    name: "Estudiante",
+    school: "Escuela no especificada",
+    location: "Ubicación no especificada",
+    age: "N/A",
+    education: "No especificada",
+    occupation: "No especificada",
+    techLiterate: "No especificada",
+    competencies: "",
+    image: "/placeholder.svg",
+    ...location.state,
+  }
 
   // Efecto para la animación de entrada y partículas
   useEffect(() => {
@@ -97,9 +112,20 @@ const DatosEstudianteProfesor = () => {
 
   const handleAssignOffer = () => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")
-    setTimeout(() => navigate("/profesor/offers"), 300)
+    setTimeout(() => navigate("/profesores/Ofertas"), 300)
   }
 
+  // Función para manejar competencias de forma segura
+  const getCompetencies = () => {
+    if (!student.competencies) return []
+    return student.competencies.split(", ")
+  }
+
+  // Obtener la primera competencia de forma segura
+  const getFirstCompetency = () => {
+    const competencies = getCompetencies()
+    return competencies.length > 0 ? competencies[0] : "áreas técnicas"
+  }
 
   return (
     <div className="datos-estudiante-page">
@@ -199,12 +225,19 @@ const DatosEstudianteProfesor = () => {
                 Competencies
               </h2>
               <div className="competencies-container">
-                {student.competencies.split(", ").map((competency, index) => (
-                  <div key={index} className="competency-item">
+                {getCompetencies().length > 0 ? (
+                  getCompetencies().map((competency, index) => (
+                    <div key={index} className="competency-item">
+                      <Lightbulb size={16} className="competency-icon" />
+                      <span>{competency}</span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="competency-item">
                     <Lightbulb size={16} className="competency-icon" />
-                    <span>{competency}</span>
+                    <span>No competencies listed</span>
                   </div>
-                ))}
+                )}
               </div>
             </div>
 
@@ -242,8 +275,8 @@ const DatosEstudianteProfesor = () => {
               <div className="notes-container">
                 <div className="note-item">
                   <p className="note-text">
-                    {student.name} shows great potential in {student.competencies.split(", ")[0]}. Recommended for
-                    internships that focus on this area.
+                    {student.name} shows great potential in {getFirstCompetency()}. Recommended for internships that
+                    focus on this area.
                   </p>
                   <p className="note-author">- Prof. Martinez</p>
                   <p className="note-date">May 10, 2025</p>

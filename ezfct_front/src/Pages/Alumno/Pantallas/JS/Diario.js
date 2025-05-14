@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import {
@@ -9,11 +11,9 @@ import {
   X,
   ArrowLeft,
   User,
-  Settings,
   LogOut,
   Edit,
   ChevronDown,
-  Home,
 } from "lucide-react"
 import "../CSS/Diario.css"
 
@@ -400,21 +400,15 @@ const DiarioAlumno = () => {
             <ArrowLeft size={18} />
             <span>Volver</span>
           </button>
-          <button className="nav-button" onClick={() => navigate("/")}>
-            <Home size={18} />
-            <span>Inicio</span>
-          </button>
         </div>
         <div className="navbar-title">
           <h2>EasyFCT</h2>
         </div>
         <div className="navbar-right">
-          <button ref={profileButtonRef} className="profile-button" onClick={handleProfileButtonClick}>
-            <div className="profile-avatar">
-              <User size={16} />
-            </div>
-            <span className="profile-name">{profileData.nombre}</span>
-            <ChevronDown size={14} className={`profile-chevron ${showProfileMenu ? "open" : ""}`} />
+          <button ref={profileButtonRef} className="user-button" onClick={handleProfileButtonClick}>
+            <User size={18} />
+            <span className="user-name">{profileData.nombre}</span>
+            <ChevronDown size={14} className={`user-chevron ${showProfileMenu ? "open" : ""}`} />
           </button>
         </div>
       </nav>
@@ -434,13 +428,13 @@ const DiarioAlumno = () => {
           <div className="calendar-card">
             <div className="calendar-header">
               <button className="month-nav-button" onClick={() => changeMonth(-1)}>
-                <ChevronLeft size={20} />
+                <span>←</span>
               </button>
               <h2 className="current-month">
                 {monthNames[currentMonth]} {currentYear}
               </h2>
               <button className="month-nav-button" onClick={() => changeMonth(1)}>
-                <ChevronRight size={20} />
+                <span>→</span>
               </button>
             </div>
 
@@ -526,10 +520,6 @@ const DiarioAlumno = () => {
             >
               <Edit size={16} />
               <span>Editar perfil</span>
-            </button>
-            <button className="profile-menu-item">
-              <Settings size={16} />
-              <span>Configuración</span>
             </button>
             <button
               className="profile-menu-item logout"
