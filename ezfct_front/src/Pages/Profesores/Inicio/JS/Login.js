@@ -89,6 +89,11 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
       setParticles(prev => prev.slice(0, 50));
     }, 1000);
   };
+
+  // guardar el token
+  const guardarToken = (token) => {
+    localStorage.setItem('token', token);
+  };
   
   // Manejar envío del formulario
   const handleSubmit = (e) => {
@@ -111,6 +116,42 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
       onLogin({ email, password });
     }, 300);
   };
+
+  // hacer el post con el login
+  const handleLogin = async () => {
+    if (!email || !password) {
+      formRef.current.classList.add('shake');
+      setTimeout(() => {
+        formRef.current.classList.remove('shake');
+      }, 500);
+      return;
+    }
+  
+    createExplosionEffect(mousePosition.x, mousePosition.y, '#3b82f6');
+  
+    try {
+      const response = await fetch('http://192.168.22.115:7484/auth/userlogin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        guardarToken(data.token);
+        console.log('Token guardado:', data.token);
+        navigate('/profesores/Ofertas');
+      } else {
+        const errorText = await response.text();
+        alert('Error al iniciar sesión: ' + errorText);
+      }
+    } catch (error) {
+      alert('Error de red: ' + error.message);
+    }
+  };
+  
   
   // Manejar clic en botón de volver
   const handleBack = () => {
@@ -229,7 +270,7 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
             <ButtonComp
               className="btn--login"
               icon="🔑"
-              onClick={() => navigate('/profesores/Ofertas')}
+              onClick={handleLogin}
               transitionDelay="1.6s"
             >
               Iniciar Sesión

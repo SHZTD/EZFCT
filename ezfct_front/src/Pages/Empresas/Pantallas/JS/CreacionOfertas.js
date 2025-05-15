@@ -166,6 +166,7 @@ const OfertasPage = () => {
     })
   }
 
+  // 
   const publishOffer = () => {
     // Validar que todos los campos estén completos
     if (!formData.title || !formData.description || !formData.skills || !formData.startDate || !formData.endDate) {
@@ -176,6 +177,9 @@ const OfertasPage = () => {
       }, 500)
       return
     }
+
+    // vale guay, 15/05/2025 - Thomas
+    // he añadido un post en la api para ver si rula o no
 
     // Efecto de explosión de partículas
     createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")

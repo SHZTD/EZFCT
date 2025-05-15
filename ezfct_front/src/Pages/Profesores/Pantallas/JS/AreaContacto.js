@@ -143,6 +143,7 @@ const ContactoProfesor = () => {
   }
 
   const handleSubmitQuestion = (e) => {
+    alert("test")
     e.preventDefault()
 
     if (!currentQuestion.trim()) return
