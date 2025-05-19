@@ -900,6 +900,212 @@
 .empresa-footer p.empresa-loaded {
   opacity: 1;
 }
+/* Modal styles */
+.empresa-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: empresa-fadeIn 0.3s ease forwards;
+}
+
+.empresa-modal-content {
+  background-color: rgba(30, 41, 59, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: empresa-modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes empresa-modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.empresa-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.empresa-modal-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+.empresa-modal-header {
+  padding: 25px 30px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.empresa-modal-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.empresa-modal-body {
+  padding: 20px 30px 30px;
+}
+
+.empresa-modal-section {
+  margin-bottom: 25px;
+}
+
+.empresa-modal-section:last-child {
+  margin-bottom: 0;
+}
+
+.empresa-modal-section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.empresa-modal-text {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.empresa-modal-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.empresa-modal-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.empresa-modal-detail-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+}
+
+.empresa-modal-detail-value {
+  font-size: 1rem;
+  color: white;
+}
+
+.empresa-modal-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.empresa-modal-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  flex: 1;
+  min-width: 180px;
+}
+
+.empresa-modal-primary {
+  background-color: #10b981;
+  color: white;
+}
+
+.empresa-modal-primary:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+}
+
+.empresa-modal-secondary {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.empresa-modal-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Responsive styles for modal */
+@media (max-width: 768px) {
+  .empresa-modal-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 20px 20px 15px;
+  }
+
+  .empresa-modal-title {
+    font-size: 1.5rem;
+  }
+
+  .empresa-modal-body {
+    padding: 15px 20px 20px;
+  }
+
+  .empresa-modal-details {
+    grid-template-columns: 1fr;
+  }
+
+  .empresa-modal-actions {
+    flex-direction: column;
+  }
+
+  .empresa-modal-button {
+    width: 100%;
+  }
+}
+
 
 /* Animaciones */
 @keyframes empresa-float {

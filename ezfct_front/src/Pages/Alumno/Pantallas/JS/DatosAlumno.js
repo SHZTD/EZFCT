@@ -1,31 +1,86 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useNavigate, useLocation } from "react-router-dom"
-import { ArrowLeft, MapPin, Calendar, GraduationCap, Briefcase, Award, Lightbulb } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { useNavigate } from "react-router-dom"
+import {
+  ArrowLeft,
+  User,
+  LogOut,
+  Edit,
+  ChevronDown,
+  Mail,
+  MapPin,
+  School,
+  BookOpen,
+  Briefcase,
+  Save,
+  X,
+  FileText,
+  Star,
+  BarChart,
+  Zap,
+} from "lucide-react"
 import "../CSS/DatosAlumno.css"
 
-const DatosEstudianteProfesor = () => {
+const DatosAlumno = () => {
   const [loaded, setLoaded] = useState(false)
   const [particles, setParticles] = useState([])
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const navigate = useNavigate()
-  const location = useLocation()
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [activeTab, setActiveTab] = useState("info")
+  const [profileData, setProfileData] = useState({
+    nombre: "Jaydon",
+    apellido: "Herwitz",
+    email: "jaydon.herwitz@example.com",
+    escuela: "Ins Puig Castellar",
+    edad: 17,
+    competencias: "Problem Solving, Critical Thinking, JavaScript, React, HTML, CSS",
+    ubicacion: "Barcelona",
+    nivelTecnico: "Alto",
+    ciclo: "Desarrollo de Aplicaciones Web",
+    curso: "2º Curso",
+    empresa: "TechSolutions Barcelona",
+    horasTotales: 380,
+    horasCompletadas: 120,
+    fechaInicio: "2025-01-15",
+    fechaFin: "2025-05-30",
+    tutor: "Maria García",
+    tutorEmail: "maria.garcia@techsolutions.com",
+    descripcion:
+      "Estudiante de desarrollo web con gran interés en tecnologías frontend. Busco oportunidades para aplicar mis conocimientos en React y mejorar mis habilidades en un entorno profesional.",
+    proyectos: [
+      {
+        nombre: "Aplicación de gestión de tareas",
+        descripcion: "Desarrollo de una aplicación web para gestionar tareas y proyectos del equipo.",
+        tecnologias: "React, Node.js, MongoDB",
+      },
+      {
+        nombre: "Rediseño de la página web corporativa",
+        descripcion: "Colaboración en el rediseño y desarrollo de la nueva web responsive de la empresa.",
+        tecnologias: "HTML, CSS, JavaScript, Figma",
+      },
+    ],
+    evaluaciones: [
+      {
+        fecha: "2025-02-15",
+        puntuacion: 4.5,
+        comentario: "Excelente progreso en el desarrollo frontend. Muestra iniciativa y capacidad de aprendizaje.",
+      },
+      {
+        fecha: "2025-03-30",
+        puntuacion: 4.8,
+        comentario:
+          "Ha mejorado significativamente en trabajo en equipo. Sus contribuciones al proyecto de rediseño han sido muy valiosas.",
+      },
+    ],
+  })
 
-  // Aseguramos que student tenga valores predeterminados para evitar errores
-  const student = {
-    id: "",
-    name: "Estudiante",
-    school: "Escuela no especificada",
-    location: "Ubicación no especificada",
-    age: "N/A",
-    education: "No especificada",
-    occupation: "No especificada",
-    techLiterate: "No especificada",
-    competencies: "",
-    image: "/placeholder.svg",
-    ...location.state,
-  }
+  const profileMenuRef = useRef(null)
+  const profileButtonRef = useRef(null)
+  const modalRef = useRef(null)
+  const navigate = useNavigate()
 
   // Efecto para la animación de entrada y partículas
   useEffect(() => {
@@ -34,6 +89,12 @@ const DatosEstudianteProfesor = () => {
 
     // Crear partículas iniciales
     createInitialParticles()
+
+    // Cargar datos del perfil desde localStorage
+    const savedProfile = localStorage.getItem("profileData")
+    if (savedProfile) {
+      setProfileData({ ...profileData, ...JSON.parse(savedProfile) })
+    }
 
     // Seguimiento del ratón
     const handleMouseMove = (e) => {
@@ -58,15 +119,39 @@ const DatosEstudianteProfesor = () => {
       createInitialParticles()
     }
 
+    // Cerrar menú de perfil al hacer clic fuera
+    const handleClickOutsideProfileMenu = (e) => {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(e.target) &&
+        profileButtonRef.current &&
+        !profileButtonRef.current.contains(e.target) &&
+        showProfileMenu
+      ) {
+        setShowProfileMenu(false)
+      }
+    }
+
+    // Cerrar modal al hacer clic fuera
+    const handleClickOutsideModal = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target) && showEditModal) {
+        setShowEditModal(false)
+      }
+    }
+
     window.addEventListener("resize", handleResize)
+    document.addEventListener("mousedown", handleClickOutsideProfileMenu)
+    document.addEventListener("mousedown", handleClickOutsideModal)
 
     // Limpieza al desmontar
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("resize", handleResize)
+      document.removeEventListener("mousedown", handleClickOutsideProfileMenu)
+      document.removeEventListener("mousedown", handleClickOutsideModal)
       clearInterval(interval)
     }
-  }, [])
+  }, [showProfileMenu, showEditModal])
 
   // Función para crear partículas iniciales
   const createInitialParticles = () => {
@@ -106,29 +191,87 @@ const DatosEstudianteProfesor = () => {
   }
 
   const handleGoBack = () => {
-    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#f43f5e")
     setTimeout(() => navigate(-1), 300)
   }
 
-  const handleAssignOffer = () => {
+  // Función para manejar el clic en el botón de perfil
+  const handleProfileButtonClick = () => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")
-    setTimeout(() => navigate("/profesores/Ofertas"), 300)
+    setShowProfileMenu(!showProfileMenu)
   }
 
-  // Función para manejar competencias de forma segura
-  const getCompetencies = () => {
-    if (!student.competencies) return []
-    return student.competencies.split(", ")
+  // Función para navegar al diario
+  const handleNavigateToDiary = () => {
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+    setShowProfileMenu(false)
+    setTimeout(() => navigate("/alumnos/diario"), 300)
   }
 
-  // Obtener la primera competencia de forma segura
-  const getFirstCompetency = () => {
-    const competencies = getCompetencies()
-    return competencies.length > 0 ? competencies[0] : "áreas técnicas"
+  // Función para guardar los datos del perfil
+  const saveProfileData = () => {
+    setIsSaving(true)
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6")
+
+    // Simular guardado
+    setTimeout(() => {
+      // Guardar en localStorage
+      localStorage.setItem("profileData", JSON.stringify(profileData))
+
+      setIsSaving(false)
+      setShowEditModal(false)
+    }, 800)
+  }
+
+  // Función para formatear fecha
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "long", day: "numeric" }
+    return new Date(dateString).toLocaleDateString("es-ES", options)
+  }
+
+  // Calcular el progreso de las prácticas
+  const progressPercentage = Math.round((profileData.horasCompletadas / profileData.horasTotales) * 100)
+
+  // Función para renderizar estrellas basadas en puntuación
+  const renderStars = (rating) => {
+    const stars = []
+    const fullStars = Math.floor(rating)
+    const hasHalfStar = rating % 1 >= 0.5
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<Star key={`star-${i}`} className="star-icon filled" size={16} fill="#f59e0b" color="#f59e0b" />)
+    }
+
+    if (hasHalfStar) {
+      stars.push(
+        <Star key="half-star" className="star-icon half-filled" size={16} fill="url(#halfGradient)" color="#f59e0b" />,
+      )
+    }
+
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0)
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(
+        <Star key={`empty-star-${i}`} className="star-icon empty" size={16} fill="transparent" color="#f59e0b" />,
+      )
+    }
+
+    return (
+      <div className="stars-container">
+        <svg width="0" height="0">
+          <defs>
+            <linearGradient id="halfGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="50%" stopColor="#f59e0b" />
+              <stop offset="50%" stopColor="transparent" />
+            </linearGradient>
+          </defs>
+        </svg>
+        {stars}
+      </div>
+    )
   }
 
   return (
-    <div className="datos-estudiante-page">
+    <div className="perfil-page">
       {/* Partículas de fondo */}
       <div className="particles-container">
         {particles.map((particle) => (
@@ -156,142 +299,492 @@ const DatosEstudianteProfesor = () => {
         }}
       />
 
-      <div className="datos-estudiante-container">
-        {/* Botón de volver */}
-        <button className={`back-button ${loaded ? "loaded" : ""}`} onClick={handleGoBack}>
-          <ArrowLeft size={20} />
-          <span>Back to Students</span>
-        </button>
+      {/* Barra de navegación superior */}
+      <nav className={`top-navbar ${loaded ? "loaded" : ""}`}>
+        <div className="navbar-left">
+          <button className="nav-button" onClick={handleGoBack}>
+            <ArrowLeft size={18} />
+            <span>Volver</span>
+          </button>
+        </div>
+        <div className="navbar-title">
+          <h2>EasyFCT</h2>
+        </div>
+        <div className="navbar-right">
+          <button ref={profileButtonRef} className="user-button" onClick={handleProfileButtonClick}>
+            <User size={18} />
+            <span className="user-name">{profileData.nombre}</span>
+            <ChevronDown size={14} className={`user-chevron ${showProfileMenu ? "open" : ""}`} />
+          </button>
+        </div>
+      </nav>
 
-        {/* Perfil del estudiante */}
-        <div className="student-profile">
-          {/* Cabecera del perfil */}
-          <div className={`profile-header ${loaded ? "loaded" : ""}`}>
-            <div className="profile-avatar">
-              <img src={student.image || "/placeholder.svg"} alt={`${student.name}'s avatar`} className="avatar-img" />
-            </div>
-            <div className="profile-header-content">
-              <h1 className="profile-name">{student.name}</h1>
-              <div className="profile-meta">
-                <div className="meta-item">
-                  <GraduationCap size={18} />
-                  <span>{student.school}</span>
-                </div>
-                <div className="meta-item">
-                  <MapPin size={18} />
-                  <span>{student.location}</span>
-                </div>
-                <div className="meta-item">
-                  <Calendar size={18} />
-                  <span>{student.age} years old</span>
-                </div>
-              </div>
-            </div>
-            <button className="assign-button" onClick={handleAssignOffer}>
-              <Briefcase size={18} />
-              <span>Assign to Offer</span>
-            </button>
+      <div className="perfil-container">
+        {/* Header */}
+        <header className={`page-header ${loaded ? "loaded" : ""}`}>
+          <div className="header-content">
+            <h1 className="page-title">Mi Perfil</h1>
+            <p className="page-subtitle">Información personal y seguimiento de prácticas</p>
           </div>
+          <div className="header-gradient"></div>
+        </header>
 
-          {/* Contenido del perfil */}
-          <div className="profile-content">
-            {/* Información detallada */}
-            <div className={`profile-section ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.1s" }}>
-              <h2 className="section-title">Student Information</h2>
-              <div className="info-grid">
-                <div className="info-item">
-                  <h3 className="info-label">Education</h3>
-                  <p className="info-value">{student.education}</p>
-                </div>
-                <div className="info-item">
-                  <h3 className="info-label">Occupation</h3>
-                  <p className="info-value">{student.occupation}</p>
-                </div>
-                <div className="info-item">
-                  <h3 className="info-label">Tech Literacy</h3>
-                  <p className="info-value">{student.techLiterate}</p>
-                </div>
-                <div className="info-item">
-                  <h3 className="info-label">Location</h3>
-                  <p className="info-value">{student.location}</p>
+        {/* Contenido principal */}
+        <div className={`perfil-content ${loaded ? "loaded" : ""}`}>
+          {/* Tarjeta de perfil */}
+          <div className="perfil-card">
+            <div className="perfil-header">
+              <div className="perfil-avatar">
+                <span>
+                  {profileData.nombre.charAt(0)}
+                  {profileData.apellido.charAt(0)}
+                </span>
+              </div>
+              <div className="perfil-info">
+                <h2 className="perfil-name">
+                  {profileData.nombre} {profileData.apellido}
+                </h2>
+                <p className="perfil-role">{profileData.ciclo}</p>
+                <div className="perfil-details">
+                  <div className="perfil-detail">
+                    <Mail size={14} />
+                    <span>{profileData.email}</span>
+                  </div>
+                  <div className="perfil-detail">
+                    <MapPin size={14} />
+                    <span>{profileData.ubicacion}</span>
+                  </div>
+                  <div className="perfil-detail">
+                    <School size={14} />
+                    <span>{profileData.escuela}</span>
+                  </div>
                 </div>
               </div>
+              <button
+                className="edit-profile-button"
+                onClick={() => {
+                  createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")
+                  setShowEditModal(true)
+                }}
+              >
+                <Edit size={16} />
+                <span>Editar</span>
+              </button>
             </div>
 
-            {/* Competencias */}
-            <div className={`profile-section ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.2s" }}>
-              <h2 className="section-title">
-                <Award size={20} className="section-icon" />
-                Competencies
-              </h2>
-              <div className="competencies-container">
-                {getCompetencies().length > 0 ? (
-                  getCompetencies().map((competency, index) => (
-                    <div key={index} className="competency-item">
-                      <Lightbulb size={16} className="competency-icon" />
-                      <span>{competency}</span>
+            <div className="perfil-tabs">
+              <button
+                className={`perfil-tab ${activeTab === "info" ? "active" : ""}`}
+                onClick={() => setActiveTab("info")}
+              >
+                <User size={16} />
+                <span>Información</span>
+              </button>
+              <button
+                className={`perfil-tab ${activeTab === "practicas" ? "active" : ""}`}
+                onClick={() => setActiveTab("practicas")}
+              >
+                <Briefcase size={16} />
+                <span>Prácticas</span>
+              </button>
+              <button
+                className={`perfil-tab ${activeTab === "proyectos" ? "active" : ""}`}
+                onClick={() => setActiveTab("proyectos")}
+              >
+                <FileText size={16} />
+                <span>Proyectos</span>
+              </button>
+              <button
+                className={`perfil-tab ${activeTab === "evaluaciones" ? "active" : ""}`}
+                onClick={() => setActiveTab("evaluaciones")}
+              >
+                <BarChart size={16} />
+                <span>Evaluaciones</span>
+              </button>
+            </div>
+
+            <div className="perfil-content-area">
+              {/* Pestaña de Información */}
+              {activeTab === "info" && (
+                <div className="tab-content info-tab">
+                  <div className="info-section">
+                    <h3 className="section-title">Sobre mí</h3>
+                    <p className="info-description">{profileData.descripcion}</p>
+                  </div>
+
+                  <div className="info-section">
+                    <h3 className="section-title">Datos académicos</h3>
+                    <div className="info-grid">
+                      <div className="info-item">
+                        <span className="info-label">Ciclo formativo</span>
+                        <span className="info-value">{profileData.ciclo}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Curso actual</span>
+                        <span className="info-value">{profileData.curso}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Centro educativo</span>
+                        <span className="info-value">{profileData.escuela}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Edad</span>
+                        <span className="info-value">{profileData.edad} años</span>
+                      </div>
                     </div>
-                  ))
-                ) : (
-                  <div className="competency-item">
-                    <Lightbulb size={16} className="competency-icon" />
-                    <span>No competencies listed</span>
                   </div>
-                )}
-              </div>
-            </div>
 
-            {/* Historial académico (simulado) */}
-            <div className={`profile-section ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.3s" }}>
-              <h2 className="section-title">
-                <GraduationCap size={20} className="section-icon" />
-                Academic History
-              </h2>
-              <div className="timeline">
-                <div className="timeline-item">
-                  <div className="timeline-dot"></div>
-                  <div className="timeline-content">
-                    <h3 className="timeline-title">High School Education</h3>
-                    <p className="timeline-period">2022 - Present</p>
-                    <p className="timeline-description">
-                      Currently studying at {student.school} with focus on technical subjects.
-                    </p>
+                  <div className="info-section">
+                    <h3 className="section-title">Competencias</h3>
+                    <div className="skills-container">
+                      {profileData.competencias.split(",").map((skill, index) => (
+                        <span key={index} className="skill-tag">
+                          {skill.trim()}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <div className="timeline-item">
-                  <div className="timeline-dot"></div>
-                  <div className="timeline-content">
-                    <h3 className="timeline-title">Secondary Education</h3>
-                    <p className="timeline-period">2018 - 2022</p>
-                    <p className="timeline-description">Completed secondary education with excellent grades.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+              )}
 
-            {/* Notas y observaciones (simulado) */}
-            <div className={`profile-section ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.4s" }}>
-              <h2 className="section-title">Notes & Observations</h2>
-              <div className="notes-container">
-                <div className="note-item">
-                  <p className="note-text">
-                    {student.name} shows great potential in {getFirstCompetency()}. Recommended for internships that
-                    focus on this area.
-                  </p>
-                  <p className="note-author">- Prof. Martinez</p>
-                  <p className="note-date">May 10, 2025</p>
+              {/* Pestaña de Prácticas */}
+              {activeTab === "practicas" && (
+                <div className="tab-content practicas-tab">
+                  <div className="info-section">
+                    <h3 className="section-title">Empresa de prácticas</h3>
+                    <div className="info-grid">
+                      <div className="info-item">
+                        <span className="info-label">Nombre de la empresa</span>
+                        <span className="info-value">{profileData.empresa}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Tutor/a</span>
+                        <span className="info-value">{profileData.tutor}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Email del tutor</span>
+                        <span className="info-value">{profileData.tutorEmail}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Nivel técnico</span>
+                        <span className="info-value">{profileData.nivelTecnico}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="info-section">
+                    <h3 className="section-title">Periodo de prácticas</h3>
+                    <div className="info-grid">
+                      <div className="info-item">
+                        <span className="info-label">Fecha de inicio</span>
+                        <span className="info-value">{formatDate(profileData.fechaInicio)}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Fecha de finalización</span>
+                        <span className="info-value">{formatDate(profileData.fechaFin)}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Horas totales</span>
+                        <span className="info-value">{profileData.horasTotales} horas</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Horas completadas</span>
+                        <span className="info-value">{profileData.horasCompletadas} horas</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="info-section">
+                    <h3 className="section-title">Progreso</h3>
+                    <div className="progress-container">
+                      <div className="progress-bar">
+                        <div className="progress-fill" style={{ width: `${progressPercentage}%` }}></div>
+                      </div>
+                      <div className="progress-stats">
+                        <span className="progress-percentage">{progressPercentage}% completado</span>
+                        <span className="progress-hours">
+                          {profileData.horasCompletadas} de {profileData.horasTotales} horas
+                        </span>
+                      </div>
+                    </div>
+                    <div className="action-buttons">
+                      <button className="action-button diary-button" onClick={handleNavigateToDiary}>
+                        <BookOpen size={16} />
+                        <span>Ir al diario de prácticas</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div className="note-item">
-                  <p className="note-text">
-                    Has shown consistent improvement throughout the semester. Works well in team environments.
-                  </p>
-                  <p className="note-author">- Prof. Garcia</p>
-                  <p className="note-date">April 22, 2025</p>
+              )}
+
+              {/* Pestaña de Proyectos */}
+              {activeTab === "proyectos" && (
+                <div className="tab-content proyectos-tab">
+                  <div className="info-section">
+                    <h3 className="section-title">Proyectos realizados</h3>
+                    <div className="projects-list">
+                      {profileData.proyectos.map((proyecto, index) => (
+                        <div key={index} className="project-card">
+                          <h4 className="project-title">{proyecto.nombre}</h4>
+                          <p className="project-description">{proyecto.descripcion}</p>
+                          <div className="project-tech">
+                            <span className="tech-label">Tecnologías:</span>
+                            <div className="tech-tags">
+                              {proyecto.tecnologias.split(",").map((tech, techIndex) => (
+                                <span key={techIndex} className="tech-tag">
+                                  {tech.trim()}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="info-section">
+                    <h3 className="section-title">Añadir nuevo proyecto</h3>
+                    <div className="add-project-placeholder">
+                      <Zap size={24} />
+                      <p>
+                        Puedes añadir nuevos proyectos realizados durante tus prácticas para mantener un portafolio
+                        actualizado.
+                      </p>
+                      <button className="add-project-button">
+                        <span>Añadir proyecto</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Pestaña de Evaluaciones */}
+              {activeTab === "evaluaciones" && (
+                <div className="tab-content evaluaciones-tab">
+                  <div className="info-section">
+                    <h3 className="section-title">Evaluaciones del tutor</h3>
+                    <div className="evaluations-list">
+                      {profileData.evaluaciones.map((evaluacion, index) => (
+                        <div key={index} className="evaluation-card">
+                          <div className="evaluation-header">
+                            <div className="evaluation-date">{formatDate(evaluacion.fecha)}</div>
+                            <div className="evaluation-rating">
+                              {renderStars(evaluacion.puntuacion)}
+                              <span className="rating-value">{evaluacion.puntuacion.toFixed(1)}</span>
+                            </div>
+                          </div>
+                          <p className="evaluation-comment">{evaluacion.comentario}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="info-section">
+                    <h3 className="section-title">Resumen de evaluaciones</h3>
+                    <div className="evaluation-summary">
+                      <div className="summary-item">
+                        <span className="summary-label">Evaluaciones recibidas</span>
+                        <span className="summary-value">{profileData.evaluaciones.length}</span>
+                      </div>
+                      <div className="summary-item">
+                        <span className="summary-label">Puntuación media</span>
+                        <div className="summary-rating">
+                          {renderStars(
+                            profileData.evaluaciones.reduce((acc, curr) => acc + curr.puntuacion, 0) /
+                              profileData.evaluaciones.length,
+                          )}
+                          <span className="rating-value">
+                            {(
+                              profileData.evaluaciones.reduce((acc, curr) => acc + curr.puntuacion, 0) /
+                              profileData.evaluaciones.length
+                            ).toFixed(1)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
+
+        {/* Menú de perfil flotante */}
+        {showProfileMenu && (
+          <div className="fixed-profile-menu" ref={profileMenuRef}>
+            <button className="profile-menu-item active">
+              <User size={16} />
+              <span>Ver perfil</span>
+            </button>
+            <button className="profile-menu-item" onClick={handleNavigateToDiary}>
+              <BookOpen size={16} />
+              <span>Ir al diario</span>
+            </button>
+            <button
+              className="profile-menu-item"
+              onClick={() => {
+                createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+                setShowProfileMenu(false)
+                setShowEditModal(true)
+              }}
+            >
+              <Edit size={16} />
+              <span>Editar perfil</span>
+            </button>
+            <button
+              className="profile-menu-item logout"
+              onClick={() => {
+                createExplosionEffect(mousePosition.x, mousePosition.y, "#f43f5e")
+                setTimeout(() => navigate("/"), 300)
+              }}
+            >
+              <LogOut size={16} />
+              <span>Cerrar sesión</span>
+            </button>
+          </div>
+        )}
+
+        {/* Modal de edición de perfil */}
+        {showEditModal && (
+          <div className="modal-overlay">
+            <div className="modal-container profile-modal" ref={modalRef}>
+              <div className="modal-header">
+                <h2 className="modal-title">Editar Perfil</h2>
+                <button className="close-button" onClick={() => setShowEditModal(false)}>
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="modal-content">
+                <div className="profile-form">
+                  <div className="profile-form-grid">
+                    <div className="form-group">
+                      <label htmlFor="nombre">Nombre</label>
+                      <input
+                        type="text"
+                        id="nombre"
+                        value={profileData.nombre}
+                        onChange={(e) => setProfileData({ ...profileData, nombre: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="apellido">Apellido</label>
+                      <input
+                        type="text"
+                        id="apellido"
+                        value={profileData.apellido}
+                        onChange={(e) => setProfileData({ ...profileData, apellido: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="email">Email</label>
+                      <input
+                        type="email"
+                        id="email"
+                        value={profileData.email}
+                        onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="escuela">Escuela/Instituto</label>
+                      <input
+                        type="text"
+                        id="escuela"
+                        value={profileData.escuela}
+                        onChange={(e) => setProfileData({ ...profileData, escuela: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="edad">Edad</label>
+                      <input
+                        type="number"
+                        id="edad"
+                        value={profileData.edad}
+                        onChange={(e) => setProfileData({ ...profileData, edad: Number.parseInt(e.target.value) })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="ubicacion">Ubicación</label>
+                      <input
+                        type="text"
+                        id="ubicacion"
+                        value={profileData.ubicacion}
+                        onChange={(e) => setProfileData({ ...profileData, ubicacion: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="ciclo">Ciclo formativo</label>
+                      <input
+                        type="text"
+                        id="ciclo"
+                        value={profileData.ciclo}
+                        onChange={(e) => setProfileData({ ...profileData, ciclo: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="curso">Curso actual</label>
+                      <input
+                        type="text"
+                        id="curso"
+                        value={profileData.curso}
+                        onChange={(e) => setProfileData({ ...profileData, curso: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group full-width">
+                      <label htmlFor="competencias">Competencias (separadas por comas)</label>
+                      <input
+                        type="text"
+                        id="competencias"
+                        value={profileData.competencias}
+                        onChange={(e) => setProfileData({ ...profileData, competencias: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="nivelTecnico">Nivel técnico</label>
+                      <select
+                        id="nivelTecnico"
+                        value={profileData.nivelTecnico}
+                        onChange={(e) => setProfileData({ ...profileData, nivelTecnico: e.target.value })}
+                      >
+                        <option value="Bajo">Bajo</option>
+                        <option value="Medio">Medio</option>
+                        <option value="Alto">Alto</option>
+                      </select>
+                    </div>
+                    <div className="form-group full-width">
+                      <label htmlFor="descripcion">Descripción personal</label>
+                      <textarea
+                        id="descripcion"
+                        rows={4}
+                        value={profileData.descripcion}
+                        onChange={(e) => setProfileData({ ...profileData, descripcion: e.target.value })}
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-footer">
+                <button className="cancel-button" onClick={() => setShowEditModal(false)}>
+                  Cancelar
+                </button>
+                <button className="save-button" onClick={saveProfileData} disabled={isSaving}>
+                  {isSaving ? (
+                    <>
+                      <span className="spinner"></span>
+                      <span>Guardando...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save size={18} />
+                      <span>Guardar cambios</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Pie de página */}
         <footer className={`page-footer ${loaded ? "loaded" : ""}`}>
@@ -302,4 +795,4 @@ const DatosEstudianteProfesor = () => {
   )
 }
 
-export default DatosEstudianteProfesor
+export default DatosAlumno

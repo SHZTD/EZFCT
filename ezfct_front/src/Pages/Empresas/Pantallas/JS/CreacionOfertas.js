@@ -72,6 +72,10 @@ const OfertasPage = () => {
 
   const navigate = useNavigate()
 
+  // Add these state variables at the top of the component with the other useState declarations:
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedOffer, setSelectedOffer] = useState(null)
+
   // Efecto para la animación de entrada y partículas
   useEffect(() => {
     // Marcar como cargado para iniciar animaciones
@@ -166,7 +170,7 @@ const OfertasPage = () => {
     })
   }
 
-  // 
+  //
   const publishOffer = () => {
     // Validar que todos los campos estén completos
     if (!formData.title || !formData.description || !formData.skills || !formData.startDate || !formData.endDate) {
@@ -612,7 +616,12 @@ const OfertasPage = () => {
                         <div className="empresa-offer-actions">
                           <button
                             className="empresa-action-button empresa-view"
-                            onClick={() => createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")}
+                            onClick={() => {
+                              // Set the selected offer and open the modal
+                              setSelectedOffer(offer)
+                              setIsModalOpen(true)
+                              createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")
+                            }}
                           >
                             <span className="empresa-action-icon">👁️</span>
                             View Details
@@ -640,6 +649,100 @@ const OfertasPage = () => {
             </div>
           </div>
         </div>
+
+        {/* Add the modal component at the end of the return statement, just before the closing </div> of empresa-offers-container: */}
+        {isModalOpen && selectedOffer && (
+          <div className="empresa-modal-overlay" onClick={() => setIsModalOpen(false)}>
+            <div className="empresa-modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="empresa-modal-close" onClick={() => setIsModalOpen(false)}>
+                ✕
+              </button>
+
+              <div className="empresa-modal-header">
+                <h2 className="empresa-modal-title">{selectedOffer.title}</h2>
+                <span className={`empresa-status-badge empresa-${selectedOffer.status}`}>
+                  {selectedOffer.status === "active" ? "Active" : "Paused"}
+                </span>
+              </div>
+
+              <div className="empresa-modal-body">
+                <div className="empresa-modal-section">
+                  <h3 className="empresa-modal-section-title">Description</h3>
+                  <p className="empresa-modal-text">{selectedOffer.description}</p>
+                </div>
+
+                <div className="empresa-modal-section">
+                  <h3 className="empresa-modal-section-title">Details</h3>
+                  <div className="empresa-modal-details">
+                    <div className="empresa-modal-detail-item">
+                      <span className="empresa-modal-detail-label">Skills Required:</span>
+                      <span className="empresa-modal-detail-value">{selectedOffer.skills}</span>
+                    </div>
+                    <div className="empresa-modal-detail-item">
+                      <span className="empresa-modal-detail-label">Period:</span>
+                      <span className="empresa-modal-detail-value">
+                        {selectedOffer.startDate} to {selectedOffer.endDate}
+                      </span>
+                    </div>
+                    <div className="empresa-modal-detail-item">
+                      <span className="empresa-modal-detail-label">Modality:</span>
+                      <span
+                        className="empresa-modal-detail-value empresa-modality-badge"
+                        style={{
+                          backgroundColor: `${getModalityColor(selectedOffer.modality)}20`,
+                          color: getModalityColor(selectedOffer.modality),
+                        }}
+                      >
+                        {selectedOffer.modality}
+                      </span>
+                    </div>
+                    <div className="empresa-modal-detail-item">
+                      <span className="empresa-modal-detail-label">Vacancies:</span>
+                      <span className="empresa-modal-detail-value">
+                        {selectedOffer.vacancies}{" "}
+                        {Number.parseInt(selectedOffer.vacancies) === 1 ? "vacancy" : "vacancies"}
+                      </span>
+                    </div>
+                    <div className="empresa-modal-detail-item">
+                      <span className="empresa-modal-detail-label">Published on:</span>
+                      <span className="empresa-modal-detail-value">{selectedOffer.date}</span>
+                    </div>
+                    <div className="empresa-modal-detail-item">
+                      <span className="empresa-modal-detail-label">Applications:</span>
+                      <span className="empresa-modal-detail-value">{selectedOffer.applications}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="empresa-modal-actions">
+                  <button
+                    className="empresa-modal-button empresa-modal-primary"
+                    onClick={() => {
+                      setIsModalOpen(false)
+                      createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+                      setTimeout(() => {
+                        navigateTo("empresas/Estudiantes")
+                      }, 300)
+                    }}
+                  >
+                    <span className="empresa-button-icon">👨‍🎓</span>
+                    View Students
+                  </button>
+                  <button
+                    className="empresa-modal-button empresa-modal-secondary"
+                    onClick={() => {
+                      toggleOfferStatus(selectedOffer.id)
+                      setIsModalOpen(false)
+                    }}
+                  >
+                    <span className="empresa-button-icon">{selectedOffer.status === "active" ? "⏸️" : "▶️"}</span>
+                    {selectedOffer.status === "active" ? "Pause Offer" : "Activate Offer"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="empresa-footer">
           <p className={loaded ? "empresa-loaded" : ""}>© 2025 EasyFCT - Innovación Educativa</p>
