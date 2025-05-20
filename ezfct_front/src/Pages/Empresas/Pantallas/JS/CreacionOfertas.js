@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../CSS/CreacionOfertas.css"
@@ -14,8 +12,6 @@ const OfertasPage = () => {
   const [activeTab, setActiveTab] = useState("offers")
   const [isLoading, setIsLoading] = useState(false)
   const [loaded, setLoaded] = useState(false)
-  const [particles, setParticles] = useState([])
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -26,49 +22,8 @@ const OfertasPage = () => {
     vacancies: "1",
   })
 
-  // Estado para las ofertas publicadas (simuladas)
-  const [offers, setOffers] = useState([
-    {
-      id: 1,
-      title: "Frontend Developer",
-      description:
-        "We are looking for a skilled frontend developer with experience in React and modern CSS frameworks.",
-      skills: "React, JavaScript, CSS, HTML",
-      startDate: "2025-04-01",
-      endDate: "2025-06-30",
-      modality: "híbrido",
-      vacancies: "2",
-      date: "2025-03-15",
-      applications: 12,
-      status: "active",
-    },
-    {
-      id: 2,
-      title: "UX/UI Designer",
-      description: "Join our creative team to design beautiful and functional user interfaces for our products.",
-      skills: "Figma, Adobe XD, UI/UX, Prototyping",
-      startDate: "2025-05-15",
-      endDate: "2025-08-15",
-      modality: "presencial",
-      vacancies: "1",
-      date: "2025-03-10",
-      applications: 8,
-      status: "active",
-    },
-    {
-      id: 3,
-      title: "Backend Developer",
-      description: "Develop and maintain server-side applications using Node.js and Express.",
-      skills: "Node.js, Express, MongoDB, API Design",
-      startDate: "2025-04-15",
-      endDate: "2025-07-15",
-      modality: "remota",
-      vacancies: "3",
-      date: "2025-03-05",
-      applications: 15,
-      status: "active",
-    },
-  ])
+  // Estado para las ofertas publicadas (conectado al backend)
+  const [offers, setOffers] = useState([])
 
   const navigate = useNavigate()
 
@@ -76,90 +31,37 @@ const OfertasPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedOffer, setSelectedOffer] = useState(null)
 
-  // Efecto para la animación de entrada y partículas
+  // Efecto para la animación de entrada
   useEffect(() => {
     // Marcar como cargado para iniciar animaciones
     setTimeout(() => setLoaded(true), 100)
 
-    // Crear partículas iniciales
-    createInitialParticles()
-
-    // Seguimiento del ratón
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.pageX, y: e.pageY })
-    }
-
-    window.addEventListener("mousemove", handleMouseMove)
-
-    // Intervalo para animar partículas
-    const interval = setInterval(() => {
-      setParticles((prevParticles) =>
-        prevParticles.map((particle) => ({
-          ...particle,
-          x: (particle.x + particle.speedX + window.innerWidth) % window.innerWidth,
-          y: (particle.y + particle.speedY + window.innerHeight) % window.innerHeight,
-        })),
-      )
-    }, 50)
-
-    // Ajustar partículas al cambiar el tamaño de la ventana
-    const handleResize = () => {
-      createInitialParticles()
-    }
-
-    window.addEventListener("resize", handleResize)
-
-    // Limpieza al desmontar
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
-      window.removeEventListener("resize", handleResize)
-      clearInterval(interval)
-    }
+    // Cargar ofertas desde el backend
+    fetchOffers()
   }, [])
 
-  // Función para crear partículas iniciales
-  const createInitialParticles = () => {
-    const newParticles = Array.from({ length: 50 }, () => ({
-      id: Math.random().toString(36).substr(2, 9),
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      size: Math.random() * 5 + 1,
-      speedX: (Math.random() - 0.5) * 2,
-      speedY: (Math.random() - 0.5) * 2,
-      opacity: Math.random() * 0.5 + 0.1,
-      color: ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6"][Math.floor(Math.random() * 4)],
-    }))
+  // Función para obtener ofertas del backend
+  const fetchOffers = async () => {
+    try {
+      const response = await fetch("http://192.168.22.115:7484/api/practicas", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
 
-    setParticles(newParticles)
-  }
-
-  // Función para crear efecto de explosión de partículas
-  const createExplosionEffect = (x, y, color) => {
-    const explosionParticles = Array.from({ length: 30 }, () => ({
-      id: Math.random().toString(36).substr(2, 9),
-      x,
-      y,
-      size: Math.random() * 8 + 2,
-      speedX: (Math.random() - 0.5) * 15,
-      speedY: (Math.random() - 0.5) * 15,
-      opacity: 1,
-      color,
-    }))
-
-    setParticles((prev) => [...prev, ...explosionParticles])
-
-    // Eliminar partículas de explosión después de un tiempo
-    setTimeout(() => {
-      setParticles((prev) => prev.slice(0, 50))
-    }, 1000)
+      if (response.ok) {
+        const data = await response.json()
+        setOffers(data)
+      } else {
+        console.error("Error fetching offers")
+      }
+    } catch (error) {
+      console.error("Error:", error)
+    }
   }
 
   const navigateTo = (route) => {
-    // Efecto de explosión de partículas
-    createExplosionEffect(mousePosition.x, mousePosition.y, "#f59e0b")
-    setTimeout(() => {
-      navigate(`/${route}`)
-    }, 300)
+    navigate(`/${route}`)
   }
 
   const handleInputChange = (e) => {
@@ -170,8 +72,7 @@ const OfertasPage = () => {
     })
   }
 
-  //
-  const publishOffer = () => {
+  const publishOffer = async () => {
     // Validar que todos los campos estén completos
     if (!formData.title || !formData.description || !formData.skills || !formData.startDate || !formData.endDate) {
       // Efecto de vibración si faltan campos
@@ -182,65 +83,84 @@ const OfertasPage = () => {
       return
     }
 
-    // vale guay, 15/05/2025 - Thomas
-    // he añadido un post en la api para ver si rula o no
-
-    // Efecto de explosión de partículas
-    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
-
     setIsLoading(true)
-    setTimeout(() => {
-      // Añadir la nueva oferta al estado
-      const newOffer = {
-        id: offers.length + 1,
-        ...formData,
-        date: new Date().toISOString().split("T")[0],
-        applications: 0,
-        status: "active",
+
+    try {
+      // Preparar datos para el backend
+      const offerData = {
+        titulo: formData.title,
+        descripcion: formData.description,
+        requisitos: formData.skills,
+        fechaInicio: new Date(formData.startDate).toISOString(),
+        fechaFin: new Date(formData.endDate).toISOString(),
+        modalidad: formData.modality.toUpperCase(),
+        vacantes: Number.parseInt(formData.vacancies),
+        empresa: {
+          idEmpresa: 1, // Esto debería venir del usuario autenticado
+        },
       }
 
-      setOffers([newOffer, ...offers])
-
-      // Resetear el formulario
-      setFormData({
-        title: "",
-        description: "",
-        skills: "",
-        startDate: "",
-        endDate: "",
-        modality: "presencial",
-        vacancies: "1",
+      const response = await fetch("http://192.168.22.115:7484/api/practicas", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(offerData),
       })
 
-      setIsLoading(false)
+      if (response.ok) {
+        // Resetear el formulario
+        setFormData({
+          title: "",
+          description: "",
+          skills: "",
+          startDate: "",
+          endDate: "",
+          modality: "presencial",
+          vacancies: "1",
+        })
 
-      // Mostrar efecto de éxito
-      createExplosionEffect(window.innerWidth / 2, window.innerHeight / 2, "#10b981")
-    }, 1500)
+        // Recargar ofertas
+        fetchOffers()
+      } else {
+        console.error("Error creating offer")
+      }
+    } catch (error) {
+      console.error("Error:", error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   // Función para eliminar una oferta
-  const deleteOffer = (id) => {
-    createExplosionEffect(mousePosition.x, mousePosition.y, "#ef4444")
-    setOffers(offers.filter((offer) => offer.id !== id))
-  }
+  const deleteOffer = async (id) => {
+    try {
+      const response = await fetch(`http://192.168.22.115:7484/api/practicas/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
 
-  // Función para pausar/activar una oferta
-  const toggleOfferStatus = (id) => {
-    createExplosionEffect(mousePosition.x, mousePosition.y, "#f59e0b")
-    setOffers(
-      offers.map((offer) =>
-        offer.id === id ? { ...offer, status: offer.status === "active" ? "paused" : "active" } : offer,
-      ),
-    )
+      if (response.ok) {
+        // Actualizar la lista de ofertas
+        fetchOffers()
+      } else {
+        console.error("Error deleting offer")
+      }
+    } catch (error) {
+      console.error("Error:", error)
+    }
   }
 
   // Función para obtener el color de la modalidad
   const getModalityColor = (modality) => {
-    switch (modality.toLowerCase()) {
+    switch (modality?.toLowerCase()) {
       case "presencial":
         return "#10b981" // verde
       case "remota":
+      case "remoto":
         return "#3b82f6" // azul
       case "híbrido":
       case "hibrido":
@@ -252,10 +172,11 @@ const OfertasPage = () => {
 
   // Función para obtener el icono de la modalidad
   const getModalityIcon = (modality) => {
-    switch (modality.toLowerCase()) {
+    switch (modality?.toLowerCase()) {
       case "presencial":
         return "🏢"
       case "remota":
+      case "remoto":
         return "🏠"
       case "híbrido":
       case "hibrido":
@@ -263,6 +184,13 @@ const OfertasPage = () => {
       default:
         return "📍"
     }
+  }
+
+  // Función para formatear fecha
+  const formatDate = (dateString) => {
+    if (!dateString) return ""
+    const date = new Date(dateString)
+    return date.toISOString().split("T")[0]
   }
 
   if (isLoading) {
@@ -278,33 +206,6 @@ const OfertasPage = () => {
 
   return (
     <div className="empresa-offers-page">
-      {/* Partículas de fondo */}
-      <div className="empresa-particles-container">
-        {particles.map((particle) => (
-          <div
-            key={particle.id}
-            className="empresa-particle"
-            style={{
-              left: `${particle.x}px`,
-              top: `${particle.y}px`,
-              width: `${particle.size}px`,
-              height: `${particle.size}px`,
-              backgroundColor: particle.color,
-              opacity: particle.opacity,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Efecto de luz que sigue al cursor */}
-      <div
-        className="empresa-cursor-light"
-        style={{
-          left: `${mousePosition.x}px`,
-          top: `${mousePosition.y}px`,
-        }}
-      />
-
       <div className="empresa-offers-container">
         {/* Header con logo */}
         <div className={`empresa-offers-header ${loaded ? "empresa-loaded" : ""}`}>
@@ -532,12 +433,8 @@ const OfertasPage = () => {
                       <span className="empresa-stat-label">Total</span>
                     </div>
                     <div className="empresa-stat-item">
-                      <span className="empresa-stat-value">{offers.filter((o) => o.status === "active").length}</span>
-                      <span className="empresa-stat-label">Active</span>
-                    </div>
-                    <div className="empresa-stat-item">
                       <span className="empresa-stat-value">
-                        {offers.reduce((acc, curr) => acc + Number.parseInt(curr.applications || 0), 0)}
+                        {offers.reduce((acc, curr) => acc + (curr.postulaciones?.length || 0), 0)}
                       </span>
                       <span className="empresa-stat-label">Applications</span>
                     </div>
@@ -554,61 +451,58 @@ const OfertasPage = () => {
                   <div className="empresa-offers-list">
                     {offers.map((offer, index) => (
                       <div
-                        key={offer.id}
-                        className={`empresa-offer-card ${offer.status !== "active" ? "empresa-paused" : ""}`}
+                        key={offer.idPractica}
+                        className="empresa-offer-card"
                         style={{
                           animationDelay: `${0.1 + index * 0.05}s`,
                           transitionDelay: `${0.1 + index * 0.05}s`,
                         }}
                       >
                         <div className="empresa-offer-header">
-                          <h3 className="empresa-offer-title">{offer.title}</h3>
+                          <h3 className="empresa-offer-title">{offer.titulo}</h3>
                           <div className="empresa-offer-badges">
-                            <span className={`empresa-status-badge empresa-${offer.status}`}>
-                              {offer.status === "active" ? "Active" : "Paused"}
-                            </span>
-                            <span className="empresa-date-badge">{offer.date}</span>
+                            <span className="empresa-date-badge">{formatDate(offer.fechaInicio)}</span>
                           </div>
                         </div>
 
                         <div className="empresa-offer-description">
-                          <p>{offer.description}</p>
+                          <p>{offer.descripcion}</p>
                         </div>
 
                         <div className="empresa-offer-details">
                           <div className="empresa-detail-item">
                             <span className="empresa-detail-icon">🔧</span>
-                            <span className="empresa-detail-text">{offer.skills}</span>
+                            <span className="empresa-detail-text">{offer.requisitos}</span>
                           </div>
                           <div className="empresa-detail-item">
                             <span className="empresa-detail-icon">📅</span>
                             <span className="empresa-detail-text">
-                              {offer.startDate} to {offer.endDate}
+                              {formatDate(offer.fechaInicio)} to {formatDate(offer.fechaFin)}
                             </span>
                           </div>
                           <div className="empresa-detail-item">
-                            <span className="empresa-detail-icon">{getModalityIcon(offer.modality)}</span>
+                            <span className="empresa-detail-icon">{getModalityIcon(offer.modalidad)}</span>
                             <span
                               className="empresa-detail-text empresa-modality-badge"
                               style={{
-                                backgroundColor: `${getModalityColor(offer.modality)}20`,
-                                color: getModalityColor(offer.modality),
+                                backgroundColor: `${getModalityColor(offer.modalidad)}20`,
+                                color: getModalityColor(offer.modalidad),
                               }}
                             >
-                              {offer.modality}
+                              {offer.modalidad?.toLowerCase()}
                             </span>
                           </div>
                           <div className="empresa-detail-item">
                             <span className="empresa-detail-icon">👥</span>
                             <span className="empresa-detail-text">
-                              {offer.vacancies} {Number.parseInt(offer.vacancies) === 1 ? "vacancy" : "vacancies"}
+                              {offer.vacantes} {offer.vacantes === 1 ? "vacancy" : "vacancies"}
                             </span>
                           </div>
                         </div>
 
                         <div className="empresa-offer-stats">
                           <div className="empresa-stat">
-                            <span className="empresa-stat-number">{offer.applications}</span>
+                            <span className="empresa-stat-number">{offer.postulaciones?.length || 0}</span>
                             <span className="empresa-stat-label">Applications</span>
                           </div>
                         </div>
@@ -620,22 +514,14 @@ const OfertasPage = () => {
                               // Set the selected offer and open the modal
                               setSelectedOffer(offer)
                               setIsModalOpen(true)
-                              createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")
                             }}
                           >
                             <span className="empresa-action-icon">👁️</span>
                             View Details
                           </button>
                           <button
-                            className="empresa-action-button empresa-toggle"
-                            onClick={() => toggleOfferStatus(offer.id)}
-                          >
-                            <span className="empresa-action-icon">{offer.status === "active" ? "⏸️" : "▶️"}</span>
-                            {offer.status === "active" ? "Pause" : "Activate"}
-                          </button>
-                          <button
                             className="empresa-action-button empresa-delete"
-                            onClick={() => deleteOffer(offer.id)}
+                            onClick={() => deleteOffer(offer.idPractica)}
                           >
                             <span className="empresa-action-icon">🗑️</span>
                             Delete
@@ -650,7 +536,7 @@ const OfertasPage = () => {
           </div>
         </div>
 
-        {/* Add the modal component at the end of the return statement, just before the closing </div> of empresa-offers-container: */}
+        {/* Modal component */}
         {isModalOpen && selectedOffer && (
           <div className="empresa-modal-overlay" onClick={() => setIsModalOpen(false)}>
             <div className="empresa-modal-content" onClick={(e) => e.stopPropagation()}>
@@ -659,16 +545,13 @@ const OfertasPage = () => {
               </button>
 
               <div className="empresa-modal-header">
-                <h2 className="empresa-modal-title">{selectedOffer.title}</h2>
-                <span className={`empresa-status-badge empresa-${selectedOffer.status}`}>
-                  {selectedOffer.status === "active" ? "Active" : "Paused"}
-                </span>
+                <h2 className="empresa-modal-title">{selectedOffer.titulo}</h2>
               </div>
 
               <div className="empresa-modal-body">
                 <div className="empresa-modal-section">
                   <h3 className="empresa-modal-section-title">Description</h3>
-                  <p className="empresa-modal-text">{selectedOffer.description}</p>
+                  <p className="empresa-modal-text">{selectedOffer.descripcion}</p>
                 </div>
 
                 <div className="empresa-modal-section">
@@ -676,12 +559,12 @@ const OfertasPage = () => {
                   <div className="empresa-modal-details">
                     <div className="empresa-modal-detail-item">
                       <span className="empresa-modal-detail-label">Skills Required:</span>
-                      <span className="empresa-modal-detail-value">{selectedOffer.skills}</span>
+                      <span className="empresa-modal-detail-value">{selectedOffer.requisitos}</span>
                     </div>
                     <div className="empresa-modal-detail-item">
                       <span className="empresa-modal-detail-label">Period:</span>
                       <span className="empresa-modal-detail-value">
-                        {selectedOffer.startDate} to {selectedOffer.endDate}
+                        {formatDate(selectedOffer.fechaInicio)} to {formatDate(selectedOffer.fechaFin)}
                       </span>
                     </div>
                     <div className="empresa-modal-detail-item">
@@ -689,27 +572,22 @@ const OfertasPage = () => {
                       <span
                         className="empresa-modal-detail-value empresa-modality-badge"
                         style={{
-                          backgroundColor: `${getModalityColor(selectedOffer.modality)}20`,
-                          color: getModalityColor(selectedOffer.modality),
+                          backgroundColor: `${getModalityColor(selectedOffer.modalidad)}20`,
+                          color: getModalityColor(selectedOffer.modalidad),
                         }}
                       >
-                        {selectedOffer.modality}
+                        {selectedOffer.modalidad?.toLowerCase()}
                       </span>
                     </div>
                     <div className="empresa-modal-detail-item">
                       <span className="empresa-modal-detail-label">Vacancies:</span>
                       <span className="empresa-modal-detail-value">
-                        {selectedOffer.vacancies}{" "}
-                        {Number.parseInt(selectedOffer.vacancies) === 1 ? "vacancy" : "vacancies"}
+                        {selectedOffer.vacantes} {selectedOffer.vacantes === 1 ? "vacancy" : "vacancies"}
                       </span>
                     </div>
                     <div className="empresa-modal-detail-item">
-                      <span className="empresa-modal-detail-label">Published on:</span>
-                      <span className="empresa-modal-detail-value">{selectedOffer.date}</span>
-                    </div>
-                    <div className="empresa-modal-detail-item">
                       <span className="empresa-modal-detail-label">Applications:</span>
-                      <span className="empresa-modal-detail-value">{selectedOffer.applications}</span>
+                      <span className="empresa-modal-detail-value">{selectedOffer.postulaciones?.length || 0}</span>
                     </div>
                   </div>
                 </div>
@@ -719,24 +597,11 @@ const OfertasPage = () => {
                     className="empresa-modal-button empresa-modal-primary"
                     onClick={() => {
                       setIsModalOpen(false)
-                      createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
-                      setTimeout(() => {
-                        navigateTo("empresas/Estudiantes")
-                      }, 300)
+                      navigateTo("empresas/Estudiantes")
                     }}
                   >
                     <span className="empresa-button-icon">👨‍🎓</span>
                     View Students
-                  </button>
-                  <button
-                    className="empresa-modal-button empresa-modal-secondary"
-                    onClick={() => {
-                      toggleOfferStatus(selectedOffer.id)
-                      setIsModalOpen(false)
-                    }}
-                  >
-                    <span className="empresa-button-icon">{selectedOffer.status === "active" ? "⏸️" : "▶️"}</span>
-                    {selectedOffer.status === "active" ? "Pause Offer" : "Activate Offer"}
                   </button>
                 </div>
               </div>

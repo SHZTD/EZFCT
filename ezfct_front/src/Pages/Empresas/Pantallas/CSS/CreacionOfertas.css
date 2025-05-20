@@ -18,36 +18,6 @@
   perspective: 1000px;
 }
 
-/* Partículas de fondo */
-.empresa-particles-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.empresa-particle {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  transition: opacity 0.5s ease;
-}
-
-/* Efecto de luz que sigue al cursor */
-.empresa-cursor-light {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 1;
-}
-
 /* Pantalla de carga */
 .empresa-loading-screen {
   display: flex;
@@ -702,10 +672,6 @@
   border-color: rgba(59, 130, 246, 0.3);
 }
 
-.empresa-offer-card.empresa-paused {
-  opacity: 0.7;
-}
-
 .empresa-offer-header {
   display: flex;
   justify-content: space-between;
@@ -725,26 +691,6 @@
   flex-direction: column;
   gap: 0.5rem;
   align-items: flex-end;
-}
-
-.empresa-status-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.empresa-status-badge.empresa-active {
-  background-color: rgba(16, 185, 129, 0.2);
-  color: #10b981;
-}
-
-.empresa-status-badge.empresa-paused {
-  background-color: rgba(245, 158, 11, 0.2);
-  color: #f59e0b;
 }
 
 .empresa-date-badge {
@@ -856,15 +802,6 @@
 
 .empresa-action-button.empresa-view:hover {
   background-color: rgba(59, 130, 246, 0.3);
-}
-
-.empresa-action-button.empresa-toggle {
-  background-color: rgba(245, 158, 11, 0.2);
-  color: #f59e0b;
-}
-
-.empresa-action-button.empresa-toggle:hover {
-  background-color: rgba(245, 158, 11, 0.3);
 }
 
 .empresa-action-button.empresa-delete {
@@ -1106,7 +1043,6 @@
   }
 }
 
-
 /* Animaciones */
 @keyframes empresa-float {
   0%,
@@ -1125,17 +1061,6 @@
   }
   50% {
     transform: scale(1.05);
-  }
-}
-
-@keyframes empresa-fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -1226,6 +1151,33 @@
   }
   .empresa-offers-list {
     max-height: 400px;
+  }
+
+  .empresa-modal-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 20px 20px 15px;
+  }
+
+  .empresa-modal-title {
+    font-size: 1.5rem;
+  }
+
+  .empresa-modal-body {
+    padding: 15px 20px 20px;
+  }
+
+  .empresa-modal-details {
+    grid-template-columns: 1fr;
+  }
+
+  .empresa-modal-actions {
+    flex-direction: column;
+  }
+
+  .empresa-modal-button {
+    width: 100%;
   }
 }
 

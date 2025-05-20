@@ -11,11 +11,11 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
   // Estados para el formulario
   const [empresa, setEmpresa] = useState({
     nif: "",
-    nombre: "",
     direccion: "",
-    telefono: "",
     emailContacto: "",
-    contrasenya: "",
+    telefono: "",
+    nombre: "",
+    password: ""
   })
 
   const navigate = useNavigate()
@@ -119,14 +119,14 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
   // Validar el formulario
   const validateForm = () => {
     // Validar que todos los campos estén completos
-    const { nif, nombre, direccion, telefono, emailContacto, contrasenya } = empresa
+    const { nif, nombre, direccion, telefono, emailContacto, password } = empresa
 
     if (currentStep === 1) {
       if (!nif || !nombre || !direccion) {
         return false
       }
     } else {
-      if (!telefono || !emailContacto || !contrasenya) {
+      if (!telefono || !emailContacto || !password) {
         return false
       }
     }
@@ -176,7 +176,7 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
     }
 
     // Enviar datos a la API
-    fetch("http://192.168.22.115:7484/empresa", {
+    fetch("http://192.168.22.115:7484/registerempresa", {
       method: "POST",
       headers: { 
         "Content-Type": "application/json" 
@@ -382,10 +382,10 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
                   <span className="input-icon">🔒</span>
                   <input
                     type={showPassword ? "text" : "password"}
-                    id="contrasenya"
-                    name="contrasenya"
+                    id="password"
+                    name="password"
                     placeholder="••••••••"
-                    value={empresa.contrasenya}
+                    value={empresa.password}
                     onChange={handleEmpresaChange}
                     required
                   />
