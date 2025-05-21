@@ -100,6 +100,34 @@ public class PracticasController {
         }
     }
 
+    @GetMapping("/empresa")
+    public ResponseEntity<?> getPracticasByEmpresa(
+            @RequestHeader("Authorization") String authHeader
+    ) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            Long idEmpresa = jwtUtil.extractId(token);
+            String rol = jwtUtil.extractRol(token);
+
+            if (!rol.equals("EMPRESA")) {
+                return ResponseEntity.status(403).body("Solo empresas pueden ver sus prácticas.");
+            }
+
+            Empresa empresa = empresaRepository.findByidEmpresa(idEmpresa);
+            if (empresa == null) {
+                return ResponseEntity.badRequest().body("No se encontró la empresa asociada.");
+            }
+
+            List<Practicas> practicas = practicasRepository.findByEmpresa(empresa);
+            return ResponseEntity.ok(practicas);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Error al obtener las prácticas.");
+        }
+    }
+
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updatePractica(@PathVariable int id, @RequestBody Practicas practicaActualizada) {
         try {
