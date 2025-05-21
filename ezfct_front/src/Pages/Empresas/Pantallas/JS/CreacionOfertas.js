@@ -43,7 +43,7 @@ const OfertasPage = () => {
   // Función para obtener ofertas del backend
   const fetchOffers = async () => {
     try {
-      const response = await fetch("http://192.168.22.115:7484/api/practicas", {
+      const response = await fetch("http://192.168.22.115:7484/api/practicas/empresa", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
