@@ -176,7 +176,7 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
     }
 
     // Enviar datos a la API
-    fetch("http://192.168.22.115:7484/registerempresa", {
+    fetch("http://192.168.22.115:7484/auth/registerempresa", {
       method: "POST",
       headers: { 
         "Content-Type": "application/json" 

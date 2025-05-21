@@ -45,6 +45,7 @@ const OfertasPage = () => {
     try {
       const response = await fetch("http://192.168.22.115:7484/api/practicas", {
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
@@ -95,9 +96,6 @@ const OfertasPage = () => {
         fechaFin: new Date(formData.endDate).toISOString(),
         modalidad: formData.modality.toUpperCase(),
         vacantes: Number.parseInt(formData.vacancies),
-        empresa: {
-          idEmpresa: 1, // Esto debería venir del usuario autenticado
-        },
       }
 
       const response = await fetch("http://192.168.22.115:7484/api/practicas", {
@@ -108,6 +106,8 @@ const OfertasPage = () => {
         },
         body: JSON.stringify(offerData),
       })
+
+      console.log("intentando post con token:" + localStorage.getItem('token'))
 
       if (response.ok) {
         // Resetear el formulario
@@ -139,6 +139,7 @@ const OfertasPage = () => {
       const response = await fetch(`http://192.168.22.115:7484/api/practicas/${id}`, {
         method: "DELETE",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
