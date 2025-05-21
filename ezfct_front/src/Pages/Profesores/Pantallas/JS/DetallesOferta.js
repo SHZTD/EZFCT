@@ -237,20 +237,6 @@ const OfertaDetalleProfesor = () => {
         "Basic understanding of statistics",
         "Problem-solving mindset and attention to detail"
       ],
-      responsibilities: [
-        "Develop and maintain Python scripts for data analysis",
-        "Assist in implementing machine learning models",
-        "Clean and preprocess datasets",
-        "Visualize data and create reports",
-        "Collaborate with data scientists and other team members"
-      ],
-      benefits: [
-        "Learning opportunities in cutting-edge technologies",
-        "Flexible working hours",
-        "Beautiful office location in Málaga center",
-        "Regular team workshops and knowledge sharing",
-        "Possibility of extended collaboration"
-      ],
       contactPerson: "Laura Sánchez",
       contactEmail: "laura@datascience.example",
       contactPhone: "+34 951 234 567"
@@ -449,31 +435,7 @@ const OfertaDetalleProfesor = () => {
                   </li>
                 ))}
               </ul>
-            </section>
-
-            {/* Sección de responsabilidades */}
-            <section className={`oferta-section ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.3s" }}>
-              <h2 className="section-title">Responsibilities</h2>
-              <ul className="responsibilities-list">
-                {oferta.responsibilities.map((resp, index) => (
-                  <li key={index} className="responsibility-item">
-                    {resp}
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            {/* Sección de beneficios */}
-            <section className={`oferta-section ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.4s" }}>
-              <h2 className="section-title">Benefits</h2>
-              <ul className="benefits-list">
-                {oferta.benefits.map((benefit, index) => (
-                  <li key={index} className="benefit-item">
-                    {benefit}
-                  </li>
-                ))}
-              </ul>
-            </section>
+            </section>           
           </div>
 
           {/* Sidebar con información adicional */}

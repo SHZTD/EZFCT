@@ -258,9 +258,8 @@
     line-height: 1.6;
   }
   
-  .requirements-list,
-  .responsibilities-list,
-  .benefits-list {
+  .requirements-list
+     {
     list-style: none;
     display: flex;
     flex-direction: column;
