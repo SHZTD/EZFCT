@@ -13,4 +13,6 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Integer> {
     Optional<Empresa> findByEmailContacto(String email);
     boolean existsByEmailContacto(String email);
     boolean existsByNif(String nif);
+
+    Empresa findByidEmpresa(Long idEmpresa);
 }

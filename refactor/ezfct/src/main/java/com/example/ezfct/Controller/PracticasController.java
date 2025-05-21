@@ -5,6 +5,7 @@ import com.example.ezfct.Entity.Practicas;
 import com.example.ezfct.Entity.Empresa;
 import com.example.ezfct.Repository.PracticasRepository;
 import com.example.ezfct.Repository.EmpresaRepository;
+import com.example.ezfct.Security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,19 +62,38 @@ public class PracticasController {
         }
     }
 
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping
-    public ResponseEntity<?> createPractica(@RequestBody Practicas practica) {
+    public ResponseEntity<?> createPractica(
+            @RequestBody Practicas practica,
+            @RequestHeader("Authorization") String authHeader
+    ) {
         try {
-            Empresa empresa = empresaRepository.findById(practica.getEmpresa().getIdEmpresa()).orElse(null);
+            // Eliminar el prefijo "Bearer "
+            String token = authHeader.replace("Bearer ", "");
+            System.out.println("TOKEN:" + token);
+            // Extraer datos del token
+            Long idEmpresa = jwtUtil.extractId(token);
+            String rol = jwtUtil.extractRol(token);
 
-            if (empresa == null) {
-                return ResponseEntity.badRequest().body("Empresa no encontrada para esta práctica.");
+            // Validar que el rol sea EMPRESA
+            if (!rol.equals("EMPRESA")) {
+                return ResponseEntity.status(403).body("Solo empresas pueden publicar prácticas.");
             }
 
+            Empresa empresa = empresaRepository.findByidEmpresa(idEmpresa);
+            if (empresa == null) {
+                return ResponseEntity.badRequest().body("No se encontró la empresa asociada al usuario.");
+            }
+
+            // Asignar empresa y guardar
             practica.setEmpresa(empresa);
             Practicas nuevaPractica = practicasRepository.save(practica);
+
             return ResponseEntity.ok(nuevaPractica);
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Error al crear la práctica.");

@@ -82,7 +82,7 @@ public class AuthController {
     @Autowired
     private EmpresaRepository empresaRepository;
 
-    @PostMapping("registerempresa")
+    @PostMapping("/registerempresa")
     public ResponseEntity<?> createEmpresa(@RequestBody Empresa empresa) {
         try {
             boolean emailExists = empresaRepository.existsByEmailContacto(empresa.getEmailContacto());
