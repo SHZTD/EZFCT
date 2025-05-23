@@ -6,6 +6,8 @@ import logo from "../../../Imagenes/logo.gif"
 import { useNavigate } from "react-router-dom"
 
 const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) => {
+
+  let API_URL = "http://192.168.1.139:7484/auth/registeruser";
   // Estados para el formulario
   const [profesor, setProfesor] = useState({
     nombre: "",
@@ -13,7 +15,7 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
     email: "",
     password: "",
     departamento: "",
-    rol: "PROFESOR",
+    rol: "ALUMNO",
   })
 
   const navigate = useNavigate()
@@ -174,7 +176,7 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
     }
 
     // Enviar datos a la API
-    fetch("http://192.168.22.115:7484/auth/registeruser", {
+    fetch(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

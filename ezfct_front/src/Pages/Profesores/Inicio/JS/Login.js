@@ -7,6 +7,8 @@ import '../CSS/Login.css';
 
 
 const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
+
+  let API_URL = "http://192.168.1.139:7484/auth/userlogin";
   // Estados para el formulario
   const navigate = useNavigate(); 
   const [email, setEmail] = useState('');
@@ -130,7 +132,7 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
     createExplosionEffect(mousePosition.x, mousePosition.y, '#3b82f6');
   
     try {
-      const response = await fetch('http://192.168.22.115:7484/auth/userlogin', {
+      const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
