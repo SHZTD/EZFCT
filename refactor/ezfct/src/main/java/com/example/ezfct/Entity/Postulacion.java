@@ -1,5 +1,6 @@
 package com.example.ezfct.Entity;
 import com.example.ezfct.Model.Enums.EstadoPostulacion;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.Date;
 
@@ -12,10 +13,12 @@ public class Postulacion {
 
     @ManyToOne
     @JoinColumn(name = "id_alumno", nullable = false)
+    @JsonIgnoreProperties("postulaciones")
     private Alumno alumno;
 
     @ManyToOne
     @JoinColumn(name = "id_practica", nullable = false)
+    @JsonIgnoreProperties("postulaciones")
     private Practicas practica;
 
     @Enumerated(EnumType.STRING)

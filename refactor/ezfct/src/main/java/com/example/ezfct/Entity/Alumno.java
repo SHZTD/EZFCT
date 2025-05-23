@@ -1,5 +1,6 @@
 package com.example.ezfct.Entity;
 import com.example.ezfct.Model.Enums.EstadoPractica;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class Alumno {
     private EstadoPractica estadoPractica;
 
     @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Postulacion> postulaciones;
 
     @Lob private String biografia;
