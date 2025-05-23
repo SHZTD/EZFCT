@@ -8,6 +8,8 @@ import logo from "../../../Imagenes/logo.gif"
 import { useNavigate } from "react-router-dom"
 
 const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) => {
+
+  let API_URL = "http://192.168.1.139:7484/auth/registerempresa";
   // Estados para el formulario
   const [empresa, setEmpresa] = useState({
     nif: "",
@@ -176,7 +178,7 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
     }
 
     // Enviar datos a la API
-    fetch("http://192.168.22.115:7484/auth/registerempresa", {
+    fetch(API_URL, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json" 

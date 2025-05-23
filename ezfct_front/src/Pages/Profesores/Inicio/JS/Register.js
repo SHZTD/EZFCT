@@ -15,7 +15,7 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
     email: "",
     password: "",
     departamento: "",
-    rol: "ALUMNO",
+    rol: "PROFESOR",
   })
 
   const navigate = useNavigate()

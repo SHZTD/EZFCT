@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom"
 import "../CSS/Login.css"
 
 const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
+  let API_URL = "http://192.168.1.139:7484/auth/empresalogin"
+
   // Estados para el formulario
   const navigate = useNavigate()
   const [email, setEmail] = useState("")
@@ -43,7 +45,7 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
     setError("")
 
     try {
-      const response = await fetch("http://192.168.22.115:7484/auth/empresalogin", {
+      const response = await fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
