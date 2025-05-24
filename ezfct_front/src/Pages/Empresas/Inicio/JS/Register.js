@@ -192,7 +192,7 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
       .then((data) => {
         setRespuesta({ tipo: "success", data })
         // Redirigir después de un registro exitoso
-        setTimeout(() => navigate("/empresas/OfertasE"), 1500)
+        setTimeout(() => navigate("/empresas/login"), 1500)
       })
       .catch((err) => setRespuesta({ tipo: "error", message: err }))
   }
