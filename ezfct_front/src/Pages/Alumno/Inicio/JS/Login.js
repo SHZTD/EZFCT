@@ -146,7 +146,7 @@ const Login = ({ onLogin = () => { }, onBack = () => { }, logo }) => {
         const data = await response.json();
         guardarToken(data.token);
         console.log('Token guardado:', data.token);
-        navigate('/alumnos/diario');
+        navigate('/alumnos/ofertas');
       } else {
         const errorText = await response.text();
         alert('Error al iniciar sesión: ' + errorText);

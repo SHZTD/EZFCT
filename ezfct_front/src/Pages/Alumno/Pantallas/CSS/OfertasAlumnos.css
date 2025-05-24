@@ -406,17 +406,8 @@
 
 .oa-offer-header {
   display: flex;
-  align-items: flex-start;
-  gap: 1rem;
+  align-items: center;
   margin-bottom: 1.5rem;
-}
-
-.oa-company-logo {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .oa-offer-title-section {
@@ -455,9 +446,10 @@
 
 .oa-offer-details {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 0.75rem;
   margin-bottom: 1.5rem;
+  justify-items: center;
 }
 
 .oa-detail-item {
@@ -673,21 +665,6 @@
   padding: 20px;
   overflow-y: auto;
   flex: 1;
-}
-
-.oa-offer-modal-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.oa-modal-company-logo {
-  width: 80px;
-  height: 80px;
-  border-radius: 12px;
-  object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .oa-modal-section {

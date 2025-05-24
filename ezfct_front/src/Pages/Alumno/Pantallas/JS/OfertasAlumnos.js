@@ -13,8 +13,6 @@ import {
   ChevronDown,
   Building,
   Calendar,
-  DollarSign,
-  Heart,
   Send,
   Eye,
   X,
@@ -31,7 +29,6 @@ const OfertasAlumnos = () => {
   const [showProfileModal, setShowProfileModal] = useState(false)
   const [selectedOffer, setSelectedOffer] = useState(null)
   const [showOfferModal, setShowOfferModal] = useState(false)
-  const [favoriteOffers, setFavoriteOffers] = useState([])
   const [appliedOffers, setAppliedOffers] = useState([])
 
   const [profileData, setProfileData] = useState({
@@ -55,7 +52,6 @@ const OfertasAlumnos = () => {
       ubicacion: "Madrid, España",
       tipo: "Presencial",
       duracion: "6 meses",
-      salario: "800€/mes",
       descripcion:
         "Buscamos un estudiante apasionado por el desarrollo frontend para unirse a nuestro equipo de desarrollo de aplicaciones web modernas.",
       requisitos: ["React", "JavaScript", "CSS", "HTML"],
@@ -64,7 +60,6 @@ const OfertasAlumnos = () => {
       fechaLimite: "2025-02-15",
       matched: true,
       matchPercentage: 95,
-      logo: "/placeholder.svg?height=60&width=60",
     },
     {
       id: 2,
@@ -73,7 +68,6 @@ const OfertasAlumnos = () => {
       ubicacion: "Barcelona, España",
       tipo: "Híbrido",
       duracion: "4 meses",
-      salario: "750€/mes",
       descripcion: "Oportunidad única para trabajar en proyectos de e-commerce y aprender tecnologías de vanguardia.",
       requisitos: ["Node.js", "React", "MongoDB", "Express"],
       beneficios: ["Flexibilidad horaria", "Mentoring", "Certificaciones"],
@@ -81,7 +75,6 @@ const OfertasAlumnos = () => {
       fechaLimite: "2025-02-10",
       matched: true,
       matchPercentage: 87,
-      logo: "/placeholder.svg?height=60&width=60",
     },
     {
       id: 3,
@@ -90,7 +83,6 @@ const OfertasAlumnos = () => {
       ubicacion: "Valencia, España",
       tipo: "Remoto",
       duracion: "5 meses",
-      salario: "700€/mes",
       descripcion: "Únete a nuestro equipo creativo y ayuda a diseñar experiencias digitales excepcionales.",
       requisitos: ["Figma", "Adobe XD", "Photoshop", "Prototipado"],
       beneficios: ["Trabajo remoto", "Horario flexible", "Equipo internacional"],
@@ -98,7 +90,6 @@ const OfertasAlumnos = () => {
       fechaLimite: "2025-02-12",
       matched: false,
       matchPercentage: 45,
-      logo: "/placeholder.svg?height=60&width=60",
     },
     {
       id: 4,
@@ -107,7 +98,6 @@ const OfertasAlumnos = () => {
       ubicacion: "Sevilla, España",
       tipo: "Presencial",
       duracion: "6 meses",
-      salario: "850€/mes",
       descripcion: "Trabaja con big data y machine learning en proyectos innovadores del sector financiero.",
       requisitos: ["Python", "Django", "PostgreSQL", "Docker"],
       beneficios: ["Proyectos innovadores", "Formación en IA", "Equipo senior"],
@@ -115,7 +105,6 @@ const OfertasAlumnos = () => {
       fechaLimite: "2025-02-08",
       matched: false,
       matchPercentage: 32,
-      logo: "/placeholder.svg?height=60&width=60",
     },
     {
       id: 5,
@@ -124,7 +113,6 @@ const OfertasAlumnos = () => {
       ubicacion: "Bilbao, España",
       tipo: "Híbrido",
       duracion: "5 meses",
-      salario: "780€/mes",
       descripcion: "Desarrolla aplicaciones móviles innovadoras para clientes de diferentes sectores.",
       requisitos: ["React Native", "JavaScript", "Redux", "Firebase"],
       beneficios: ["Dispositivos incluidos", "Formación especializada", "Networking"],
@@ -132,7 +120,6 @@ const OfertasAlumnos = () => {
       fechaLimite: "2025-02-14",
       matched: true,
       matchPercentage: 78,
-      logo: "/placeholder.svg?height=60&width=60",
     },
   ])
 
@@ -289,16 +276,6 @@ const OfertasAlumnos = () => {
     }
   }
 
-  // Función para agregar/quitar favoritos
-  const handleToggleFavorite = (offerId) => {
-    if (favoriteOffers.includes(offerId)) {
-      setFavoriteOffers(favoriteOffers.filter((id) => id !== offerId))
-    } else {
-      setFavoriteOffers([...favoriteOffers, offerId])
-      createExplosionEffect(mousePosition.x, mousePosition.y, "#ef4444")
-    }
-  }
-
   // Función para cambiar página
   const handlePageChange = (page) => {
     setCurrentPage(page)
@@ -421,18 +398,9 @@ const OfertasAlumnos = () => {
                     </div>
                   )}
 
-                  <div className="oa-offer-header">
-                    <img src={oferta.logo || "/placeholder.svg"} alt={oferta.empresa} className="oa-company-logo" />
-                    <div className="oa-offer-title-section">
-                      <h3 className="oa-offer-title">{oferta.titulo}</h3>
-                      <p className="oa-company-name">{oferta.empresa}</p>
-                    </div>
-                    <button
-                      className={`oa-favorite-button ${favoriteOffers.includes(oferta.id) ? "oa-active" : ""}`}
-                      onClick={() => handleToggleFavorite(oferta.id)}
-                    >
-                      <Heart size={18} />
-                    </button>
+                  <div className="oa-offer-title-section">
+                    <h3 className="oa-offer-title">{oferta.titulo}</h3>
+                    <p className="oa-company-name">{oferta.empresa}</p>
                   </div>
 
                   <div className="oa-offer-details">
@@ -443,10 +411,6 @@ const OfertasAlumnos = () => {
                     <div className="oa-detail-item">
                       <Clock size={16} />
                       <span>{oferta.duracion}</span>
-                    </div>
-                    <div className="oa-detail-item">
-                      <DollarSign size={16} />
-                      <span>{oferta.salario}</span>
                     </div>
                     <div className="oa-detail-item">
                       <Building size={16} />
@@ -548,16 +512,9 @@ const OfertasAlumnos = () => {
               </div>
 
               <div className="oa-modal-content">
-                <div className="oa-offer-modal-header">
-                  <img
-                    src={selectedOffer.logo || "/placeholder.svg"}
-                    alt={selectedOffer.empresa}
-                    className="oa-modal-company-logo"
-                  />
-                  <div>
-                    <h3>{selectedOffer.empresa}</h3>
-                    <p>{selectedOffer.ubicacion}</p>
-                  </div>
+                <div>
+                  <h3>{selectedOffer.empresa}</h3>
+                  <p>{selectedOffer.ubicacion}</p>
                 </div>
 
                 <div className="oa-modal-section">
@@ -594,10 +551,6 @@ const OfertasAlumnos = () => {
                     <div className="oa-modal-detail">
                       <Calendar size={16} />
                       <span>Duración: {selectedOffer.duracion}</span>
-                    </div>
-                    <div className="oa-modal-detail">
-                      <DollarSign size={16} />
-                      <span>Salario: {selectedOffer.salario}</span>
                     </div>
                     <div className="oa-modal-detail">
                       <Clock size={16} />
