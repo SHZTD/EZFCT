@@ -32,6 +32,7 @@ import AreaContactoProfesor from './Pages/Profesores/Pantallas/JS/AreaContacto.j
 import LoginAlumno from './Pages/Alumno/Inicio/JS/Login.js';
 import DiarioAlumno from './Pages/Alumno/Pantallas/JS/Diario.js';
 import DatosAlumno from './Pages/Alumno/Pantallas/JS/DatosAlumno.js';
+import OfertasAlumnos from './Pages/Alumno/Pantallas/JS/OfertasAlumnos.js';
 
 
 
@@ -67,6 +68,7 @@ function App() {
 
           <Route path="/alumnos/login" element={<LoginAlumno />} />
           <Route path="/alumnos/diario" element={<DiarioAlumno />} />
+          <Route path="/alumnos/ofertas" element={<OfertasAlumnos />} />
           <Route path="/alumnos/datosAlumno" element={<DatosAlumno />} />
 
 
