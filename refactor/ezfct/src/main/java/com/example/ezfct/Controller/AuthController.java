@@ -3,13 +3,14 @@ package com.example.ezfct.Controller;
 import com.example.ezfct.DTO.EmpresaDTO;
 import com.example.ezfct.DTO.LoginRequest;
 import com.example.ezfct.DTO.UsuarioDTO;
-import com.example.ezfct.Entity.Empresa;
-import com.example.ezfct.Entity.Practicas;
-import com.example.ezfct.Entity.Usuario;
+import com.example.ezfct.Entity.*;
 import com.example.ezfct.Model.Enums.Rol;
+import com.example.ezfct.Repository.AlumnoRepository;
 import com.example.ezfct.Repository.EmpresaRepository;
+import com.example.ezfct.Repository.ProfesorRepository;
 import com.example.ezfct.Repository.UsuarioRepository;
 import com.example.ezfct.Security.JwtUtil;
+import com.example.ezfct.Model.Enums.EstadoPractica;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -52,29 +53,54 @@ public class AuthController {
         }
     }
 
+    @Autowired
+    private AlumnoRepository alumnoRepository;
+
+    @Autowired
+    private ProfesorRepository profesorRepository;
+
 
     @PostMapping("/registeruser")
     public ResponseEntity<?> createUsuario(@RequestBody Usuario usuario) {
         try {
+            // Comprobación básica
+            if (usuario.getRol() == null) {
+                return ResponseEntity.badRequest().body("El rol es obligatorio.");
+            }
+
             String epw = passwordEncoder.encode(usuario.getPassword());
             usuario.setPassword(epw);
+
             Usuario nuevoUsuario = usuarioRepository.save(usuario);
 
-            // construimos el DTO
+            // Según el rol, insertar también en Profesor o Alumno
+            if (usuario.getRol().equals(Rol.ALUMNO)) {
+                Alumno alumno = new Alumno();
+                alumno.setUsuario(nuevoUsuario);
+                alumno.setEstadoPractica(EstadoPractica.PENDIENTE);
+                alumnoRepository.save(alumno);
+            } else if (usuario.getRol().equals(Rol.PROFESOR)) {
+                Profesor profesor = new Profesor();
+                profesor.setUsuario(nuevoUsuario);
+                profesorRepository.save(profesor);
+            }
+
+            // Devolver DTO limpio
             UsuarioDTO dto = new UsuarioDTO(
                     nuevoUsuario.getNombre(),
                     nuevoUsuario.getApellido(),
                     nuevoUsuario.getEmail()
             );
 
-            // devolvemos solo el dto, nada de passwords y eso
             return ResponseEntity.ok(dto);
 
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("El email ya está en uso. Por favor, usa otro.");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al registrar usuario.");
         }
     }
 

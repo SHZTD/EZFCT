@@ -5,6 +5,8 @@ import ButtonComp from '../Components/JSX/ButtonComp.js';
 import './EleccionUsuario.css';
 
 const EleccionUsuario = () => {
+  // limpia el local storage
+  localStorage.clear()
   const navigate = useNavigate();
   const [loaded, setLoaded] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });

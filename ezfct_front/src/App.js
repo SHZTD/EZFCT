@@ -28,15 +28,12 @@ import CrearAlumno from "./Pages/Profesores/Pantallas/JS/CrearAlumno.js"
 
 /* Imports alumnos*/
 
-import LoginAlumno from "./Pages/Alumno/Inicio/JS/Login.js"
-import DiarioAlumno from "./Pages/Alumno/Pantallas/JS/Diario.js"
-import DatosAlumno from "./Pages/Alumno/Pantallas/JS/DatosAlumno.js"
-import OfertasAlumnos from "./Pages/Alumno/Pantallas/JS/OfertasAlumnos.js"
+import LoginAlumno from './Pages/Alumno/Inicio/JS/Login.js';
+import DiarioAlumno from './Pages/Alumno/Pantallas/JS/Diario.js';
+import DatosAlumno from './Pages/Alumno/Pantallas/JS/DatosAlumno.js';
+import OfertasAlumnos from './Pages/Alumno/Pantallas/JS/OfertasAlumnos.js';
 
-/* Imports Admin*/
-import LoginAdmin from "./Pages/Admin/Inicio/JS/LoginAdmin"
-import AdminDashboard from "./Pages/Admin/Pantallas/JS/Dashboard"
-import AdminMessageDetail from "./Pages/Admin/Pantallas/JS/MessageDetail"
+
 
 function App() {
   return (

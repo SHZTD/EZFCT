@@ -3,41 +3,44 @@ import PropTypes from 'prop-types';
 import ButtonComp from '../../../../Components/JSX/ButtonComp.js';
 import LogoDefault from '../../../Imagenes/logo.gif';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../../../../constants.js';
 import '../CSS/Login.css';
 
 
-const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
+const Login = ({ onLogin = () => { }, onBack = () => { }, logo }) => {
   // Estados para el formulario
-  const navigate = useNavigate(); 
+
+  let userLoginEndpoint = "/auth/userlogin";
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [particles, setParticles] = useState([]);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  
+
   // Referencias para elementos DOM
   const particlesContainerRef = useRef(null);
   const formRef = useRef(null);
-  
+
   // Efecto para la animación de entrada
   useEffect(() => {
     // Marcar como cargado para iniciar animaciones
     setTimeout(() => setLoaded(true), 100);
-    
+
     // Crear partículas iniciales
     createInitialParticles();
-    
+
     // Seguimiento del ratón
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
-    
+
     window.addEventListener('mousemove', handleMouseMove);
-    
+
     // Intervalo para animar partículas
     const interval = setInterval(() => {
-      setParticles(prevParticles => 
+      setParticles(prevParticles =>
         prevParticles.map(particle => ({
           ...particle,
           x: (particle.x + particle.speedX + window.innerWidth) % window.innerWidth,
@@ -45,14 +48,14 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
         }))
       );
     }, 50);
-    
+
     // Limpieza al desmontar
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       clearInterval(interval);
     };
   }, []);
-  
+
   // Función para crear partículas iniciales
   const createInitialParticles = () => {
     const newParticles = Array.from({ length: 50 }, () => ({
@@ -65,10 +68,10 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
       opacity: Math.random() * 0.5 + 0.1,
       color: ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6"][Math.floor(Math.random() * 4)],
     }));
-    
+
     setParticles(newParticles);
   };
-  
+
   // Función para crear efecto de explosión de partículas
   const createExplosionEffect = (x, y, color) => {
     const explosionParticles = Array.from({ length: 30 }, () => ({
@@ -81,19 +84,19 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
       opacity: 1,
       color,
     }));
-    
+
     setParticles(prev => [...prev, ...explosionParticles]);
-    
+
     // Eliminar partículas de explosión después de un tiempo
     setTimeout(() => {
       setParticles(prev => prev.slice(0, 50));
     }, 1000);
   };
-  
+
   // Manejar envío del formulario
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
       // Efecto de vibración si faltan campos
       formRef.current.classList.add('shake');
@@ -102,22 +105,58 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
       }, 500);
       return;
     }
-    
+
     // Efecto de explosión de partículas
     createExplosionEffect(mousePosition.x, mousePosition.y, '#3b82f6');
-    
+
     // Llamar a la función de login
     setTimeout(() => {
       onLogin({ email, password });
     }, 300);
   };
-  
+
   // Manejar clic en botón de volver
   const handleBack = () => {
     createExplosionEffect(50, 50, '#f43f5e');
     setTimeout(() => navigate(-1), 300);
   };
-  
+
+  const guardarToken = (token) => {
+    localStorage.setItem('token', token);
+  };
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      formRef.current.classList.add('shake');
+      setTimeout(() => {
+        formRef.current.classList.remove('shake');
+      }, 500);
+      return;
+    }
+
+    try {
+      const response = await fetch(API_URL + userLoginEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        guardarToken(data.token);
+        console.log('Token guardado:', data.token);
+        navigate('/alumnos/ofertas');
+      } else {
+        const errorText = await response.text();
+        alert('Error al iniciar sesión: ' + errorText);
+      }
+    } catch (error) {
+      alert('Error de red: ' + error.message);
+    }
+  };
+
   return (
     <div className="login-container">
       {/* Partículas de fondo */}
@@ -137,25 +176,25 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
           />
         ))}
       </div>
-      
+
       {/* Efecto de luz que sigue al cursor */}
-      <div 
+      <div
         className="cursor-light"
         style={{
           left: `${mousePosition.x}px`,
           top: `${mousePosition.y}px`,
         }}
       />
-      
+
       {/* Botón de volver atrás */}
-      <button 
+      <button
         className={`back-button ${loaded ? 'loaded' : ''}`}
         onClick={handleBack}
         aria-label="Volver"
       >
         ←
       </button>
-      
+
       {/* Contenedor principal */}
       <div className={`login-card ${loaded ? 'loaded' : ''}`}>
         {/* Sección del logo */}
@@ -163,21 +202,21 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
           {/* Círculos decorativos */}
           <div className="decorative-circle circle-1" />
           <div className="decorative-circle circle-2" />
-          
+
           {/* Logo con animación */}
           <div className={`logo-container ${loaded ? 'loaded' : ''}`}>
             <img src={logo || LogoDefault} className="logo" />
           </div>
-          
+
           {/* Título y subtítulo */}
           <h1 className={`title ${loaded ? 'loaded' : ''}`}>EasyFCT</h1>
           <div className={`divider ${loaded ? 'loaded' : ''}`} />
           <p className={`subtitle ${loaded ? 'loaded' : ''}`}>Accede a tu cuenta</p>
-          
+
           {/* Línea decorativa */}
           <div className={`gradient-line ${loaded ? 'loaded' : ''}`} />
         </div>
-        
+
         {/* Formulario */}
         <form className="form-container" onSubmit={handleSubmit} ref={formRef}>
           {/* Campo de email */}
@@ -195,7 +234,7 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
               />
             </div>
           </div>
-          
+
           {/* Campo de contraseña */}
           <div className={`input-group ${loaded ? 'loaded' : ''}`} style={{ transitionDelay: '1.4s' }}>
             <label htmlFor="password">Contraseña</label>
@@ -218,25 +257,25 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
               </button>
             </div>
           </div>
-          
+
           {/* Enlace de olvidé mi contraseña */}
           <div className={`forgot-password ${loaded ? 'loaded' : ''}`}>
             <a href="#">¿Olvidaste tu contraseña?</a>
           </div>
-          
+
           {/* Botón de login usando ButtonComp */}
           <div className={`button-container ${loaded ? 'loaded' : ''}`}>
             <ButtonComp
               className="btn--login"
               icon="🔑"
-              onClick={() => navigate('/alumnos/diario')}
+              onClick={handleLogin}
               transitionDelay="1.6s"
             >
               Iniciar Sesión
             </ButtonComp>
           </div>
         </form>
-        
+
         {/* Pie de página */}
         <div className="footer">
           <p className={loaded ? 'loaded' : ''}>© 2025 EasyFCT - Innovación Educativa</p>
