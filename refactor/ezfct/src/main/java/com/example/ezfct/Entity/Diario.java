@@ -17,7 +17,7 @@ public class Diario {
     @JoinColumn(name = "id_alumno", nullable = false)
     private Alumno alumno;
 
-    private String resumen;
+    @Lob private String resumen;
     private Date fecha;
 
     public int getIdDiario() {
