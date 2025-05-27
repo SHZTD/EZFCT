@@ -1,0 +1,266 @@
+.admin-message-detail {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  .admin-message-detail::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.05;
+    z-index: 1;
+  }
+  
+  .admin-message-header {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .admin-back-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .admin-back-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-5px);
+  }
+  
+  .admin-back-btn img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1);
+  }
+  
+  .admin-message-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .admin-message-content {
+    padding: 30px;
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .admin-message-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 25px;
+  }
+  
+  .admin-message-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .admin-message-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .admin-message-role {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .admin-message-email {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+  }
+  
+  .admin-message-date {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+  }
+  
+  .admin-message-text {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    line-height: 1.6;
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .admin-response-section {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 30px;
+  }
+  
+  .admin-response-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .admin-response-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+  }
+  
+  .admin-response-status {
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .admin-response-status.answered {
+    background: rgba(40, 167, 69, 0.2);
+    color: #28a745;
+    border: 1px solid rgba(40, 167, 69, 0.3);
+  }
+  
+  .admin-response-status.pending {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+  }
+  
+  .admin-response-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .admin-response-textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: vertical;
+    transition: all 0.3s ease;
+  }
+  
+  .admin-response-textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+  }
+  
+  .admin-response-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .admin-response-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+  }
+  
+  .admin-response-btn {
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+  }
+  
+  .admin-response-btn.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+  }
+  
+  .admin-response-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+  }
+  
+  .admin-response-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+  
+  .admin-response-btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .admin-existing-response {
+    background: rgba(40, 167, 69, 0.1);
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    line-height: 1.6;
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  @media (max-width: 768px) {
+    .admin-message-header {
+      padding: 15px 20px;
+    }
+  
+    .admin-message-content {
+      padding: 20px;
+    }
+  
+    .admin-message-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  
+    .admin-response-actions {
+      flex-direction: column;
+    }
+  
+    .admin-response-btn {
+      width: 100%;
+    }
+  }
+  
