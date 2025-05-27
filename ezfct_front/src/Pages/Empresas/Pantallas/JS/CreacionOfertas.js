@@ -7,9 +7,11 @@ import paperIcon from "../../../Imagenes/paper.png"
 import usersIcon from "../../../Imagenes/users.png"
 import questionIcon from "../../../Imagenes/question.png"
 import logo from "../../../Imagenes/logo.gif"
-
+import { API_URL } from "../../../../constants"
 const OfertasPage = () => {
-  let API_URL = "http://192.168.1.139:7484/api/practicas/empresa"
+
+  let obtenerPracticasEmpresaEndpoint = "/api/practicas/empresa"
+  
   const [activeTab, setActiveTab] = useState("offers")
   const [isLoading, setIsLoading] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -44,7 +46,7 @@ const OfertasPage = () => {
   // Función para obtener ofertas del backend
   const fetchOffers = async () => {
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(API_URL + obtenerPracticasEmpresaEndpoint, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -99,7 +101,7 @@ const OfertasPage = () => {
         vacantes: Number.parseInt(formData.vacancies),
       }
 
-      let PRACTICAS_URL = "http://192.168.1.139:7484/api/practicas";
+      let PRACTICAS_URL = API_URL + "/api/practicas";
       const response = await fetch(PRACTICAS_URL, {
         method: "POST",
         headers: {
@@ -137,7 +139,7 @@ const OfertasPage = () => {
 
   // Función para eliminar una oferta
   const deleteOffer = async (id) => {
-    let DELETE_URL = `http://192.168.1.139:7484/api/practicas/${id}`
+    let DELETE_URL = API_URL + `/api/practicas/${id}`
     try {
       const response = await fetch(DELETE_URL, {
         method: "DELETE",

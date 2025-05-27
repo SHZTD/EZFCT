@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import ButtonComp from '../../../../Components/JSX/ButtonComp.js';
 import LogoDefault from '../../../Imagenes/logo.gif';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../../../../constants.js';
 import '../CSS/Login.css';
 
 
 const Login = ({ onLogin = () => { }, onBack = () => { }, logo }) => {
   // Estados para el formulario
-  let API_URL = "http://192.168.1.139:7484/auth/userlogin";
 
+  let userLoginEndpoint = "/auth/userlogin";
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -134,7 +135,7 @@ const Login = ({ onLogin = () => { }, onBack = () => { }, logo }) => {
     }
 
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(API_URL + userLoginEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -7,8 +7,10 @@ import LogoDefault from "../../../Imagenes/logo.gif"
 import { useNavigate } from "react-router-dom"
 import "../CSS/Login.css"
 
+import { API_URL } from '../../../../constants.js';
+
 const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
-  let API_URL = "http://192.168.1.139:7484/auth/empresalogin"
+  let empresaLoginEndpoint = "/auth/empresalogin"
 
   // Estados para el formulario
   const navigate = useNavigate()
@@ -45,7 +47,7 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
     setError("")
 
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(API_URL + empresaLoginEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
