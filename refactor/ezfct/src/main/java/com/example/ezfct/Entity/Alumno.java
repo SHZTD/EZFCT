@@ -27,6 +27,7 @@ public class Alumno {
     private String habilidades;
     private String educacion;
     private String experiencia;
+    private String competencias;
     private String disponibilidad;
     private String portfolio;
 
@@ -75,7 +76,6 @@ public class Alumno {
 
     // jdr
 
-
     public String getBiografia() {
         return biografia;
     }
@@ -122,5 +122,13 @@ public class Alumno {
 
     public void setPortfolio(String portfolio) {
         this.portfolio = portfolio;
+    }
+
+    public String getCompetencias() {
+        return competencias;
+    }
+
+    public void setCompetencias(String competencias) {
+        this.competencias = competencias;
     }
 }
