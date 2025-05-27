@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../CSS/OfertasProfesor.css"
-import { Search, Filter, ChevronRight, Calendar, Users, Briefcase } from "lucide-react"
+import { Search, HelpCircle, ChevronRight, Calendar, Users, Briefcase } from "lucide-react"
 
 const ProfesorOffers = () => {
   const [loaded, setLoaded] = useState(false)
@@ -180,6 +180,11 @@ const ProfesorOffers = () => {
     navigate(`/profesores/detalles/${id}`)
   }
 
+  const handleNavigateToHelp = () => {
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")
+    setTimeout(() => navigate("/profesores/areaContacto"), 300)
+  }
+
   return (
     <div className="profesor-offers-page-alt">
       {/* Partículas de fondo */}
@@ -231,9 +236,9 @@ const ProfesorOffers = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <button className="filter-button">
-            <Filter size={18} />
-            <span>Filters</span>
+          <button className="filter-button" onClick={handleNavigateToHelp}>
+            <HelpCircle size={18} />
+            <span>Help</span>
           </button>
         </div>
 

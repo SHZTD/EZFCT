@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import "../CSS/DetallesOferta.css"
-import { ArrowLeft, Briefcase, Calendar, MapPin, Users, Building, GraduationCap, Clock, Mail, Phone } from 'lucide-react'
+import { ArrowLeft, Calendar, MapPin, Users, Building, GraduationCap, Clock, Mail, Phone } from "lucide-react"
+import ButtonComp from "../../../../Components/JSX/ButtonComp"
 
 const OfertaDetalleProfesor = () => {
   const [loaded, setLoaded] = useState(false)
@@ -22,38 +23,26 @@ const OfertaDetalleProfesor = () => {
       category: "programming",
       company: "TechSolutions",
       companyLogo: "https://via.placeholder.com/100",
-      companyDescription: "TechSolutions is a leading technology company specializing in database solutions and cloud infrastructure.",
+      companyDescription:
+        "TechSolutions is a leading technology company specializing in database solutions and cloud infrastructure.",
       location: "Madrid",
       address: "Calle Gran Vía 28, 28013 Madrid",
       date: "2025-04-15",
       startDate: "2025-05-01",
       endDate: "2025-07-30",
       students: 3,
-      description: "We are looking for a talented database programmer to join our team for a 3-month internship. The candidate will work on designing, implementing, and optimizing database solutions for our enterprise clients. This is a great opportunity to gain hands-on experience in a professional environment.",
+      description:
+        "We are looking for a talented database programmer to join our team for a 3-month internship. The candidate will work on designing, implementing, and optimizing database solutions for our enterprise clients. This is a great opportunity to gain hands-on experience in a professional environment.",
       requirements: [
         "Knowledge of SQL and relational databases",
         "Basic understanding of database design principles",
         "Familiarity with at least one programming language (Java, Python, etc.)",
         "Good problem-solving skills",
-        "Ability to work in a team environment"
-      ],
-      responsibilities: [
-        "Assist in database design and implementation",
-        "Write and optimize SQL queries",
-        "Participate in code reviews and testing",
-        "Document database structures and processes",
-        "Collaborate with the development team on integration tasks"
-      ],
-      benefits: [
-        "Flexible working hours",
-        "Mentorship from experienced professionals",
-        "Possibility of future employment",
-        "Modern office in central Madrid",
-        "Transportation allowance"
+        "Ability to work in a team environment",
       ],
       contactPerson: "María García",
       contactEmail: "m.garcia@techsolutions.example",
-      contactPhone: "+34 912 345 678"
+      contactPhone: "+34 912 345 678",
     },
     {
       id: 2,
@@ -62,38 +51,40 @@ const OfertaDetalleProfesor = () => {
       category: "design",
       company: "CreativeMinds",
       companyLogo: "https://via.placeholder.com/100",
-      companyDescription: "CreativeMinds is an innovative design agency working with clients across various industries to create beautiful and functional digital experiences.",
+      companyDescription:
+        "CreativeMinds is an innovative design agency working with clients across various industries to create beautiful and functional digital experiences.",
       location: "Barcelona",
       address: "Avinguda Diagonal 211, 08018 Barcelona",
       date: "2025-04-20",
       startDate: "2025-06-01",
       endDate: "2025-08-31",
       students: 2,
-      description: "Join our creative team as a UI Design intern and help us create stunning user interfaces for web and mobile applications. You'll work closely with our design team to create wireframes, prototypes, and final designs for real client projects.",
+      description:
+        "Join our creative team as a UI Design intern and help us create stunning user interfaces for web and mobile applications. You'll work closely with our design team to create wireframes, prototypes, and final designs for real client projects.",
       requirements: [
         "Basic knowledge of design principles",
         "Familiarity with design tools (Figma, Adobe XD, etc.)",
         "Understanding of responsive design concepts",
         "Creative thinking and attention to detail",
-        "Interest in user experience design"
+        "Interest in user experience design",
       ],
       responsibilities: [
         "Create wireframes and prototypes",
         "Design user interface elements",
         "Collaborate with UX designers and developers",
         "Participate in design reviews and iterations",
-        "Research design trends and best practices"
+        "Research design trends and best practices",
       ],
       benefits: [
         "Creative and inspiring work environment",
         "Portfolio-building opportunities",
         "Team lunches and social events",
         "Access to design resources and tools",
-        "Central location in Barcelona"
+        "Central location in Barcelona",
       ],
       contactPerson: "Jordi Puig",
       contactEmail: "jordi@creativeminds.example",
-      contactPhone: "+34 933 456 789"
+      contactPhone: "+34 933 456 789",
     },
     {
       id: 3,
@@ -102,38 +93,40 @@ const OfertaDetalleProfesor = () => {
       category: "programming",
       company: "WebInnovate",
       companyLogo: "https://via.placeholder.com/100",
-      companyDescription: "WebInnovate specializes in creating cutting-edge web applications and interfaces for clients in the technology and finance sectors.",
+      companyDescription:
+        "WebInnovate specializes in creating cutting-edge web applications and interfaces for clients in the technology and finance sectors.",
       location: "Valencia",
       address: "Carrer de Colón 58, 46004 Valencia",
       date: "2025-05-01",
       startDate: "2025-07-01",
       endDate: "2025-09-30",
       students: 1,
-      description: "We're looking for a talented interface developer intern to join our team in Valencia. You'll be working on real client projects, implementing responsive and accessible user interfaces using modern web technologies.",
+      description:
+        "We're looking for a talented interface developer intern to join our team in Valencia. You'll be working on real client projects, implementing responsive and accessible user interfaces using modern web technologies.",
       requirements: [
         "Knowledge of HTML, CSS, and JavaScript",
         "Familiarity with at least one modern framework (React, Vue, etc.)",
         "Understanding of responsive design principles",
         "Basic knowledge of web accessibility standards",
-        "Willingness to learn and adapt to new technologies"
+        "Willingness to learn and adapt to new technologies",
       ],
       responsibilities: [
         "Implement user interfaces based on designs",
         "Write clean, maintainable code",
         "Test and debug across different browsers and devices",
         "Collaborate with designers and backend developers",
-        "Participate in code reviews and team meetings"
+        "Participate in code reviews and team meetings",
       ],
       benefits: [
         "Flexible schedule",
         "Remote work options",
         "Professional development opportunities",
         "Modern office in central Valencia",
-        "Team building activities"
+        "Team building activities",
       ],
       contactPerson: "Ana Martínez",
       contactEmail: "ana@webinnovate.example",
-      contactPhone: "+34 962 345 678"
+      contactPhone: "+34 962 345 678",
     },
     {
       id: 4,
@@ -142,38 +135,40 @@ const OfertaDetalleProfesor = () => {
       category: "programming",
       company: "JavaTech",
       companyLogo: "https://via.placeholder.com/100",
-      companyDescription: "JavaTech is a software development company specializing in enterprise Java applications for the banking and insurance sectors.",
+      companyDescription:
+        "JavaTech is a software development company specializing in enterprise Java applications for the banking and insurance sectors.",
       location: "Sevilla",
       address: "Avenida de la Constitución 20, 41004 Sevilla",
       date: "2025-05-10",
       startDate: "2025-06-15",
       endDate: "2025-09-15",
       students: 4,
-      description: "Join our development team as a Java programming intern. You'll gain hands-on experience working with enterprise Java applications, learning about software architecture, and developing your programming skills in a professional environment.",
+      description:
+        "Join our development team as a Java programming intern. You'll gain hands-on experience working with enterprise Java applications, learning about software architecture, and developing your programming skills in a professional environment.",
       requirements: [
         "Knowledge of Java programming fundamentals",
         "Understanding of object-oriented programming concepts",
         "Familiarity with basic data structures and algorithms",
         "Interest in enterprise software development",
-        "Good problem-solving skills"
+        "Good problem-solving skills",
       ],
       responsibilities: [
         "Develop and maintain Java applications",
         "Write unit tests for code quality assurance",
         "Debug and fix issues in existing applications",
         "Participate in code reviews and team meetings",
-        "Document code and technical specifications"
+        "Document code and technical specifications",
       ],
       benefits: [
         "Structured training program",
         "Mentorship from senior developers",
         "Exposure to enterprise-level projects",
         "Comfortable office in historic Sevilla",
-        "Flexible working hours"
+        "Flexible working hours",
       ],
       contactPerson: "Carlos Ruiz",
       contactEmail: "c.ruiz@javatech.example",
-      contactPhone: "+34 954 567 890"
+      contactPhone: "+34 954 567 890",
     },
     {
       id: 5,
@@ -182,38 +177,40 @@ const OfertaDetalleProfesor = () => {
       category: "hardware",
       company: "HardwarePro",
       companyLogo: "https://via.placeholder.com/100",
-      companyDescription: "HardwarePro is a leading IT services company providing hardware support, maintenance, and repair services to businesses and educational institutions.",
+      companyDescription:
+        "HardwarePro is a leading IT services company providing hardware support, maintenance, and repair services to businesses and educational institutions.",
       location: "Bilbao",
       address: "Gran Vía de Don Diego López de Haro 45, 48011 Bilbao",
       date: "2025-05-15",
       startDate: "2025-07-01",
       endDate: "2025-10-01",
       students: 2,
-      description: "We're looking for laptop technician interns to join our technical support team. You'll gain practical experience in diagnosing and repairing hardware issues, installing and configuring operating systems, and providing technical support to clients.",
+      description:
+        "We're looking for laptop technician interns to join our technical support team. You'll gain practical experience in diagnosing and repairing hardware issues, installing and configuring operating systems, and providing technical support to clients.",
       requirements: [
         "Basic knowledge of computer hardware components",
         "Understanding of operating systems (Windows, macOS)",
         "Problem-solving and troubleshooting skills",
         "Good customer service attitude",
-        "Willingness to learn new technologies"
+        "Willingness to learn new technologies",
       ],
       responsibilities: [
         "Diagnose and repair hardware issues",
         "Install and configure operating systems and software",
         "Perform preventive maintenance on laptops and desktops",
         "Document repair procedures and inventory",
-        "Provide technical support to clients"
+        "Provide technical support to clients",
       ],
       benefits: [
         "Hands-on technical experience",
         "Certification preparation assistance",
         "Exposure to various hardware and software technologies",
         "Modern facilities in central Bilbao",
-        "Transportation allowance"
+        "Transportation allowance",
       ],
       contactPerson: "Miren Etxebarria",
       contactEmail: "miren@hardwarepro.example",
-      contactPhone: "+34 944 567 890"
+      contactPhone: "+34 944 567 890",
     },
     {
       id: 6,
@@ -222,31 +219,33 @@ const OfertaDetalleProfesor = () => {
       category: "programming",
       company: "DataScience Inc.",
       companyLogo: "https://via.placeholder.com/100",
-      companyDescription: "DataScience Inc. specializes in data analysis, machine learning solutions, and AI-driven applications for businesses across various sectors.",
+      companyDescription:
+        "DataScience Inc. specializes in data analysis, machine learning solutions, and AI-driven applications for businesses across various sectors.",
       location: "Málaga",
       address: "Calle Larios 15, 29005 Málaga",
       date: "2025-05-20",
       startDate: "2025-06-01",
       endDate: "2025-08-31",
       students: 3,
-      description: "Join our data science team as a Python programming intern. You'll work on real-world data analysis projects, learn about machine learning algorithms, and develop your programming skills in a collaborative environment.",
+      description:
+        "Join our data science team as a Python programming intern. You'll work on real-world data analysis projects, learn about machine learning algorithms, and develop your programming skills in a collaborative environment.",
       requirements: [
         "Knowledge of Python programming basics",
         "Interest in data analysis and machine learning",
         "Familiarity with libraries like NumPy, Pandas (a plus)",
         "Basic understanding of statistics",
-        "Problem-solving mindset and attention to detail"
+        "Problem-solving mindset and attention to detail",
       ],
       contactPerson: "Laura Sánchez",
       contactEmail: "laura@datascience.example",
-      contactPhone: "+34 951 234 567"
-    }
+      contactPhone: "+34 951 234 567",
+    },
   ]
 
   // Efecto para la animación de entrada y partículas
   useEffect(() => {
     // Buscar la oferta por ID
-    const ofertaEncontrada = ofertas.find(o => o.id === parseInt(id))
+    const ofertaEncontrada = ofertas.find((o) => o.id === Number.parseInt(id))
     setOferta(ofertaEncontrada)
 
     // Marcar como cargado para iniciar animaciones
@@ -333,11 +332,6 @@ const OfertaDetalleProfesor = () => {
   const handleNavigateToAssign = () => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
     setTimeout(() => navigate("/profesores/alumnos"), 300)
-  }
-
-  const handleNavigateToHelp = () => {
-    createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")
-    setTimeout(() => navigate("/profesores/areaContacto"), 300)
   }
 
   if (!oferta) {
@@ -435,16 +429,13 @@ const OfertaDetalleProfesor = () => {
                   </li>
                 ))}
               </ul>
-            </section>           
-          </div>
+            </section>
 
-          {/* Sidebar con información adicional */}
-          <div className="oferta-sidebar">
-            {/* Información de la empresa */}
+         
+ {/* Información de la empresa */}
             <div className={`sidebar-card company-card ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.2s" }}>
               <h3 className="sidebar-title">Company Information</h3>
               <div className="company-info">
-                <img src={oferta.companyLogo || "/placeholder.svg"} alt={`${oferta.company} logo`} className="company-logo" />
                 <h4 className="company-name">{oferta.company}</h4>
                 <p className="company-description">{oferta.companyDescription}</p>
                 <div className="company-location">
@@ -453,10 +444,13 @@ const OfertaDetalleProfesor = () => {
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Detalles del periodo */}
-            <div className={`sidebar-card period-card ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.3s" }}>
-              <h3 className="sidebar-title">Internship Period</h3>
+          {/* Sidebar con información adicional */}
+          <div className="oferta-sidebar">
+              {/* Sección de periodo de prácticas */}
+            <section className={`oferta-section ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.3s" }}>
+              <h2 className="section-title">Internship Period</h2>
               <div className="period-info">
                 <div className="period-item">
                   <Calendar size={16} />
@@ -477,19 +471,17 @@ const OfertaDetalleProfesor = () => {
                   <div>
                     <span className="period-label">Duration</span>
                     <span className="period-value">
-                      {Math.round(
-                        (new Date(oferta.endDate) - new Date(oferta.startDate)) / (1000 * 60 * 60 * 24 * 30)
-                      )}{" "}
+                      {Math.round((new Date(oferta.endDate) - new Date(oferta.startDate)) / (1000 * 60 * 60 * 24 * 30))}{" "}
                       months
                     </span>
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
 
-            {/* Información de contacto */}
-            <div className={`sidebar-card contact-card ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.4s" }}>
-              <h3 className="sidebar-title">Contact Information</h3>
+  {/* Sección de información de contacto */}
+            <section className={`oferta-section ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.4s" }}>
+              <h2 className="section-title">Contact Information</h2>
               <div className="contact-info">
                 <div className="contact-person">{oferta.contactPerson}</div>
                 <div className="contact-item">
@@ -505,26 +497,13 @@ const OfertaDetalleProfesor = () => {
                   </a>
                 </div>
               </div>
-            </div>
-
+            </section>
             {/* Botones de acción */}
             <div className={`action-buttons ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.5s" }}>
-              <button className="action-button assign-button" onClick={handleNavigateToAssign}>
-                <GraduationCap size={18} />
-                <span>Assign Student</span>
-              </button>
-              <button className="action-button contact-button" onClick={handleNavigateToHelp}>
-                <Mail size={18} />
-                <span>Contact Area</span>
-              </button>
+              <ButtonComp text="Assign Student" icon={<GraduationCap size={18} />} onClick={handleNavigateToAssign} />
             </div>
           </div>
         </div>
-
-        {/* Pie de página */}
-        <footer className={`page-footer ${loaded ? "loaded" : ""}`}>
-          <p>© 2025 EasyFCT - Innovación Educativa</p>
-        </footer>
       </div>
     </div>
   )
