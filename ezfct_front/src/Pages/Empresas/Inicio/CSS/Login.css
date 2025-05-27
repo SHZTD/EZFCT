@@ -1,5 +1,5 @@
 /* Estilos generales */
-.login-container {
+.empresa-login-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   display: flex;
@@ -12,8 +12,38 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Partículas de fondo */
+.empresa-particles-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.empresa-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+/* Efecto de luz que sigue al cursor */
+.empresa-cursor-light {
+  position: fixed;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* Botón de volver atrás */
-.back-button {
+.empresa-back-button {
   position: fixed;
   top: 30px;
   left: 30px;
@@ -35,18 +65,18 @@
   z-index: 10;
 }
 
-.back-button:hover {
+.empresa-back-button:hover {
   background-color: rgba(244, 63, 94, 0.9);
   box-shadow: 0 10px 25px rgba(244, 63, 94, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.2), 0 0 20px rgba(244, 63, 94, 0.5);
 }
 
-.back-button.loaded {
+.empresa-back-button.loaded {
   transform: scale(1);
   opacity: 1;
 }
 
 /* Contenedor principal */
-.login-card {
+.empresa-login-card {
   width: 100%;
   max-width: 450px;
   background-color: rgba(255, 255, 255, 0.1);
@@ -62,13 +92,13 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.login-card.loaded {
+.empresa-login-card.loaded {
   transform: rotateX(0deg) scale(1);
   opacity: 1;
 }
 
 /* Sección del logo */
-.logo-section {
+.empresa-logo-section {
   padding: 40px 32px 20px;
   display: flex;
   flex-direction: column;
@@ -78,45 +108,45 @@
 }
 
 /* Círculos decorativos */
-.decorative-circle {
+.empresa-decorative-circle {
   position: absolute;
   border-radius: 50%;
 }
 
-.circle-1 {
+.empresa-circle-1 {
   width: 150px;
   height: 150px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%);
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(251, 146, 60, 0.2) 100%);
   top: -50px;
   left: -50px;
-  animation: float 8s infinite ease-in-out;
+  animation: empresa-float 8s infinite ease-in-out;
 }
 
-.circle-2 {
+.empresa-circle-2 {
   width: 100px;
   height: 100px;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
+  background: linear-gradient(135deg, rgba(251, 146, 60, 0.2) 0%, rgba(249, 115, 22, 0.2) 100%);
   bottom: -30px;
   right: -30px;
-  animation: float 6s infinite ease-in-out reverse;
+  animation: empresa-float 6s infinite ease-in-out reverse;
 }
 
 /* Logo */
-.logo-container {
+.empresa-logo-container {
   background-color: rgba(255, 255, 255, 0.9);
   padding: 20px;
   border-radius: 50%;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 0 0 15px rgba(255, 255, 255, 0.1);
   margin-bottom: 20px;
-  animation: pulse 2s infinite ease-in-out;
+  animation: empresa-pulse 2s infinite ease-in-out;
   transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s;
 }
 
-.logo-container.loaded {
+.empresa-logo-container.loaded {
   transform: scale(1);
 }
 
-.logo {
+.empresa-logo {
   height: 80px;
   width: 80px;
   object-fit: contain;
@@ -124,7 +154,7 @@
 }
 
 /* Título y subtítulo */
-.title {
+.empresa-title {
   font-size: 36px;
   font-weight: bold;
   color: white;
@@ -136,12 +166,12 @@
   margin-bottom: 5px;
 }
 
-.title.loaded {
+.empresa-title.loaded {
   opacity: 1;
   transform: translateY(0);
 }
 
-.divider {
+.empresa-divider {
   width: 60px;
   height: 4px;
   background: rgba(255, 255, 255, 0.7);
@@ -152,12 +182,12 @@
   transition: transform 0.8s ease 0.8s, opacity 0.8s ease 0.8s;
 }
 
-.divider.loaded {
+.empresa-divider.loaded {
   opacity: 1;
   transform: scaleX(1);
 }
 
-.subtitle {
+.empresa-subtitle {
   color: rgba(255, 255, 255, 0.9);
   font-size: 16px;
   text-align: center;
@@ -167,13 +197,13 @@
   margin-bottom: 15px;
 }
 
-.subtitle.loaded {
+.empresa-subtitle.loaded {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* Línea decorativa */
-.gradient-line {
+.empresa-gradient-line {
   width: 80%;
   height: 2px;
   background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5), transparent);
@@ -182,18 +212,18 @@
   transition: opacity 0.8s ease 1.2s;
 }
 
-.gradient-line.loaded {
+.empresa-gradient-line.loaded {
   opacity: 1;
 }
 
 /* Formulario */
-.form-container {
+.empresa-form-container {
   padding: 0 32px 30px;
   position: relative;
 }
 
 /* Mensaje de error */
-.error-message {
+.empresa-error-message {
   background-color: rgba(239, 68, 68, 0.2);
   color: #ef4444;
   padding: 12px;
@@ -201,23 +231,23 @@
   margin-bottom: 20px;
   text-align: center;
   border: 1px solid rgba(239, 68, 68, 0.3);
-  animation: fadeIn 0.3s ease forwards;
+  animation: empresa-fadeIn 0.3s ease forwards;
 }
 
 /* Grupos de input */
-.input-group {
+.empresa-input-group {
   margin-bottom: 20px;
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
-.input-group.loaded {
+.empresa-input-group.loaded {
   opacity: 1;
   transform: translateY(0);
 }
 
-.input-group label {
+.empresa-input-group label {
   display: block;
   color: rgba(255, 255, 255, 0.9);
   font-size: 14px;
@@ -225,19 +255,19 @@
   font-weight: 500;
 }
 
-.input-wrapper {
+.empresa-input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.input-icon {
+.empresa-input-icon {
   position: absolute;
   left: 15px;
   font-size: 16px;
 }
 
-.input-group input {
+.empresa-input-group input {
   width: 100%;
   padding: 15px 15px 15px 45px;
   border-radius: 12px;
@@ -249,19 +279,19 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.input-group input:focus {
+.empresa-input-group input:focus {
   outline: none;
-  border-color: rgba(59, 130, 246, 0.5);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-color: rgba(249, 115, 22, 0.5);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.25), 0 4px 10px rgba(0, 0, 0, 0.1);
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.input-group input::placeholder {
+.empresa-input-group input::placeholder {
   color: rgba(255, 255, 255, 0.4);
 }
 
 /* Botón para mostrar/ocultar contraseña */
-.toggle-password {
+.empresa-toggle-password {
   position: absolute;
   right: 15px;
   background: none;
@@ -272,12 +302,12 @@
   transition: color 0.3s ease;
 }
 
-.toggle-password:hover {
+.empresa-toggle-password:hover {
   color: rgba(255, 255, 255, 1);
 }
 
 /* Enlace de olvidé mi contraseña */
-.forgot-password {
+.empresa-forgot-password {
   text-align: right;
   margin-bottom: 25px;
   opacity: 0;
@@ -285,40 +315,40 @@
   transition: opacity 0.8s ease 1.5s, transform 0.8s ease 1.5s;
 }
 
-.forgot-password.loaded {
+.empresa-forgot-password.loaded {
   opacity: 1;
   transform: translateY(0);
 }
 
-.forgot-password a {
-  color: rgba(59, 130, 246, 0.9);
+.empresa-forgot-password a {
+  color: rgba(249, 115, 22, 0.9);
   text-decoration: none;
   font-size: 14px;
   transition: color 0.3s ease;
 }
 
-.forgot-password a:hover {
-  color: rgba(59, 130, 246, 1);
+.empresa-forgot-password a:hover {
+  color: rgba(249, 115, 22, 1);
   text-decoration: underline;
 }
 
 /* Contenedor del botón */
-.button-container {
+.empresa-button-container {
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.8s ease 1.6s, transform 0.8s ease 1.6s;
   margin-bottom: 20px;
 }
 
-.button-container.loaded {
+.empresa-button-container.loaded {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* Estilos específicos para el ButtonComp */
-.btn--login {
+.empresa-btn--login {
   width: 100%;
-  background-color: #2563eb;
+  background-color: #f97316;
   color: white;
   font-weight: 600;
   font-size: 18px;
@@ -326,13 +356,13 @@
   border-radius: 14px;
 }
 
-.btn--login:hover {
-  background-color: #1d4ed8;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.2), 0 0 20px #2563eb;
+.empresa-btn--login:hover {
+  background-color: #ea580c;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.2), 0 0 20px #f97316;
   transform: translateY(-2px);
 }
 
-.btn--login:disabled {
+.empresa-btn--login:disabled {
   background-color: #6b7280;
   cursor: not-allowed;
   transform: none;
@@ -340,55 +370,55 @@
 }
 
 /* Texto adicional */
-.additional-text {
+.empresa-additional-text {
   text-align: center;
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.8s ease 1.7s, transform 0.8s ease 1.7s;
 }
 
-.additional-text.loaded {
+.empresa-additional-text.loaded {
   opacity: 1;
   transform: translateY(0);
 }
 
-.additional-text p {
+.empresa-additional-text p {
   color: rgba(255, 255, 255, 0.7);
   font-size: 14px;
 }
 
-.additional-text a {
-  color: rgba(59, 130, 246, 0.9);
+.empresa-additional-text a {
+  color: rgba(249, 115, 22, 0.9);
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
-.additional-text a:hover {
-  color: rgba(59, 130, 246, 1);
+.empresa-additional-text a:hover {
+  color: rgba(249, 115, 22, 1);
   text-decoration: underline;
 }
 
 /* Pie de página */
-.footer {
+.empresa-footer {
   background-color: rgba(255, 255, 255, 0.05);
   padding: 16px 24px;
   text-align: center;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.footer p {
+.empresa-footer p {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.7);
   opacity: 0;
   transition: opacity 0.8s ease 1.8s;
 }
 
-.footer p.loaded {
+.empresa-footer p.loaded {
   opacity: 1;
 }
 
 /* Animaciones */
-@keyframes float {
+@keyframes empresa-float {
   0%,
   100% {
     transform: translateY(0) rotate(0deg);
@@ -398,7 +428,7 @@
   }
 }
 
-@keyframes pulse {
+@keyframes empresa-pulse {
   0%,
   100% {
     transform: scale(1);
@@ -408,7 +438,7 @@
   }
 }
 
-@keyframes fadeIn {
+@keyframes empresa-fadeIn {
   from {
     opacity: 0;
     transform: translateY(-10px);
@@ -420,7 +450,7 @@
 }
 
 /* Animación de vibración para validación */
-@keyframes shake {
+@keyframes empresa-shake {
   0%,
   100% {
     transform: translateX(0);
@@ -440,26 +470,26 @@
   }
 }
 
-.shake {
-  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+.empresa-shake {
+  animation: empresa-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
 /* Estilos responsivos */
 @media (max-width: 480px) {
-  .login-card {
+  .empresa-login-card {
     max-width: 100%;
   }
 
-  .title {
+  .empresa-title {
     font-size: 28px;
   }
 
-  .logo {
+  .empresa-logo {
     height: 60px;
     width: 60px;
   }
 
-  .back-button {
+  .empresa-back-button {
     top: 15px;
     left: 15px;
     width: 40px;
