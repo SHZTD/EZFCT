@@ -89,7 +89,7 @@ const GestionProfesores = () => {
   const [formData, setFormData] = useState({})
 
   useEffect(() => {
-    const adminToken = localStorage.getItem("adminToken")
+    const adminToken = localStorage.getItem("token")
     if (!adminToken) {
       navigate("/admin/login")
     }
