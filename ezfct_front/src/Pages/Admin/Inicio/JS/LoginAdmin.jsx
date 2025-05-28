@@ -6,10 +6,9 @@ import ButtonComp from "../../../../Components/JSX/ButtonComp.js"
 import LogoDefault from "../../../Imagenes/ajuste.png"
 import { useNavigate } from "react-router-dom"
 import "../CSS/LoginAdmin.css"
+import { API_URL } from "../../../../constants.js"
 
-const tokenVar = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBlemZjdC5jb20iLCJpZCI6Mywicm9sIjoiQURNSU4iLCJpYXQiOjE3NDg0Njk2MjAsImV4cCI6MTc0ODU1NjAyMH0.VryQm6V7ExV0oDih9tbME8OCK8hp-OcZKsPiB8nPp3w"
 const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
-  localStorage.setItem('token', tokenVar);
   // Estados para el formulario
   const navigate = useNavigate()
   const [email, setEmail] = useState("")
@@ -122,38 +121,49 @@ const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
   }
 
   const guardarToken = (token) => {
-    localStorage.setItem("adminToken", token)
+    localStorage.setItem("token", token)
   }
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      formRef.current.classList.add("admin-shake")
-      setTimeout(() => {
-        formRef.current.classList.remove("admin-shake")
-      }, 500)
-      return
-    }
+  const handleLogin = async (email, password, mousePosition, formRef, navigate) => {
+  try {
+      const endpointLogin = API_URL + "/auth/userlogin";
 
-    try {
-      // Simulación de login de admin
-      if (email === "admin@ezfct.com" && password === "admin123") {
-        guardarToken("admin-token-123")
-        localStorage.setItem("adminEmail", email)
-        createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+      const response = await fetch(endpointLogin, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Credenciales incorrectas");
+      }
+
+      const data = await response.json();
+
+      if (data.token) {
+        guardarToken(data.token); // tu función local
+        localStorage.setItem("userEmail", email);
+
+        createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981");
         setTimeout(() => {
-          navigate("/admin/dashboard")
-        }, 300)
+          navigate("/dashboard");
+        }, 300);
       } else {
-        alert("Credenciales incorrectas")
-        formRef.current.classList.add("admin-shake")
-        setTimeout(() => {
-          formRef.current.classList.remove("admin-shake")
-        }, 500)
+        throw new Error("No se recibió un token.");
       }
     } catch (error) {
-      alert("Error de red: " + error.message)
+      alert("Error: " + error.message);
+      if (formRef?.current) {
+        formRef.current.classList.add("admin-shake");
+        setTimeout(() => {
+          formRef.current.classList.remove("admin-shake");
+        }, 500);
+      }
     }
-  }
+  };
+
 
   return (
     <div className="admin-login-container">
@@ -255,7 +265,14 @@ const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
 
           {/* Botón de login usando ButtonComp */}
           <div className={`admin-button-container ${loaded ? "loaded" : ""}`}>
-            <ButtonComp className="admin-btn--login" icon="🔑" onClick={handleLogin} transitionDelay="1.6s">
+            <ButtonComp
+              className="admin-btn--login"
+              icon="🔑"
+              onClick={() =>
+                handleLogin(email, password, mousePosition, formRef, navigate)
+              }
+              transitionDelay="1.6s"
+            >
               Acceder al Panel
             </ButtonComp>
           </div>
