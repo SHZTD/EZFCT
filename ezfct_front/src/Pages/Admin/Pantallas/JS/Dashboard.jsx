@@ -20,33 +20,7 @@ const AdminDashboard = () => {
         "Tengo problemas para acceder a la sección de estudiantes. No puedo ver la lista completa de alumnos asignados.",
       respuesta: null,
       fecha: "2025-01-27",
-    },
-    {
-      id: 2,
-      email: "profesor2@universidad.com",
-      rol: "PROFESOR",
-      mensaje:
-        "Necesito ayuda para entender cómo funciona el sistema de asignación de prácticas. ¿Podrían explicarme el proceso?",
-      respuesta: "Hola, el proceso de asignación se realiza desde la sección de ofertas...",
-      fecha: "2025-01-26",
-    },
-    {
-      id: 3,
-      email: "profesor3@universidad.com",
-      rol: "PROFESOR",
-      mensaje:
-        "El sistema no me permite crear nuevas evaluaciones para los estudiantes. Aparece un error cuando intento guardar.",
-      respuesta: null,
-      fecha: "2025-01-25",
-    },
-    {
-      id: 4,
-      email: "profesor4@universidad.com",
-      rol: "PROFESOR",
-      mensaje: "Solicito información sobre cómo exportar los reportes de progreso de los estudiantes en prácticas.",
-      respuesta: "Para exportar reportes, dirígete a la sección de reportes...",
-      fecha: "2025-01-24",
-    },
+    }
   ]
 
   useEffect(() => {

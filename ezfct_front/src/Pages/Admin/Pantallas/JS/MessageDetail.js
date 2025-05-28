@@ -22,36 +22,7 @@ const AdminMessageDetail = () => {
         "Tengo problemas para acceder a la sección de estudiantes. No puedo ver la lista completa de alumnos asignados. He intentado refrescar la página y cerrar sesión, pero el problema persiste. ¿Podrían ayudarme a solucionarlo?",
       respuesta: null,
       fecha: "2025-01-27",
-    },
-    {
-      id: 2,
-      email: "profesor2@universidad.com",
-      rol: "PROFESOR",
-      mensaje:
-        "Necesito ayuda para entender cómo funciona el sistema de asignación de prácticas. ¿Podrían explicarme el proceso paso a paso? También me gustaría saber si hay algún manual o guía disponible.",
-      respuesta:
-        "Hola, el proceso de asignación se realiza desde la sección de ofertas. Primero debe revisar las ofertas disponibles, luego puede asignar estudiantes según sus perfiles académicos. Le enviaremos un manual detallado por correo.",
-      fecha: "2025-01-26",
-    },
-    {
-      id: 3,
-      email: "profesor3@universidad.com",
-      rol: "PROFESOR",
-      mensaje:
-        'El sistema no me permite crear nuevas evaluaciones para los estudiantes. Aparece un error cuando intento guardar los datos. El mensaje de error dice "Error de conexión con el servidor".',
-      respuesta: null,
-      fecha: "2025-01-25",
-    },
-    {
-      id: 4,
-      email: "profesor4@universidad.com",
-      rol: "PROFESOR",
-      mensaje:
-        "Solicito información sobre cómo exportar los reportes de progreso de los estudiantes en prácticas. Necesito generar informes mensuales para la coordinación académica.",
-      respuesta:
-        "Para exportar reportes, dirígete a la sección de reportes en el menú principal. Allí encontrarás opciones para generar informes por período, estudiante o empresa. Los reportes se pueden exportar en formato PDF o Excel.",
-      fecha: "2025-01-24",
-    },
+    }
   ]
 
   useEffect(() => {

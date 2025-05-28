@@ -7,8 +7,9 @@ import LogoDefault from "../../../Imagenes/ajuste.png"
 import { useNavigate } from "react-router-dom"
 import "../CSS/LoginAdmin.css"
 
+const tokenVar = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBlemZjdC5jb20iLCJpZCI6Mywicm9sIjoiQURNSU4iLCJpYXQiOjE3NDg0Njk2MjAsImV4cCI6MTc0ODU1NjAyMH0.VryQm6V7ExV0oDih9tbME8OCK8hp-OcZKsPiB8nPp3w"
 const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
-  localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBlemZjdC5jb20iLCJpZCI6Mywicm9sIjoiQURNSU4iLCJpYXQiOjE3NDg0NDcyMDcsImV4cCI6MTc0ODUzMzYwN30.3jDR7_7sawU27piYWiDUMhm5rnK1Cb08R4xYBLMAHMc');
+  localStorage.setItem('token', tokenVar);
   // Estados para el formulario
   const navigate = useNavigate()
   const [email, setEmail] = useState("")
