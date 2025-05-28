@@ -25,7 +25,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     // Verificar autenticación
-    const adminToken = localStorage.getItem("adminToken")
+    const adminToken = localStorage.getItem("token")
     if (!adminToken) {
       navigate("/admin/login")
       return
@@ -39,8 +39,7 @@ const AdminDashboard = () => {
   }, [navigate])
 
   const handleLogout = () => {
-    localStorage.removeItem("adminToken")
-    localStorage.removeItem("adminEmail")
+    localStorage.clear()
     navigate("/admin/login")
   }
 
