@@ -21,8 +21,8 @@ const OfertasPage = () => {
     skills: "",
     startDate: "",
     endDate: "",
-    modality: "presencial",
-    vacancies: "1",
+    modality: "",
+    vacancies: ""
   })
 
   // Estado para las ofertas publicadas (conectado al backend)
@@ -380,9 +380,9 @@ const OfertasPage = () => {
                             value={formData.modality}
                             onChange={handleInputChange}
                           >
-                            <option value="presencial">Presencial</option>
-                            <option value="remota">Remota</option>
-                            <option value="híbrido">Híbrido</option>
+                            <option value="PRESENCIAL">Presencial</option>
+                            <option value="REMOTO">Remota</option>
+                            <option value="HIBRIDO">Híbrido</option>
                           </select>
                         </div>
                       </div>
