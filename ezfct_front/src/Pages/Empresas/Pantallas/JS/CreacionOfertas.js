@@ -21,8 +21,8 @@ const OfertasPage = () => {
     skills: "",
     startDate: "",
     endDate: "",
-    modality: "",
-    vacancies: ""
+    modality: "PRESENCIAL", // en caso de que no se haya establecido por antes
+    vacancies: "1" // en caso de que no se haya establecido anteriormente una
   })
 
   // Estado para las ofertas publicadas (conectado al backend)
