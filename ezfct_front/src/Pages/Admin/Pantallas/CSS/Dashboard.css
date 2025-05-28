@@ -196,6 +196,114 @@
   z-index: 1;
 }
 
+/* Nueva sección de gestión */
+.admin-management-section {
+  background: rgba(26, 31, 58, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(74, 144, 226, 0.2);
+  border-radius: 20px;
+  padding: 36px;
+  margin-bottom: 40px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-management-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #4a90e2 0%, #6366f1 50%, #8b5cf6 100%);
+}
+
+.admin-management-section h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.admin-management-section h2::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, #4a90e2 0%, #6366f1 100%);
+  border-radius: 1px;
+}
+
+.admin-management-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.admin-management-card {
+  background: rgba(10, 14, 39, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(74, 144, 226, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-management-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4a90e2 0%, #6366f1 100%);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.admin-management-card:hover {
+  background: rgba(45, 53, 97, 0.6);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  border-color: rgba(74, 144, 226, 0.4);
+}
+
+.admin-management-card:hover::before {
+  transform: scaleX(1);
+}
+
+.management-icon {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #4a90e2 0%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.admin-management-card h3 {
+  color: white;
+  margin: 0 0 12px 0;
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.admin-management-card p {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  text-align: center;
+  font-size: 1rem;
+}
+
 .admin-messages-section {
   background: rgba(26, 31, 58, 0.8);
   backdrop-filter: blur(20px);
@@ -445,6 +553,10 @@
   .admin-stats {
     grid-template-columns: 1fr;
     gap: 20px;
+  }
+
+  .admin-management-cards {
+    grid-template-columns: 1fr;
   }
 
   .admin-filter-buttons {

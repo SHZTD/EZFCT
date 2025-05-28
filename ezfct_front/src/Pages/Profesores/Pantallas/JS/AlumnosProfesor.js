@@ -268,7 +268,6 @@ const EstudiantesProfesor = () => {
           top: `${mousePosition.y}px`,
         }}
       />
-
       {/* Barra de navegación superior */}
       <nav className={`top-navbar ${loaded ? "loaded" : ""}`}>
         <div className="navbar-left">
@@ -483,15 +482,6 @@ const EstudiantesProfesor = () => {
                       id="departamento"
                       value={profileData.departamento}
                       onChange={(e) => setProfileData({ ...profileData, departamento: e.target.value })}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="experiencia">Experiencia</label>
-                    <input
-                      type="text"
-                      id="experiencia"
-                      value={profileData.experiencia}
-                      onChange={(e) => setProfileData({ ...profileData, experiencia: e.target.value })}
                     />
                   </div>
                   <div className="form-group full-width">

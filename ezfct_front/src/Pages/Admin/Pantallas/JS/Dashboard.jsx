@@ -4,82 +4,64 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../CSS/Dashboard.css"
 
-const API_URL = "http://192.168.1.139:7484/api/reporte"
-
 const AdminDashboard = () => {
   const [messages, setMessages] = useState([])
   const [filter, setFilter] = useState("all")
   const [loading, setLoading] = useState(true)
-  const [responseText, setResponseText] = useState("")
-  const [selectedMessage, setSelectedMessage] = useState(null)
   const navigate = useNavigate()
 
-  const fetchMessages = async () => {
-    try {
-      const token = localStorage.getItem("token")
-      if (!token) {
-        navigate("/admin/login")
-        return
-      }
+  // Datos simulados de mensajes
+  const mockMessages = [
+    {
+      id: 1,
+      email: "profesor1@universidad.com",
+      rol: "PROFESOR",
+      mensaje:
+        "Tengo problemas para acceder a la sección de estudiantes. No puedo ver la lista completa de alumnos asignados.",
+      respuesta: null,
+      fecha: "2025-01-27",
+    },
+    {
+      id: 2,
+      email: "profesor2@universidad.com",
+      rol: "PROFESOR",
+      mensaje:
+        "Necesito ayuda para entender cómo funciona el sistema de asignación de prácticas. ¿Podrían explicarme el proceso?",
+      respuesta: "Hola, el proceso de asignación se realiza desde la sección de ofertas...",
+      fecha: "2025-01-26",
+    },
+    {
+      id: 3,
+      email: "profesor3@universidad.com",
+      rol: "PROFESOR",
+      mensaje:
+        "El sistema no me permite crear nuevas evaluaciones para los estudiantes. Aparece un error cuando intento guardar.",
+      respuesta: null,
+      fecha: "2025-01-25",
+    },
+    {
+      id: 4,
+      email: "profesor4@universidad.com",
+      rol: "PROFESOR",
+      mensaje: "Solicito información sobre cómo exportar los reportes de progreso de los estudiantes en prácticas.",
+      respuesta: "Para exportar reportes, dirígete a la sección de reportes...",
+      fecha: "2025-01-24",
+    },
+  ]
 
-      const response = await fetch(`${API_URL}/admin`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      })
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch messages")
-      }
-
-      const data = await response.json()
-      setMessages(data)
-      setLoading(false)
-    } catch (error) {
-      console.error("Error fetching messages:", error)
-      setLoading(false)
-    }
-  }
-
-  const handleRespond = async (idReporte) => {
-    if (!responseText.trim()) {
-      alert("Please enter a response")
+  useEffect(() => {
+    // Verificar autenticación
+    const adminToken = localStorage.getItem("adminToken")
+    if (!adminToken) {
+      navigate("/admin/login")
       return
     }
 
-    try {
-      const token = localStorage.getItem("adminToken")
-      const response = await fetch(`${API_URL}/admin`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          idReporte: idReporte,
-          respuesta: responseText
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error("Failed to submit response")
-      }
-
-      const updatedReport = await response.json()
-      setMessages(messages.map(msg => 
-        msg.idReporte === updatedReport.idReporte ? updatedReport : msg
-      ))
-      setResponseText("")
-      setSelectedMessage(null)
-    } catch (error) {
-      console.error("Error responding to report:", error)
-    }
-  }
-
-  useEffect(() => {
-    fetchMessages()
+    // Simular carga de datos
+    setTimeout(() => {
+      setMessages(mockMessages)
+      setLoading(false)
+    }, 1000)
   }, [navigate])
 
   const handleLogout = () => {
@@ -98,6 +80,10 @@ const AdminDashboard = () => {
     total: messages.length,
     pending: messages.filter((m) => !m.respuesta).length,
     answered: messages.filter((m) => m.respuesta).length,
+  }
+
+  const handleMessageClick = (messageId) => {
+    navigate(`/admin/message/${messageId}`)
   }
 
   if (loading) {
@@ -138,6 +124,27 @@ const AdminDashboard = () => {
           </div>
         </div>
 
+        <div className="admin-management-section">
+          <h2>Gestión del Sistema</h2>
+          <div className="admin-management-cards">
+            <div className="admin-management-card" onClick={() => navigate("/admin/empresas")}>
+              <div className="management-icon">🏢</div>
+              <h3>Gestión de Empresas</h3>
+              <p>Administrar empresas y ofertas de prácticas</p>
+            </div>
+            <div className="admin-management-card" onClick={() => navigate("/admin/profesores")}>
+              <div className="management-icon">👨‍🏫</div>
+              <h3>Gestión de Profesores</h3>
+              <p>Administrar profesores y asignaciones</p>
+            </div>
+            <div className="admin-management-card" onClick={() => navigate("/admin/alumnos")}>
+              <div className="management-icon">👨‍🎓</div>
+              <h3>Gestión de Alumnos</h3>
+              <p>Administrar alumnos y seguimiento</p>
+            </div>
+          </div>
+        </div>
+
         <div className="admin-messages-section">
           <div className="admin-messages-header">
             <h2>Mensajes de Ayuda</h2>
@@ -166,7 +173,7 @@ const AdminDashboard = () => {
           <div className="admin-messages-list">
             {filteredMessages.length > 0 ? (
               filteredMessages.map((message) => (
-                <div key={message.idReporte} className="admin-message-card" onClick={() => setSelectedMessage(message)}>
+                <div key={message.id} className="admin-message-card" onClick={() => handleMessageClick(message.id)}>
                   <div className="admin-message-header">
                     <div className="admin-message-info">
                       <span className="admin-message-role">{message.rol}</span>
@@ -177,11 +184,6 @@ const AdminDashboard = () => {
                     </span>
                   </div>
                   <div className="admin-message-preview">{message.mensaje}</div>
-                  {message.respuesta && (
-                    <div className="admin-message-response">
-                      <strong>Respuesta:</strong> {message.respuesta}
-                    </div>
-                  )}
                 </div>
               ))
             ) : (
@@ -189,27 +191,6 @@ const AdminDashboard = () => {
             )}
           </div>
         </div>
-
-        {selectedMessage && !selectedMessage.respuesta && (
-          <div className="admin-response-modal">
-            <div className="admin-response-content">
-              <h3>Responder a: {selectedMessage.email}</h3>
-              <p>{selectedMessage.mensaje}</p>
-              <textarea
-                value={responseText}
-                onChange={(e) => setResponseText(e.target.value)}
-                placeholder="Escribe tu respuesta aquí..."
-              />
-              <div className="admin-response-buttons">
-                <button onClick={() => handleRespond(selectedMessage.idReporte)}>Enviar Respuesta</button>
-                <button onClick={() => {
-                  setSelectedMessage(null)
-                  setResponseText("")
-                }}>Cancelar</button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   )

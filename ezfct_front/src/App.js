@@ -37,6 +37,9 @@ import OfertasAlumnos from "./Pages/Alumno/Pantallas/JS/OfertasAlumnos.js"
 import LoginAdmin from "./Pages/Admin/Inicio/JS/LoginAdmin"
 import AdminDashboard from "./Pages/Admin/Pantallas/JS/Dashboard"
 import AdminMessageDetail from "./Pages/Admin/Pantallas/JS/MessageDetail"
+import GestionEmpresas from "./Pages/Admin/Pantallas/JS/GestionEmpresas"
+import GestionProfesores from "./Pages/Admin/Pantallas/JS/GestionProfesores"
+import GestionAlumnos from "./Pages/Admin/Pantallas/JS/GestionAlumnos"
 
 function App() {
   return (
@@ -77,6 +80,9 @@ function App() {
           <Route path="/admin/login" element={<LoginAdmin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/message/:id" element={<AdminMessageDetail />} />
+          <Route path="/admin/empresas" element={<GestionEmpresas />} />
+          <Route path="/admin/profesores" element={<GestionProfesores />} />
+          <Route path="/admin/alumnos" element={<GestionAlumnos />} />
         </Routes>
       </div>
     </BrowserRouter>
