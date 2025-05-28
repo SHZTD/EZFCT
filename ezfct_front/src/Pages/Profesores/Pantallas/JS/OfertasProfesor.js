@@ -1,9 +1,22 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import "../CSS/OfertasProfesor.css"
-import { Search, HelpCircle, ChevronRight, Calendar, Users, Briefcase } from "lucide-react"
+import {
+  Search,
+  Filter,
+  ChevronRight,
+  Calendar,
+  Users,
+  Briefcase,
+  ArrowLeft,
+  User,
+  LogOut,
+  Edit,
+  ChevronDown,
+  UserPlus,
+} from "lucide-react"
 
 const ProfesorOffers = () => {
   const [loaded, setLoaded] = useState(false)
@@ -11,7 +24,21 @@ const ProfesorOffers = () => {
   const [activeCategory, setActiveCategory] = useState("all")
   const [particles, setParticles] = useState([])
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [showProfileModal, setShowProfileModal] = useState(false)
+  const [profileData, setProfileData] = useState({
+    nombre: "Prof. García",
+    apellido: "Martínez",
+    email: "garcia.martinez@instituto.edu",
+    instituto: "Ins Puig Castellar",
+    departamento: "Informática",
+    experiencia: "15 años",
+    especialidad: "Desarrollo Web",
+  })
+
   const navigate = useNavigate()
+  const profileMenuRef = useRef(null)
+  const profileButtonRef = useRef(null)
 
   // Datos de ofertas
   const offers = [
@@ -85,6 +112,29 @@ const ProfesorOffers = () => {
     { id: "hardware", name: "Hardware", count: offers.filter((o) => o.category === "hardware").length },
   ]
 
+  // Funciones del topbar
+  const handleGoBack = () => {
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6")
+    setTimeout(() => navigate(-1), 300)
+  }
+
+  const handleProfileButtonClick = () => {
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")
+    setShowProfileMenu(!showProfileMenu)
+  }
+
+  const handleNavigateToCreateStudent = () => {
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+    setShowProfileMenu(false)
+    setTimeout(() => navigate("/profesores/crearAlumno"), 300)
+  }
+
+  const saveProfileData = () => {
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6")
+    localStorage.setItem("profesorProfileData", JSON.stringify(profileData))
+    setShowProfileModal(false)
+  }
+
   // Efecto para la animación de entrada y partículas
   useEffect(() => {
     // Marcar como cargado para iniciar animaciones
@@ -116,15 +166,36 @@ const ProfesorOffers = () => {
       createInitialParticles()
     }
 
+    // Cerrar menú de perfil al hacer clic fuera
+    const handleClickOutsideProfileMenu = (e) => {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(e.target) &&
+        profileButtonRef.current &&
+        !profileButtonRef.current.contains(e.target) &&
+        showProfileMenu
+      ) {
+        setShowProfileMenu(false)
+      }
+    }
+
     window.addEventListener("resize", handleResize)
+    document.addEventListener("mousedown", handleClickOutsideProfileMenu)
+
+    // Cargar datos del perfil desde localStorage
+    const savedProfile = localStorage.getItem("profesorProfileData")
+    if (savedProfile) {
+      setProfileData(JSON.parse(savedProfile))
+    }
 
     // Limpieza al desmontar
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("resize", handleResize)
+      document.removeEventListener("mousedown", handleClickOutsideProfileMenu)
       clearInterval(interval)
     }
-  }, [])
+  }, [showProfileMenu])
 
   // Función para crear partículas iniciales
   const createInitialParticles = () => {
@@ -180,13 +251,8 @@ const ProfesorOffers = () => {
     navigate(`/profesores/detalles/${id}`)
   }
 
-  const handleNavigateToHelp = () => {
-    createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")
-    setTimeout(() => navigate("/profesores/areaContacto"), 300)
-  }
-
   return (
-    <div className="profesor-offers-page-alt">
+    <>
       {/* Partículas de fondo */}
       <div className="particles-container">
         {particles.map((particle) => (
@@ -214,99 +280,247 @@ const ProfesorOffers = () => {
         }}
       />
 
-      <div className="offers-container-alt">
-        {/* Header */}
-        <header className={`page-header ${loaded ? "loaded" : ""}`}>
-          <div className="header-content">
-            <h1 className="page-title">Available Offers</h1>
-            <p className="page-subtitle">Find and manage internship opportunities for your students</p>
-          </div>
-          <div className="header-gradient"></div>
-        </header>
-
-        {/* Barra de búsqueda y filtros */}
-        <div className={`search-bar-container ${loaded ? "loaded" : ""}`}>
-          <div className="search-input-wrapper">
-            <Search className="search-icon" size={20} />
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search offers by title, description or company..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <button className="filter-button" onClick={handleNavigateToHelp}>
-            <HelpCircle size={18} />
-            <span>Help</span>
+      {/* Barra de navegación superior */}
+      <nav className={`top-navbar ${loaded ? "loaded" : ""}`}>
+        <div className="navbar-left">
+          <button className="nav-button" onClick={handleGoBack}>
+            <ArrowLeft size={18} />
+            <span>Volver</span>
           </button>
         </div>
-
-        {/* Categorías */}
-        <div className={`categories-container ${loaded ? "loaded" : ""}`}>
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              className={`category-button ${activeCategory === category.id ? "active" : ""}`}
-              onClick={() => setActiveCategory(category.id)}
-            >
-              {category.name}
-              <span className="category-count">{category.count}</span>
-            </button>
-          ))}
+        <div className="navbar-title">
+          <h2>EasyFCT</h2>
         </div>
+        <div className="navbar-right">
+          <button ref={profileButtonRef} className="user-button" onClick={handleProfileButtonClick}>
+            <User size={18} />
+            <span className="user-name">{profileData.nombre}</span>
+            <ChevronDown size={14} className={`user-chevron ${showProfileMenu ? "open" : ""}`} />
+          </button>
+        </div>
+      </nav>
 
-        {/* Contenido principal */}
-        <div className={`offers-grid ${loaded ? "loaded" : ""}`}>
-          {filteredOffers.length === 0 ? (
-            <div className="no-results">
-              <div className="no-results-icon">🔍</div>
-              <h3>No offers found</h3>
-              <p>Try adjusting your search or filters</p>
+      {/* Contenedor principal con el diseño original */}
+      <div className="profesor-offers-page-alt">
+        <div className="offers-container-alt">
+          {/* Header */}
+          <header className={`page-header ${loaded ? "loaded" : ""}`}>
+            <div className="header-content">
+              <h1 className="page-title">Available Offers</h1>
+              <p className="page-subtitle">Find and manage internship opportunities for your students</p>
             </div>
-          ) : (
-            filteredOffers.map((offer, index) => (
-              <div key={offer.id} className="offer-card-alt" style={{ animationDelay: `${0.05 * index}s` }}>
-                <div className="card-content">
-                  <div className="offer-header-alt">
-                    <h2 className="offer-title-alt">{offer.title}</h2>
-                    <span className="offer-category">{offer.category}</span>
-                  </div>
-                  <p className="offer-subtitle-alt">{offer.subtitle}</p>
+            <div className="header-gradient"></div>
+          </header>
 
-                  <div className="offer-details-alt">
-                    <div className="detail-item-alt">
-                      <Briefcase size={16} />
-                      <span>{offer.company}</span>
+          {/* Barra de búsqueda y filtros */}
+          <div className={`search-bar-container ${loaded ? "loaded" : ""}`}>
+            <div className="search-input-wrapper">
+              <Search className="search-icon" size={20} />
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search offers by title, description or company..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <button className="filter-button">
+              <Filter size={18} />
+              <span>Filters</span>
+            </button>
+          </div>
+
+          {/* Categorías */}
+          <div className={`categories-container ${loaded ? "loaded" : ""}`}>
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                className={`category-button ${activeCategory === category.id ? "active" : ""}`}
+                onClick={() => setActiveCategory(category.id)}
+              >
+                {category.name}
+                <span className="category-count">{category.count}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Contenido principal */}
+          <div className={`offers-grid ${loaded ? "loaded" : ""}`}>
+            {filteredOffers.length === 0 ? (
+              <div className="no-results">
+                <div className="no-results-icon">🔍</div>
+                <h3>No offers found</h3>
+                <p>Try adjusting your search or filters</p>
+              </div>
+            ) : (
+              filteredOffers.map((offer, index) => (
+                <div key={offer.id} className="offer-card-alt" style={{ animationDelay: `${0.05 * index}s` }}>
+                  <div className="card-content">
+                    <div className="offer-header-alt">
+                      <h2 className="offer-title-alt">{offer.title}</h2>
+                      <span className="offer-category">{offer.category}</span>
                     </div>
-                    <div className="detail-item-alt">
-                      <Calendar size={16} />
-                      <span>{offer.date}</span>
+                    <p className="offer-subtitle-alt">{offer.subtitle}</p>
+
+                    <div className="offer-details-alt">
+                      <div className="detail-item-alt">
+                        <Briefcase size={16} />
+                        <span>{offer.company}</span>
+                      </div>
+                      <div className="detail-item-alt">
+                        <Calendar size={16} />
+                        <span>{offer.date}</span>
+                      </div>
+                      <div className="detail-item-alt">
+                        <Users size={16} />
+                        <span>{offer.students} students</span>
+                      </div>
                     </div>
-                    <div className="detail-item-alt">
-                      <Users size={16} />
-                      <span>{offer.students} students</span>
-                    </div>
+                  </div>
+
+                  <div className="card-footer">
+                    <button className="view-details-button" onClick={() => handleViewOffer(offer.id)}>
+                      <span>View Details</span>
+                      <ChevronRight size={16} />
+                    </button>
                   </div>
                 </div>
+              ))
+            )}
+          </div>
 
-                <div className="card-footer">
-                  <button className="view-details-button" onClick={() => handleViewOffer(offer.id)}>
-                    <span>View Details</span>
-                    <ChevronRight size={16} />
-                  </button>
+          {/* Pie de página */}
+          <footer className={`page-footer ${loaded ? "loaded" : ""}`}>
+            <p>© 2025 EasyFCT - Innovación Educativa</p>
+          </footer>
+        </div>
+      </div>
+
+      {/* Menú de perfil flotante */}
+      {showProfileMenu && (
+        <div className="fixed-profile-menu" ref={profileMenuRef}>
+          <button className="profile-menu-item" onClick={handleNavigateToCreateStudent}>
+            <UserPlus size={16} />
+            <span>Crear Alumno</span>
+          </button>
+          <button
+            className="profile-menu-item"
+            onClick={() => {
+              createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+              setShowProfileMenu(false)
+              setShowProfileModal(true)
+            }}
+          >
+            <Edit size={16} />
+            <span>Editar perfil</span>
+          </button>
+          <button
+            className="profile-menu-item logout"
+            onClick={() => {
+              createExplosionEffect(mousePosition.x, mousePosition.y, "#f43f5e")
+              setTimeout(() => navigate("/"), 300)
+            }}
+          >
+            <LogOut size={16} />
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
+      )}
+
+      {/* Modal de edición de perfil */}
+      {showProfileModal && (
+        <div className="modal-overlay">
+          <div className="modal-container profile-modal">
+            <div className="modal-header">
+              <h2 className="modal-title">Editar Perfil</h2>
+              <button className="close-button" onClick={() => setShowProfileModal(false)}>
+                ×
+              </button>
+            </div>
+
+            <div className="modal-content">
+              <div className="profile-form">
+                <div className="profile-form-grid">
+                  <div className="form-group">
+                    <label htmlFor="nombre">Nombre</label>
+                    <input
+                      type="text"
+                      id="nombre"
+                      value={profileData.nombre}
+                      onChange={(e) => setProfileData({ ...profileData, nombre: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="apellido">Apellido</label>
+                    <input
+                      type="text"
+                      id="apellido"
+                      value={profileData.apellido}
+                      onChange={(e) => setProfileData({ ...profileData, apellido: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="email">Email</label>
+                    <input
+                      type="email"
+                      id="email"
+                      value={profileData.email}
+                      onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="instituto">Instituto</label>
+                    <input
+                      type="text"
+                      id="instituto"
+                      value={profileData.instituto}
+                      onChange={(e) => setProfileData({ ...profileData, instituto: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="departamento">Departamento</label>
+                    <input
+                      type="text"
+                      id="departamento"
+                      value={profileData.departamento}
+                      onChange={(e) => setProfileData({ ...profileData, departamento: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="experiencia">Experiencia</label>
+                    <input
+                      type="text"
+                      id="experiencia"
+                      value={profileData.experiencia}
+                      onChange={(e) => setProfileData({ ...profileData, experiencia: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group full-width">
+                    <label htmlFor="especialidad">Especialidad</label>
+                    <input
+                      type="text"
+                      id="especialidad"
+                      value={profileData.especialidad}
+                      onChange={(e) => setProfileData({ ...profileData, especialidad: e.target.value })}
+                    />
+                  </div>
                 </div>
               </div>
-            ))
-          )}
-        </div>
+            </div>
 
-        {/* Pie de página */}
-        <footer className={`page-footer ${loaded ? "loaded" : ""}`}>
-          <p>© 2025 EasyFCT - Innovación Educativa</p>
-        </footer>
-      </div>
-    </div>
+            <div className="modal-footer">
+              <button className="cancel-button" onClick={() => setShowProfileModal(false)}>
+                Cancelar
+              </button>
+              <button className="save-button" onClick={saveProfileData}>
+                <Edit size={18} />
+                <span>Guardar cambios</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 

@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import { ArrowLeft, Search, Filter, GraduationCap } from "lucide-react"
+import { ArrowLeft, Search, Filter, GraduationCap, User, LogOut, Edit, ChevronDown, UserPlus } from "lucide-react"
 import "../CSS/AlumnosProfesor.css"
 
 const EstudiantesProfesor = () => {
@@ -10,7 +10,21 @@ const EstudiantesProfesor = () => {
   const [particles, setParticles] = useState([])
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [searchTerm, setSearchTerm] = useState("")
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [showProfileModal, setShowProfileModal] = useState(false)
+  const [profileData, setProfileData] = useState({
+    nombre: "Prof. García",
+    apellido: "Martínez",
+    email: "garcia.martinez@instituto.edu",
+    instituto: "Ins Puig Castellar",
+    departamento: "Informática",
+    experiencia: "15 años",
+    especialidad: "Desarrollo Web",
+  })
+
   const navigate = useNavigate()
+  const profileMenuRef = useRef(null)
+  const profileButtonRef = useRef(null)
 
   // Datos de estudiantes
   const students = [
@@ -119,15 +133,36 @@ const EstudiantesProfesor = () => {
       createInitialParticles()
     }
 
+    // Cerrar menú de perfil al hacer clic fuera
+    const handleClickOutsideProfileMenu = (e) => {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(e.target) &&
+        profileButtonRef.current &&
+        !profileButtonRef.current.contains(e.target) &&
+        showProfileMenu
+      ) {
+        setShowProfileMenu(false)
+      }
+    }
+
     window.addEventListener("resize", handleResize)
+    document.addEventListener("mousedown", handleClickOutsideProfileMenu)
+
+    // Cargar datos del perfil desde localStorage
+    const savedProfile = localStorage.getItem("profesorProfileData")
+    if (savedProfile) {
+      setProfileData(JSON.parse(savedProfile))
+    }
 
     // Limpieza al desmontar
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("resize", handleResize)
+      document.removeEventListener("mousedown", handleClickOutsideProfileMenu)
       clearInterval(interval)
     }
-  }, [])
+  }, [showProfileMenu])
 
   // Función para crear partículas iniciales
   const createInitialParticles = () => {
@@ -178,6 +213,26 @@ const EstudiantesProfesor = () => {
     }, 300)
   }
 
+  // Función para manejar el clic en el botón de perfil
+  const handleProfileButtonClick = () => {
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")
+    setShowProfileMenu(!showProfileMenu)
+  }
+
+  // Función para navegar a crear alumno
+  const handleNavigateToCreateStudent = () => {
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+    setShowProfileMenu(false)
+    setTimeout(() => navigate("/profesores/crearAlumno"), 300)
+  }
+
+  // Función para guardar los datos del perfil
+  const saveProfileData = () => {
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6")
+    localStorage.setItem("profesorProfileData", JSON.stringify(profileData))
+    setShowProfileModal(false)
+  }
+
   // Filtrar estudiantes según la búsqueda
   const filteredStudents = students.filter(
     (student) =>
@@ -214,6 +269,26 @@ const EstudiantesProfesor = () => {
         }}
       />
 
+      {/* Barra de navegación superior */}
+      <nav className={`top-navbar ${loaded ? "loaded" : ""}`}>
+        <div className="navbar-left">
+          <button className="nav-button" onClick={handleGoBack}>
+            <ArrowLeft size={18} />
+            <span>Volver</span>
+          </button>
+        </div>
+        <div className="navbar-title">
+          <h2>EasyFCT</h2>
+        </div>
+        <div className="navbar-right">
+          <button ref={profileButtonRef} className="user-button" onClick={handleProfileButtonClick}>
+            <User size={18} />
+            <span className="user-name">{profileData.nombre}</span>
+            <ChevronDown size={14} className={`user-chevron ${showProfileMenu ? "open" : ""}`} />
+          </button>
+        </div>
+      </nav>
+
       <div className="estudiantes-container">
         {/* Header */}
         <header className={`page-header ${loaded ? "loaded" : ""}`}>
@@ -226,9 +301,15 @@ const EstudiantesProfesor = () => {
 
         {/* Botón de volver y barra de búsqueda */}
         <div className={`actions-container ${loaded ? "loaded" : ""}`}>
-          <button className="back-button" onClick={handleGoBack}>
-            <ArrowLeft size={20} />
-            <span>Back</span>
+          <button
+            className="back-button"
+            onClick={() => {
+              createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+              setTimeout(() => navigate("/profesores/crearAlumno"), 300)
+            }}
+          >
+            <UserPlus size={20} />
+            <span>Create Student</span>
           </button>
 
           <div className="search-container">
@@ -313,6 +394,131 @@ const EstudiantesProfesor = () => {
           <p>© 2025 EasyFCT - Innovación Educativa</p>
         </footer>
       </div>
+
+      {/* Menú de perfil flotante */}
+      {showProfileMenu && (
+        <div className="fixed-profile-menu" ref={profileMenuRef}>
+          <button className="profile-menu-item" onClick={handleNavigateToCreateStudent}>
+            <UserPlus size={16} />
+            <span>Crear Alumno</span>
+          </button>
+          <button
+            className="profile-menu-item"
+            onClick={() => {
+              createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+              setShowProfileMenu(false)
+              setShowProfileModal(true)
+            }}
+          >
+            <Edit size={16} />
+            <span>Editar perfil</span>
+          </button>
+          <button
+            className="profile-menu-item logout"
+            onClick={() => {
+              createExplosionEffect(mousePosition.x, mousePosition.y, "#f43f5e")
+              setTimeout(() => navigate("/"), 300)
+            }}
+          >
+            <LogOut size={16} />
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
+      )}
+
+      {/* Modal de edición de perfil */}
+      {showProfileModal && (
+        <div className="modal-overlay">
+          <div className="modal-container profile-modal">
+            <div className="modal-header">
+              <h2 className="modal-title">Editar Perfil</h2>
+              <button className="close-button" onClick={() => setShowProfileModal(false)}>
+                ×
+              </button>
+            </div>
+
+            <div className="modal-content">
+              <div className="profile-form">
+                <div className="profile-form-grid">
+                  <div className="form-group">
+                    <label htmlFor="nombre">Nombre</label>
+                    <input
+                      type="text"
+                      id="nombre"
+                      value={profileData.nombre}
+                      onChange={(e) => setProfileData({ ...profileData, nombre: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="apellido">Apellido</label>
+                    <input
+                      type="text"
+                      id="apellido"
+                      value={profileData.apellido}
+                      onChange={(e) => setProfileData({ ...profileData, apellido: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="email">Email</label>
+                    <input
+                      type="email"
+                      id="email"
+                      value={profileData.email}
+                      onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="instituto">Instituto</label>
+                    <input
+                      type="text"
+                      id="instituto"
+                      value={profileData.instituto}
+                      onChange={(e) => setProfileData({ ...profileData, instituto: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="departamento">Departamento</label>
+                    <input
+                      type="text"
+                      id="departamento"
+                      value={profileData.departamento}
+                      onChange={(e) => setProfileData({ ...profileData, departamento: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="experiencia">Experiencia</label>
+                    <input
+                      type="text"
+                      id="experiencia"
+                      value={profileData.experiencia}
+                      onChange={(e) => setProfileData({ ...profileData, experiencia: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group full-width">
+                    <label htmlFor="especialidad">Especialidad</label>
+                    <input
+                      type="text"
+                      id="especialidad"
+                      value={profileData.especialidad}
+                      onChange={(e) => setProfileData({ ...profileData, especialidad: e.target.value })}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button className="cancel-button" onClick={() => setShowProfileModal(false)}>
+                Cancelar
+              </button>
+              <button className="save-button" onClick={saveProfileData}>
+                <Edit size={18} />
+                <span>Guardar cambios</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
