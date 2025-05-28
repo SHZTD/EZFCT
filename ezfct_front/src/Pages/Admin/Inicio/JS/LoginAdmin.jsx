@@ -6,9 +6,9 @@ import ButtonComp from "../../../../Components/JSX/ButtonComp.js"
 import LogoDefault from "../../../Imagenes/ajuste.png"
 import { useNavigate } from "react-router-dom"
 import "../CSS/LoginAdmin.css"
-import { API_URL } from "../../../../constants.js"
 
 const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
+  localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBlemZjdC5jb20iLCJpZCI6Mywicm9sIjoiQURNSU4iLCJpYXQiOjE3NDg0NDcyMDcsImV4cCI6MTc0ODUzMzYwN30.3jDR7_7sawU27piYWiDUMhm5rnK1Cb08R4xYBLMAHMc');
   // Estados para el formulario
   const navigate = useNavigate()
   const [email, setEmail] = useState("")
@@ -121,49 +121,38 @@ const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
   }
 
   const guardarToken = (token) => {
-    localStorage.setItem("token", token)
+    localStorage.setItem("adminToken", token)
   }
 
-  const handleLogin = async (email, password, mousePosition, formRef, navigate) => {
-  try {
-      const endpointLogin = API_URL + "/auth/userlogin";
+  const handleLogin = async () => {
+    if (!email || !password) {
+      formRef.current.classList.add("admin-shake")
+      setTimeout(() => {
+        formRef.current.classList.remove("admin-shake")
+      }, 500)
+      return
+    }
 
-      const response = await fetch(endpointLogin, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Credenciales incorrectas");
-      }
-
-      const data = await response.json();
-
-      if (data.token) {
-        guardarToken(data.token); // tu función local
-        localStorage.setItem("userEmail", email);
-
-        createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981");
+    try {
+      // Simulación de login de admin
+      if (email === "admin@ezfct.com" && password === "admin123") {
+        guardarToken("admin-token-123")
+        localStorage.setItem("adminEmail", email)
+        createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
         setTimeout(() => {
-          navigate("/admin/dashboard");
-        }, 300);
+          navigate("/admin/dashboard")
+        }, 300)
       } else {
-        throw new Error("No se recibió un token.");
+        alert("Credenciales incorrectas")
+        formRef.current.classList.add("admin-shake")
+        setTimeout(() => {
+          formRef.current.classList.remove("admin-shake")
+        }, 500)
       }
     } catch (error) {
-      alert("Error: " + error.message);
-      if (formRef?.current) {
-        formRef.current.classList.add("admin-shake");
-        setTimeout(() => {
-          formRef.current.classList.remove("admin-shake");
-        }, 500);
-      }
+      alert("Error de red: " + error.message)
     }
-  };
-
+  }
 
   return (
     <div className="admin-login-container">
@@ -265,14 +254,7 @@ const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
 
           {/* Botón de login usando ButtonComp */}
           <div className={`admin-button-container ${loaded ? "loaded" : ""}`}>
-            <ButtonComp
-              className="admin-btn--login"
-              icon="🔑"
-              onClick={() =>
-                handleLogin(email, password, mousePosition, formRef, navigate)
-              }
-              transitionDelay="1.6s"
-            >
+            <ButtonComp className="admin-btn--login" icon="🔑" onClick={handleLogin} transitionDelay="1.6s">
               Acceder al Panel
             </ButtonComp>
           </div>
