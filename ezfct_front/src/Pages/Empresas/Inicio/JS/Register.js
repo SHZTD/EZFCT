@@ -7,11 +7,10 @@ import "../CSS/Register.css"
 import logo from "../../../Imagenes/logo.gif"
 import { useNavigate } from "react-router-dom"
 
-import { API_URL } from '../../../../constants.js';
+import { API_URL } from "../../../../constants.js"
 
 const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) => {
-
-  let registerEmpresaEndpoint = "/auth/registerempresa";
+  const registerEmpresaEndpoint = "/auth/registerempresa"
   // Estados para el formulario
   const [empresa, setEmpresa] = useState({
     nif: "",
@@ -19,12 +18,12 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
     emailContacto: "",
     telefono: "",
     nombre: "",
-    password: ""
+    password: "",
   })
 
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
-  const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(true) // Inicializado como true para que todo sea visible desde el principio
   const [particles, setParticles] = useState([])
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [currentStep, setCurrentStep] = useState(1) // Para dividir el formulario en pasos
@@ -35,9 +34,6 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
 
   // Efecto para la animación de entrada
   useEffect(() => {
-    // Marcar como cargado para iniciar animaciones
-    setTimeout(() => setLoaded(true), 100)
-
     // Crear partículas iniciales
     createInitialParticles()
 
@@ -182,8 +178,8 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
     // Enviar datos a la API
     fetch(API_URL + registerEmpresaEndpoint, {
       method: "POST",
-      headers: { 
-        "Content-Type": "application/json" 
+      headers: {
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
     })
@@ -213,13 +209,13 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
   }
 
   return (
-    <div className="register-container">
+    <div className="empresa-register-container">
       {/* Partículas de fondo */}
-      <div className="particles-container" ref={particlesContainerRef}>
+      <div className="empresa-particles-container" ref={particlesContainerRef}>
         {particles.map((particle) => (
           <div
             key={particle.id}
-            className="particle"
+            className="empresa-particle"
             style={{
               left: `${particle.x}px`,
               top: `${particle.y}px`,
@@ -234,7 +230,7 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
 
       {/* Efecto de luz que sigue al cursor */}
       <div
-        className="cursor-light"
+        className="empresa-cursor-light"
         style={{
           left: `${mousePosition.x}px`,
           top: `${mousePosition.y}px`,
@@ -242,51 +238,62 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
       />
 
       {/* Botón de volver atrás */}
-      <button className={`back-button ${loaded ? "loaded" : ""}`} onClick={handleBack} aria-label="Volver">
+      <button
+        className="empresa-back-button empresa-loaded"
+        onClick={handleBack}
+        aria-label="Volver"
+        style={{ transform: "scale(1)", opacity: 1 }}
+      >
         ←
       </button>
 
       {/* Contenedor principal */}
-      <div className={`register-card ${loaded ? "loaded" : ""}`}>
+      <div className="empresa-register-card empresa-loaded" style={{ transform: "rotateX(0deg) scale(1)", opacity: 1 }}>
         {/* Sección del logo */}
-        <div className="logo-section">
+        <div className="empresa-logo-section">
           {/* Círculos decorativos */}
-          <div className="decorative-circle circle-1" />
-          <div className="decorative-circle circle-2" />
+          <div className="empresa-decorative-circle empresa-circle-1" />
+          <div className="empresa-decorative-circle empresa-circle-2" />
 
           {/* Logo con animación */}
-          <div className={`logo-container ${loaded ? "loaded" : ""}`}>
-            <img src={logo || "/placeholder.svg"} alt="Logo" className="logo" />
+          <div className="empresa-logo-container empresa-loaded" style={{ transform: "scale(1)" }}>
+            <img src={logo || "/placeholder.svg"} alt="Logo" className="empresa-logo" />
           </div>
 
           {/* Título y subtítulo */}
-          <h1 className={`title ${loaded ? "loaded" : ""}`}>EasyFCT</h1>
-          <div className={`divider ${loaded ? "loaded" : ""}`} />
-          <p className={`subtitle ${loaded ? "loaded" : ""}`}>
+          <h1 className="empresa-title empresa-loaded" style={{ opacity: 1, transform: "translateY(0)" }}>
+            EasyFCT
+          </h1>
+          <div className="empresa-divider empresa-loaded" style={{ opacity: 1, transform: "scaleX(1)" }} />
+          <p className="empresa-subtitle empresa-loaded" style={{ opacity: 1, transform: "translateY(0)" }}>
             {currentStep === 1 ? "Registro de Empresa - Paso 1/2" : "Registro de Empresa - Paso 2/2"}
           </p>
 
           {/* Indicador de pasos */}
-          <div className={`steps-indicator ${loaded ? "loaded" : ""}`}>
-            <div className={`step ${currentStep === 1 ? "active" : "completed"}`}>1</div>
-            <div className="step-line"></div>
-            <div className={`step ${currentStep === 2 ? "active" : ""}`}>2</div>
+          <div className="empresa-steps-indicator empresa-loaded" style={{ opacity: 1, transform: "translateY(0)" }}>
+            <div className={`empresa-step ${currentStep === 1 ? "empresa-active" : "empresa-completed"}`}>1</div>
+            <div className="empresa-step-line"></div>
+            <div className={`empresa-step ${currentStep === 2 ? "empresa-active" : ""}`}>2</div>
           </div>
 
           {/* Línea decorativa */}
-          <div className={`gradient-line ${loaded ? "loaded" : ""}`} />
+          <div className="empresa-gradient-line empresa-loaded" style={{ opacity: 1 }} />
         </div>
 
         {/* Formulario */}
-        <form className="form-container" ref={formRef} onSubmit={currentStep === 1 ? handleNextStep : enviarFormulario}>
+        <form
+          className="empresa-form-container"
+          ref={formRef}
+          onSubmit={currentStep === 1 ? handleNextStep : enviarFormulario}
+        >
           {/* Paso 1: Datos de la empresa */}
           {currentStep === 1 && (
             <>
               {/* Campo de NIF */}
-              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.3s" }}>
+              <div className="empresa-input-group empresa-loaded" style={{ opacity: 1, transform: "translateY(0)" }}>
                 <label htmlFor="nif">NIF/CIF</label>
-                <div className="input-wrapper">
-                  <span className="input-icon">🏢</span>
+                <div className="empresa-input-wrapper">
+                  <span className="empresa-input-icon">🏢</span>
                   <input
                     type="text"
                     id="nif"
@@ -300,10 +307,10 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
               </div>
 
               {/* Campo de Nombre */}
-              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.4s" }}>
+              <div className="empresa-input-group empresa-loaded" style={{ opacity: 1, transform: "translateY(0)" }}>
                 <label htmlFor="nombre">Nombre de la empresa</label>
-                <div className="input-wrapper">
-                  <span className="input-icon">🏭</span>
+                <div className="empresa-input-wrapper">
+                  <span className="empresa-input-icon">🏭</span>
                   <input
                     type="text"
                     id="nombre"
@@ -317,10 +324,10 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
               </div>
 
               {/* Campo de Dirección */}
-              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.5s" }}>
+              <div className="empresa-input-group empresa-loaded" style={{ opacity: 1, transform: "translateY(0)" }}>
                 <label htmlFor="direccion">Dirección</label>
-                <div className="input-wrapper">
-                  <span className="input-icon">📍</span>
+                <div className="empresa-input-wrapper">
+                  <span className="empresa-input-icon">📍</span>
                   <input
                     type="text"
                     id="direccion"
@@ -334,8 +341,11 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
               </div>
 
               {/* Botón de siguiente paso */}
-              <div className={`button-container ${loaded ? "loaded" : ""}`}>
-                <ButtonComp className="btn--next" icon="➡️" type="submit" transitionDelay="1.6s">
+              <div
+                className="empresa-button-container empresa-loaded"
+                style={{ opacity: 1, transform: "translateY(0)" }}
+              >
+                <ButtonComp className="empresa-btn--next" icon="➡️" type="submit">
                   Siguiente
                 </ButtonComp>
               </div>
@@ -346,10 +356,10 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
           {currentStep === 2 && (
             <>
               {/* Campo de Teléfono */}
-              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.3s" }}>
+              <div className="empresa-input-group empresa-loaded" style={{ opacity: 1, transform: "translateY(0)" }}>
                 <label htmlFor="telefono">Teléfono</label>
-                <div className="input-wrapper">
-                  <span className="input-icon">📱</span>
+                <div className="empresa-input-wrapper">
+                  <span className="empresa-input-icon">📱</span>
                   <input
                     type="tel"
                     id="telefono"
@@ -363,10 +373,10 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
               </div>
 
               {/* Campo de Email */}
-              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.4s" }}>
+              <div className="empresa-input-group empresa-loaded" style={{ opacity: 1, transform: "translateY(0)" }}>
                 <label htmlFor="emailContacto">Email de contacto</label>
-                <div className="input-wrapper">
-                  <span className="input-icon">✉️</span>
+                <div className="empresa-input-wrapper">
+                  <span className="empresa-input-icon">✉️</span>
                   <input
                     type="email"
                     id="emailContacto"
@@ -380,10 +390,10 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
               </div>
 
               {/* Campo de Contraseña */}
-              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.5s" }}>
+              <div className="empresa-input-group empresa-loaded" style={{ opacity: 1, transform: "translateY(0)" }}>
                 <label htmlFor="contrasenya">Contraseña</label>
-                <div className="input-wrapper">
-                  <span className="input-icon">🔒</span>
+                <div className="empresa-input-wrapper">
+                  <span className="empresa-input-icon">🔒</span>
                   <input
                     type={showPassword ? "text" : "password"}
                     id="password"
@@ -393,15 +403,22 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
                     onChange={handleEmpresaChange}
                     required
                   />
-                  <button type="button" className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
+                  <button
+                    type="button"
+                    className="empresa-toggle-password"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
                     {showPassword ? "🔒" : "👁️"}
                   </button>
                 </div>
               </div>
 
               {/* Botón de registro */}
-              <div className={`button-container ${loaded ? "loaded" : ""}`}>
-                <ButtonComp className="btn--register" icon="✨" type="submit" transitionDelay="1.6s">
+              <div
+                className="empresa-button-container empresa-loaded"
+                style={{ opacity: 1, transform: "translateY(0)" }}
+              >
+                <ButtonComp className="empresa-btn--register" icon="✨" type="submit">
                   Completar Registro
                 </ButtonComp>
               </div>
@@ -409,7 +426,7 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
           )}
 
           {/* Texto adicional */}
-          <div className={`additional-text ${loaded ? "loaded" : ""}`}>
+          <div className="empresa-additional-text empresa-loaded" style={{ opacity: 1, transform: "translateY(0)" }}>
             <p>
               ¿Ya tienes una cuenta?{" "}
               <a href="#" onClick={() => navigate("/empresas/login")}>
@@ -421,7 +438,7 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
 
         {/* Mensaje de respuesta */}
         {respuesta && (
-          <div className={`respuesta ${respuesta.tipo} ${loaded ? "loaded" : ""}`}>
+          <div className={`empresa-respuesta ${respuesta.tipo} empresa-loaded`} style={{ opacity: 1 }}>
             {respuesta.tipo === "success" ? (
               <>
                 <p style={{ color: "green" }}>Empresa registrada con éxito!</p>
@@ -434,8 +451,10 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
         )}
 
         {/* Pie de página */}
-        <div className="footer">
-          <p className={loaded ? "loaded" : ""}>© 2025 EasyFCT - Innovación Educativa</p>
+        <div className="empresa-footer">
+          <p className="empresa-loaded" style={{ opacity: 1 }}>
+            © 2025 EasyFCT - Innovación Educativa
+          </p>
         </div>
       </div>
     </div>

@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect, useRef } from "react"
 import PropTypes from "prop-types"
 import ButtonComp from "../../../../Components/JSX/ButtonComp.js"
@@ -6,8 +8,7 @@ import logo from "../../../Imagenes/logo.gif"
 import { useNavigate } from "react-router-dom"
 
 const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) => {
-
-  let API_URL = "http://192.168.1.139:7484/auth/registeruser";
+  const API_URL = "http://192.168.1.139:7484/auth/registeruser"
   // Estados para el formulario
   const [profesor, setProfesor] = useState({
     nombre: "",
@@ -20,7 +21,7 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
 
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
-  const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(true) // Forzado a true
   const [particles, setParticles] = useState([])
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [currentStep, setCurrentStep] = useState(1) // Para dividir el formulario en pasos
@@ -31,8 +32,8 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
 
   // Efecto para la animación de entrada
   useEffect(() => {
-    // Marcar como cargado para iniciar animaciones
-    setTimeout(() => setLoaded(true), 100)
+    // Marcar como cargado inmediatamente
+    setLoaded(true)
 
     // Crear partículas iniciales
     createInitialParticles()
@@ -140,9 +141,9 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
 
     if (!validateForm()) {
       // Efecto de vibración si faltan campos
-      formRef.current.classList.add("shake")
+      formRef.current.classList.add("profesor-shake")
       setTimeout(() => {
-        formRef.current.classList.remove("shake")
+        formRef.current.classList.remove("profesor-shake")
       }, 500)
       return
     }
@@ -160,9 +161,9 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
 
     if (!validateForm()) {
       // Efecto de vibración si faltan campos
-      formRef.current.classList.add("shake")
+      formRef.current.classList.add("profesor-shake")
       setTimeout(() => {
-        formRef.current.classList.remove("shake")
+        formRef.current.classList.remove("profesor-shake")
       }, 500)
       return
     }
@@ -209,13 +210,13 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
   }
 
   return (
-    <div className="register-container">
+    <div className="profesor-registro-container" style={{ opacity: 1, transform: "none" }}>
       {/* Partículas de fondo */}
-      <div className="particles-container" ref={particlesContainerRef}>
+      <div className="profesor-particles-container" ref={particlesContainerRef}>
         {particles.map((particle) => (
           <div
             key={particle.id}
-            className="particle"
+            className="profesor-particle"
             style={{
               left: `${particle.x}px`,
               top: `${particle.y}px`,
@@ -230,7 +231,7 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
 
       {/* Efecto de luz que sigue al cursor */}
       <div
-        className="cursor-light"
+        className="profesor-cursor-light"
         style={{
           left: `${mousePosition.x}px`,
           top: `${mousePosition.y}px`,
@@ -238,51 +239,78 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
       />
 
       {/* Botón de volver atrás */}
-      <button className={`back-button ${loaded ? "loaded" : ""}`} onClick={handleBack} aria-label="Volver">
+      <button
+        className={`profesor-back-button ${loaded ? "loaded" : ""}`}
+        onClick={handleBack}
+        aria-label="Volver"
+        style={{ transform: "scale(1)", opacity: 1 }}
+      >
         ←
       </button>
 
       {/* Contenedor principal */}
-      <div className={`register-card ${loaded ? "loaded" : ""}`}>
+      <div
+        className={`profesor-registro-card ${loaded ? "loaded" : ""}`}
+        style={{ transform: "rotateX(0deg) scale(1)", opacity: 1 }}
+      >
         {/* Sección del logo */}
-        <div className="logo-section">
+        <div className="profesor-logo-section">
           {/* Círculos decorativos */}
-          <div className="decorative-circle circle-1" />
-          <div className="decorative-circle circle-2" />
+          <div className="profesor-decorative-circle profesor-circle-1" />
+          <div className="profesor-decorative-circle profesor-circle-2" />
 
           {/* Logo con animación */}
-          <div className={`logo-container ${loaded ? "loaded" : ""}`}>
-            <img src={logo || "/placeholder.svg"} alt="Logo" className="logo" />
+          <div className={`profesor-logo-container ${loaded ? "loaded" : ""}`} style={{ transform: "scale(1)" }}>
+            <img src={logo || "/placeholder.svg"} alt="Logo" className="profesor-logo" />
           </div>
 
           {/* Título y subtítulo */}
-          <h1 className={`title ${loaded ? "loaded" : ""}`}>EasyFCT</h1>
-          <div className={`divider ${loaded ? "loaded" : ""}`} />
-          <p className={`subtitle ${loaded ? "loaded" : ""}`}>
+          <h1 className={`profesor-title ${loaded ? "loaded" : ""}`} style={{ opacity: 1, transform: "translateY(0)" }}>
+            EasyFCT
+          </h1>
+          <div
+            className={`profesor-divider ${loaded ? "loaded" : ""}`}
+            style={{ opacity: 1, transform: "scaleX(1)" }}
+          />
+          <p
+            className={`profesor-subtitle ${loaded ? "loaded" : ""}`}
+            style={{ opacity: 1, transform: "translateY(0)" }}
+          >
             {currentStep === 1 ? "Registro de Profesor - Paso 1/2" : "Registro de Profesor - Paso 2/2"}
           </p>
 
           {/* Indicador de pasos */}
-          <div className={`steps-indicator ${loaded ? "loaded" : ""}`}>
-            <div className={`step ${currentStep === 1 ? "active" : "completed"}`}>1</div>
-            <div className="step-line"></div>
-            <div className={`step ${currentStep === 2 ? "active" : ""}`}>2</div>
+          <div
+            className={`profesor-steps-indicator ${loaded ? "loaded" : ""}`}
+            style={{ opacity: 1, transform: "translateY(0)" }}
+          >
+            <div className={`profesor-step ${currentStep === 1 ? "active" : "completed"}`}>1</div>
+            <div className="profesor-step-line"></div>
+            <div className={`profesor-step ${currentStep === 2 ? "active" : ""}`}>2</div>
           </div>
 
           {/* Línea decorativa */}
-          <div className={`gradient-line ${loaded ? "loaded" : ""}`} />
+          <div className={`profesor-gradient-line ${loaded ? "loaded" : ""}`} style={{ opacity: 1 }} />
         </div>
 
         {/* Formulario */}
-        <form className="form-container" ref={formRef} onSubmit={currentStep === 1 ? handleNextStep : enviarFormulario}>
+        <form
+          className="profesor-form-container"
+          ref={formRef}
+          onSubmit={currentStep === 1 ? handleNextStep : enviarFormulario}
+          style={{ opacity: 1, transform: "translateY(0)" }}
+        >
           {/* Paso 1: Datos personales */}
           {currentStep === 1 && (
-            <>
+            <div style={{ opacity: 1, transform: "translateY(0)" }}>
               {/* Campo de Nombre */}
-              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.3s" }}>
+              <div
+                className={`profesor-input-group ${loaded ? "loaded" : ""}`}
+                style={{ opacity: 1, transform: "translateY(0)" }}
+              >
                 <label htmlFor="nombre">Nombre</label>
-                <div className="input-wrapper">
-                  <span className="input-icon">👤</span>
+                <div className="profesor-input-wrapper">
+                  <span className="profesor-input-icon">👤</span>
                   <input
                     type="text"
                     id="nombre"
@@ -296,10 +324,13 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
               </div>
 
               {/* Campo de Apellido */}
-              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.4s" }}>
+              <div
+                className={`profesor-input-group ${loaded ? "loaded" : ""}`}
+                style={{ opacity: 1, transform: "translateY(0)" }}
+              >
                 <label htmlFor="apellido">Apellido</label>
-                <div className="input-wrapper">
-                  <span className="input-icon">👤</span>
+                <div className="profesor-input-wrapper">
+                  <span className="profesor-input-icon">👤</span>
                   <input
                     type="text"
                     id="apellido"
@@ -313,10 +344,13 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
               </div>
 
               {/* Campo de Departamento */}
-              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.5s" }}>
+              <div
+                className={`profesor-input-group ${loaded ? "loaded" : ""}`}
+                style={{ opacity: 1, transform: "translateY(0)" }}
+              >
                 <label htmlFor="departamento">Departamento</label>
-                <div className="input-wrapper">
-                  <span className="input-icon">📚</span>
+                <div className="profesor-input-wrapper">
+                  <span className="profesor-input-icon">📚</span>
                   <input
                     type="text"
                     id="departamento"
@@ -330,22 +364,28 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
               </div>
 
               {/* Botón de siguiente paso */}
-              <div className={`button-container ${loaded ? "loaded" : ""}`}>
-                <ButtonComp className="btn--next" icon="➡️" type="submit" transitionDelay="1.6s">
+              <div
+                className={`profesor-button-container ${loaded ? "loaded" : ""}`}
+                style={{ opacity: 1, transform: "translateY(0)" }}
+              >
+                <ButtonComp className="profesor-btn--next" icon="➡️" type="submit">
                   Siguiente
                 </ButtonComp>
               </div>
-            </>
+            </div>
           )}
 
           {/* Paso 2: Datos de acceso */}
           {currentStep === 2 && (
-            <>
+            <div style={{ opacity: 1, transform: "translateY(0)" }}>
               {/* Campo de Email */}
-              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.3s" }}>
+              <div
+                className={`profesor-input-group ${loaded ? "loaded" : ""}`}
+                style={{ opacity: 1, transform: "translateY(0)" }}
+              >
                 <label htmlFor="email">Email</label>
-                <div className="input-wrapper">
-                  <span className="input-icon">✉️</span>
+                <div className="profesor-input-wrapper">
+                  <span className="profesor-input-icon">✉️</span>
                   <input
                     type="email"
                     id="email"
@@ -359,10 +399,13 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
               </div>
 
               {/* Campo de Contraseña */}
-              <div className={`input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.4s" }}>
+              <div
+                className={`profesor-input-group ${loaded ? "loaded" : ""}`}
+                style={{ opacity: 1, transform: "translateY(0)" }}
+              >
                 <label htmlFor="password">Contraseña</label>
-                <div className="input-wrapper">
-                  <span className="input-icon">🔒</span>
+                <div className="profesor-input-wrapper">
+                  <span className="profesor-input-icon">🔒</span>
                   <input
                     type={showPassword ? "text" : "password"}
                     id="password"
@@ -372,23 +415,33 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
                     onChange={handleProfesorChange}
                     required
                   />
-                  <button type="button" className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
+                  <button
+                    type="button"
+                    className="profesor-toggle-password"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
                     {showPassword ? "🔒" : "👁️"}
                   </button>
                 </div>
               </div>
 
               {/* Botón de registro */}
-              <div className={`button-container ${loaded ? "loaded" : ""}`}>
-                <ButtonComp className="btn--register" icon="✨" type="submit" transitionDelay="1.6s">
+              <div
+                className={`profesor-button-container ${loaded ? "loaded" : ""}`}
+                style={{ opacity: 1, transform: "translateY(0)" }}
+              >
+                <ButtonComp className="profesor-btn--register" icon="✨" type="submit">
                   Completar Registro
                 </ButtonComp>
               </div>
-            </>
+            </div>
           )}
 
           {/* Texto adicional */}
-          <div className={`additional-text ${loaded ? "loaded" : ""}`}>
+          <div
+            className={`profesor-additional-text ${loaded ? "loaded" : ""}`}
+            style={{ opacity: 1, transform: "translateY(0)" }}
+          >
             <p>
               ¿Ya tienes una cuenta?{" "}
               <a href="#" onClick={() => navigate("/profesores/login")}>
@@ -400,7 +453,10 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
 
         {/* Mensaje de respuesta */}
         {respuesta && (
-          <div className={`respuesta ${respuesta.tipo} ${loaded ? "loaded" : ""}`}>
+          <div
+            className={`profesor-respuesta ${respuesta.tipo} ${loaded ? "loaded" : ""}`}
+            style={{ opacity: 1, transform: "translateY(0)" }}
+          >
             {respuesta.tipo === "success" ? (
               <>
                 <p style={{ color: "green" }}>Profesor registrado con éxito!</p>
@@ -413,8 +469,10 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
         )}
 
         {/* Pie de página */}
-        <div className="footer">
-          <p className={loaded ? "loaded" : ""}>© 2025 EasyFCT - Innovación Educativa</p>
+        <div className="profesor-footer">
+          <p className={loaded ? "loaded" : ""} style={{ opacity: 1 }}>
+            © 2025 EasyFCT - Innovación Educativa
+          </p>
         </div>
       </div>
     </div>
