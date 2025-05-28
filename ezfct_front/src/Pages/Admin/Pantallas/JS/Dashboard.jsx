@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../CSS/Dashboard.css"
+import { API_URL } from "../../../../constants.js"
 
 const AdminDashboard = () => {
   const [messages, setMessages] = useState([])
@@ -10,32 +11,38 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
-  // Datos simulados de mensajes
-  const mockMessages = [
-    {
-      id: 1,
-      email: "profesor1@universidad.com",
-      rol: "PROFESOR",
-      mensaje:
-        "Tengo problemas para acceder a la sección de estudiantes. No puedo ver la lista completa de alumnos asignados.",
-      respuesta: null,
-      fecha: "2025-01-27",
-    }
-  ]
-
   useEffect(() => {
-    // Verificar autenticación
+    // Verify authentication
     const adminToken = localStorage.getItem("token")
     if (!adminToken) {
       navigate("/admin/login")
       return
     }
 
-    // Simular carga de datos
-    setTimeout(() => {
-      setMessages(mockMessages)
-      setLoading(false)
-    }, 1000)
+  // Fetch messages from API
+  const fetchMessages = async () => {
+    try {
+      const response = await fetch(API_URL + "/api/reporte/admin", {
+        headers: {
+          "Authorization": `Bearer ${adminToken}`
+        }
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch messages");
+
+      const data = await response.json();
+      console.log("Full API response:", data); // Debug log
+      setMessages(data);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      alert("Error al cargar los mensajes");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+
+    fetchMessages()
   }, [navigate])
 
   const handleLogout = () => {
@@ -56,7 +63,8 @@ const AdminDashboard = () => {
   }
 
   const handleMessageClick = (messageId) => {
-    navigate(`/admin/message/${messageId}`)
+    console.log("Navigating to message ID:", messageId);
+    navigate(`/admin/message/${messageId}`);
   }
 
   if (loading) {
@@ -146,7 +154,11 @@ const AdminDashboard = () => {
           <div className="admin-messages-list">
             {filteredMessages.length > 0 ? (
               filteredMessages.map((message) => (
-                <div key={message.id} className="admin-message-card" onClick={() => handleMessageClick(message.id)}>
+              <div 
+                key={message.idReporte} 
+                className="admin-message-card" 
+                onClick={() => handleMessageClick(message.idReporte)}
+              >
                   <div className="admin-message-header">
                     <div className="admin-message-info">
                       <span className="admin-message-role">{message.rol}</span>
@@ -156,7 +168,11 @@ const AdminDashboard = () => {
                       {message.respuesta ? "Respondido" : "Pendiente"}
                     </span>
                   </div>
-                  <div className="admin-message-preview">{message.mensaje}</div>
+                  <div className="admin-message-preview">
+                    {message.mensaje.length > 100 
+                      ? `${message.mensaje.substring(0, 100)}...` 
+                      : message.mensaje}
+                  </div>
                 </div>
               ))
             ) : (

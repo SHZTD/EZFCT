@@ -93,4 +93,24 @@ public class ReporteController {
         List<Reporte> reportes = reporteRepository.findByRespuestaIsNull();
         return ResponseEntity.ok(reportes);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getReporteById(
+            @PathVariable int id,
+            HttpServletRequest request
+    ) {
+        String token = request.getHeader("Authorization").substring(7);
+        Rol rol = Rol.valueOf(jwtUtil.extractRol(token));
+
+        if (!rol.equals(Rol.ADMIN)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Solo el administrador puede ver este reporte.");
+        }
+
+        Optional<Reporte> reporte = reporteRepository.findById(id);
+        if (reporte.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Reporte no encontrado.");
+        }
+
+        return ResponseEntity.ok(reporte.get());
+    }
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import "../CSS/MessageDetail.css"
+import { API_URL } from "../../../../constants.js"
 
 const AdminMessageDetail = () => {
   const [message, setMessage] = useState(null)
@@ -12,38 +13,39 @@ const AdminMessageDetail = () => {
   const navigate = useNavigate()
   const { id } = useParams()
 
-  // Datos simulados de mensajes
-  const mockMessages = [
-    {
-      id: 1,
-      email: "profesor1@universidad.com",
-      rol: "PROFESOR",
-      mensaje:
-        "Tengo problemas para acceder a la sección de estudiantes. No puedo ver la lista completa de alumnos asignados. He intentado refrescar la página y cerrar sesión, pero el problema persiste. ¿Podrían ayudarme a solucionarlo?",
-      respuesta: null,
-      fecha: "2025-01-27",
-    }
-  ]
-
   useEffect(() => {
-    // Verificar autenticación
+    // Verify authentication
     const adminToken = localStorage.getItem("token")
     if (!adminToken) {
       navigate("/admin/login")
       return
     }
 
-    // Simular carga del mensaje
-    setTimeout(() => {
-      const foundMessage = mockMessages.find((m) => m.id === Number.parseInt(id))
-      if (foundMessage) {
-        setMessage(foundMessage)
-        setResponse(foundMessage.respuesta || "")
-      } else {
+    // Fetch message from API
+    const fetchMessage = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/reporte/${id}`, {
+          headers: {
+            "Authorization": `Bearer ${adminToken}`
+          }
+        })
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch message")
+        }
+
+        const data = await response.json()
+        setMessage(data)
+        setResponse(data.respuesta || "")
+      } catch (error) {
+        console.error("Error fetching message:", error)
         navigate("/admin/dashboard")
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
-    }, 500)
+    }
+
+    fetchMessage()
   }, [id, navigate])
 
   const handleBack = () => {
@@ -59,15 +61,23 @@ const AdminMessageDetail = () => {
     setSending(true)
 
     try {
-      // Simular envío de respuesta
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const adminToken = localStorage.getItem("token")
+      const res = await fetch(`${API_URL}/api/reporte/admin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({
+          idReporte: parseInt(id),
+          respuesta: response
+        })
+      })
 
-      // Actualizar el mensaje localmente
-      setMessage((prev) => ({
-        ...prev,
-        respuesta: response,
-      }))
+      if (!res.ok) throw new Error("Failed to send response")
 
+      const updatedMessage = await res.json()
+      setMessage(updatedMessage)
       alert("Respuesta enviada correctamente")
     } catch (error) {
       console.error("Error al enviar respuesta:", error)
