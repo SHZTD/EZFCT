@@ -6,10 +6,9 @@ import ButtonComp from "../../../../Components/JSX/ButtonComp.js"
 import LogoDefault from "../../../Imagenes/ajuste.png"
 import { useNavigate } from "react-router-dom"
 import "../CSS/LoginAdmin.css"
+import { API_URL } from "../../../../constants.js"
 
-const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
-  localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBlemZjdC5jb20iLCJpZCI6Mywicm9sIjoiQURNSU4iLCJpYXQiOjE3NDg0NDcyMDcsImV4cCI6MTc0ODUzMzYwN30.3jDR7_7sawU27piYWiDUMhm5rnK1Cb08R4xYBLMAHMc');
-  // Estados para el formulario
+const LoginAdmin = ({ onBack = () => {}, logo }) => {
   const navigate = useNavigate()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -18,44 +17,35 @@ const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
   const [particles, setParticles] = useState([])
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 
-  // Referencias para elementos DOM
   const particlesContainerRef = useRef(null)
   const formRef = useRef(null)
 
-  // Efecto para la animación de entrada
   useEffect(() => {
-    // Marcar como cargado para iniciar animaciones
     setTimeout(() => setLoaded(true), 100)
-
-    // Crear partículas iniciales
     createInitialParticles()
 
-    // Seguimiento del ratón
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
 
     window.addEventListener("mousemove", handleMouseMove)
 
-    // Intervalo para animar partículas
     const interval = setInterval(() => {
       setParticles((prevParticles) =>
         prevParticles.map((particle) => ({
           ...particle,
           x: (particle.x + particle.speedX + window.innerWidth) % window.innerWidth,
           y: (particle.y + particle.speedY + window.innerHeight) % window.innerHeight,
-        })),
+        }))
       )
     }, 50)
 
-    // Limpieza al desmontar
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       clearInterval(interval)
     }
   }, [])
 
-  // Función para crear partículas iniciales
   const createInitialParticles = () => {
     const newParticles = Array.from({ length: 50 }, () => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -67,11 +57,9 @@ const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
       opacity: Math.random() * 0.5 + 0.1,
       color: ["#8b5cf6", "#f43f5e", "#f59e0b", "#10b981"][Math.floor(Math.random() * 4)],
     }))
-
     setParticles(newParticles)
   }
 
-  // Función para crear efecto de explosión de partículas
   const createExplosionEffect = (x, y, color) => {
     const explosionParticles = Array.from({ length: 30 }, () => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -83,80 +71,67 @@ const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
       opacity: 1,
       color,
     }))
-
     setParticles((prev) => [...prev, ...explosionParticles])
-
-    // Eliminar partículas de explosión después de un tiempo
     setTimeout(() => {
       setParticles((prev) => prev.slice(0, 50))
     }, 1000)
   }
 
-  // Manejar envío del formulario
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
-    if (!email || !password) {
-      // Efecto de vibración si faltan campos
-      formRef.current.classList.add("admin-shake")
-      setTimeout(() => {
-        formRef.current.classList.remove("admin-shake")
-      }, 500)
-      return
-    }
-
-    // Efecto de explosión de partículas
-    createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6")
-
-    // Llamar a la función de login
-    setTimeout(() => {
-      onLogin({ email, password })
-    }, 300)
+  const guardarToken = (token) => {
+    localStorage.setItem("token", token)
   }
 
-  // Manejar clic en botón de volver
+const handleLogin = async (e) => {
+  e?.preventDefault()
+
+  if (!email || !password) {
+    formRef.current.classList.add("admin-shake")
+    setTimeout(() => {
+      formRef.current.classList.remove("admin-shake")
+    }, 500)
+    return
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/auth/userlogin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    })
+
+    if (!response.ok) {
+      throw new Error("Credenciales incorrectas")
+    }
+
+    const data = await response.json()
+
+    if (data.token) {
+      guardarToken(data.token)
+      createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+      setTimeout(() => {
+        navigate("/admin/dashboard")
+      }, 300)
+    } else {
+      throw new Error("Respuesta inválida del servidor")
+    }
+  } catch (error) {
+    alert("Error: " + error.message)
+    formRef.current.classList.add("admin-shake")
+    setTimeout(() => {
+      formRef.current.classList.remove("admin-shake")
+    }, 500)
+  }
+}
+
   const handleBack = () => {
     createExplosionEffect(50, 50, "#f43f5e")
     setTimeout(() => navigate("/"), 300)
   }
 
-  const guardarToken = (token) => {
-    localStorage.setItem("adminToken", token)
-  }
-
-  const handleLogin = async () => {
-    if (!email || !password) {
-      formRef.current.classList.add("admin-shake")
-      setTimeout(() => {
-        formRef.current.classList.remove("admin-shake")
-      }, 500)
-      return
-    }
-
-    try {
-      // Simulación de login de admin
-      if (email === "admin@ezfct.com" && password === "admin123") {
-        guardarToken("admin-token-123")
-        localStorage.setItem("adminEmail", email)
-        createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
-        setTimeout(() => {
-          navigate("/admin/dashboard")
-        }, 300)
-      } else {
-        alert("Credenciales incorrectas")
-        formRef.current.classList.add("admin-shake")
-        setTimeout(() => {
-          formRef.current.classList.remove("admin-shake")
-        }, 500)
-      }
-    } catch (error) {
-      alert("Error de red: " + error.message)
-    }
-  }
-
   return (
     <div className="admin-login-container">
-      {/* Partículas de fondo */}
       <div className="admin-particles-container" ref={particlesContainerRef}>
         {particles.map((particle) => (
           <div
@@ -174,7 +149,6 @@ const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
         ))}
       </div>
 
-      {/* Efecto de luz que sigue al cursor */}
       <div
         className="admin-cursor-light"
         style={{
@@ -183,36 +157,26 @@ const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
         }}
       />
 
-      {/* Botón de volver atrás */}
       <button className={`admin-back-button ${loaded ? "loaded" : ""}`} onClick={handleBack} aria-label="Volver">
         ←
       </button>
 
-      {/* Contenedor principal */}
       <div className={`admin-login-card ${loaded ? "loaded" : ""}`}>
-        {/* Sección del logo */}
         <div className="admin-logo-section">
-          {/* Círculos decorativos */}
           <div className="admin-decorative-circle admin-circle-1" />
           <div className="admin-decorative-circle admin-circle-2" />
 
-          {/* Logo con animación */}
           <div className={`admin-logo-container ${loaded ? "loaded" : ""}`}>
             <img src={logo || LogoDefault} className="admin-logo" alt="Admin Logo" />
           </div>
 
-          {/* Título y subtítulo */}
           <h1 className={`admin-title ${loaded ? "loaded" : ""}`}>Admin Panel</h1>
           <div className={`admin-divider ${loaded ? "loaded" : ""}`} />
           <p className={`admin-subtitle ${loaded ? "loaded" : ""}`}>Panel de Administración</p>
-
-          {/* Línea decorativa */}
           <div className={`admin-gradient-line ${loaded ? "loaded" : ""}`} />
         </div>
 
-        {/* Formulario */}
-        <form className="admin-form-container" onSubmit={handleSubmit} ref={formRef}>
-          {/* Campo de email */}
+        <form className="admin-form-container" onSubmit={handleLogin} ref={formRef}>
           <div className={`admin-input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.3s" }}>
             <label htmlFor="email">Email Administrativo</label>
             <div className="admin-input-wrapper">
@@ -228,7 +192,6 @@ const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
             </div>
           </div>
 
-          {/* Campo de contraseña */}
           <div className={`admin-input-group ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "1.4s" }}>
             <label htmlFor="password">Contraseña</label>
             <div className="admin-input-wrapper">
@@ -247,12 +210,10 @@ const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
             </div>
           </div>
 
-          {/* Enlace de olvidé mi contraseña */}
           <div className={`admin-forgot-password ${loaded ? "loaded" : ""}`}>
             <a href="#">Acceso de emergencia</a>
           </div>
 
-          {/* Botón de login usando ButtonComp */}
           <div className={`admin-button-container ${loaded ? "loaded" : ""}`}>
             <ButtonComp className="admin-btn--login" icon="🔑" onClick={handleLogin} transitionDelay="1.6s">
               Acceder al Panel
@@ -260,7 +221,6 @@ const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
           </div>
         </form>
 
-        {/* Pie de página */}
         <div className="admin-footer">
           <p className={loaded ? "loaded" : ""}>© 2025 EasyFCT - Panel Administrativo</p>
         </div>
@@ -270,7 +230,6 @@ const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
 }
 
 LoginAdmin.propTypes = {
-  onLogin: PropTypes.func,
   onBack: PropTypes.func,
   logo: PropTypes.string,
 }
