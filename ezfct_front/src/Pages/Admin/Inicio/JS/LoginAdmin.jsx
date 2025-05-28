@@ -148,7 +148,7 @@ const LoginAdmin = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
 
         createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981");
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/admin/dashboard");
         }, 300);
       } else {
         throw new Error("No se recibió un token.");
