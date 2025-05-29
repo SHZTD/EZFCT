@@ -5,6 +5,7 @@ import paperIcon from '../../../Imagenes/paper.png';
 import usersIcon from '../../../Imagenes/users.png';
 import questionIcon from '../../../Imagenes/question.png';
 import '../CSS/InfoEstudiante.css';
+import { API_URL } from "../../../../constants"
 
 const InfoEstudiante = () => {
   const navigate = useNavigate();
