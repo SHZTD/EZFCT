@@ -11,8 +11,8 @@ public class Alumno {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idAlumno;
 
-    @OneToOne
-    @JoinColumn(name = "id_usuario", nullable = false, unique = true)
+    @ManyToOne
+    @JoinColumn(name = "id_usuario") // Make sure this matches your DB column name
     private Usuario usuario;
 
     @Enumerated(EnumType.STRING)

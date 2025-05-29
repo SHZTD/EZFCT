@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import {
@@ -19,6 +17,7 @@ import {
   Edit,
 } from "lucide-react"
 import "../CSS/OfertasAlumnos.css"
+import { API_URL } from "../../../../constants.js"
 
 const OfertasAlumnos = () => {
   const [loaded, setLoaded] = useState(false)
@@ -30,115 +29,188 @@ const OfertasAlumnos = () => {
   const [selectedOffer, setSelectedOffer] = useState(null)
   const [showOfferModal, setShowOfferModal] = useState(false)
   const [appliedOffers, setAppliedOffers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   const [profileData, setProfileData] = useState({
-    nombre: "Jaydon",
-    apellido: "Herwitz",
-    email: "jaydon.herwitz@example.com",
-    escuela: "Ins Puig Castellar",
-    edad: 17,
-    competencias: "Problem Solving, Critical Thinking",
-    ubicacion: "Barcelona",
-    nivelTecnico: "Alto",
-    habilidades: ["React", "JavaScript", "Node.js", "CSS", "HTML"],
-    preferencias: ["Frontend", "Desarrollo Web", "Startups"],
+    idAlumno: null, // Make sure to include this
+    nombre: "",
+    apellido: "",
+    email: "",
+    escuela: "",
+    edad: 0,
+    competencias: "",
+    ubicacion: "",
+    nivelTecnico: "",
+    habilidades: [],
+    preferencias: [],
   })
 
-  const [ofertas, setOfertas] = useState([
-    {
-      id: 1,
-      titulo: "Desarrollador Frontend React",
-      empresa: "TechStart Solutions",
-      ubicacion: "Madrid, España",
-      tipo: "Presencial",
-      duracion: "6 meses",
-      descripcion:
-        "Buscamos un estudiante apasionado por el desarrollo frontend para unirse a nuestro equipo de desarrollo de aplicaciones web modernas.",
-      requisitos: ["React", "JavaScript", "CSS", "HTML"],
-      beneficios: ["Formación continua", "Ambiente joven", "Proyectos reales"],
-      fechaPublicacion: "2025-01-15",
-      fechaLimite: "2025-02-15",
-      matched: true,
-      matchPercentage: 95,
-    },
-    {
-      id: 2,
-      titulo: "Desarrollador Full Stack",
-      empresa: "InnovaCorp",
-      ubicacion: "Barcelona, España",
-      tipo: "Híbrido",
-      duracion: "4 meses",
-      descripcion: "Oportunidad única para trabajar en proyectos de e-commerce y aprender tecnologías de vanguardia.",
-      requisitos: ["Node.js", "React", "MongoDB", "Express"],
-      beneficios: ["Flexibilidad horaria", "Mentoring", "Certificaciones"],
-      fechaPublicacion: "2025-01-10",
-      fechaLimite: "2025-02-10",
-      matched: true,
-      matchPercentage: 87,
-    },
-    {
-      id: 3,
-      titulo: "Diseñador UI/UX",
-      empresa: "Creative Studio",
-      ubicacion: "Valencia, España",
-      tipo: "Remoto",
-      duracion: "5 meses",
-      descripcion: "Únete a nuestro equipo creativo y ayuda a diseñar experiencias digitales excepcionales.",
-      requisitos: ["Figma", "Adobe XD", "Photoshop", "Prototipado"],
-      beneficios: ["Trabajo remoto", "Horario flexible", "Equipo internacional"],
-      fechaPublicacion: "2025-01-12",
-      fechaLimite: "2025-02-12",
-      matched: false,
-      matchPercentage: 45,
-    },
-    {
-      id: 4,
-      titulo: "Desarrollador Backend Python",
-      empresa: "DataTech Labs",
-      ubicacion: "Sevilla, España",
-      tipo: "Presencial",
-      duracion: "6 meses",
-      descripcion: "Trabaja con big data y machine learning en proyectos innovadores del sector financiero.",
-      requisitos: ["Python", "Django", "PostgreSQL", "Docker"],
-      beneficios: ["Proyectos innovadores", "Formación en IA", "Equipo senior"],
-      fechaPublicacion: "2025-01-08",
-      fechaLimite: "2025-02-08",
-      matched: false,
-      matchPercentage: 32,
-    },
-    {
-      id: 5,
-      titulo: "Desarrollador Mobile React Native",
-      empresa: "AppMakers",
-      ubicacion: "Bilbao, España",
-      tipo: "Híbrido",
-      duracion: "5 meses",
-      descripcion: "Desarrolla aplicaciones móviles innovadoras para clientes de diferentes sectores.",
-      requisitos: ["React Native", "JavaScript", "Redux", "Firebase"],
-      beneficios: ["Dispositivos incluidos", "Formación especializada", "Networking"],
-      fechaPublicacion: "2025-01-14",
-      fechaLimite: "2025-02-14",
-      matched: true,
-      matchPercentage: 78,
-    },
-  ])
+  const [ofertas, setOfertas] = useState([])
 
   const modalRef = useRef(null)
   const profileMenuRef = useRef(null)
   const profileButtonRef = useRef(null)
   const navigate = useNavigate()
 
-  const offersPerPage = 3
-  const totalPages = Math.ceil(ofertas.length / offersPerPage)
-  const startIndex = (currentPage - 1) * offersPerPage
-  const currentOffers = ofertas.slice(startIndex, startIndex + offersPerPage)
+  // Fetch all internship offers
+  const fetchOffers = async () => {
+    try {
+      const token = localStorage.getItem("token")
+      const response = await fetch(`${API_URL}/api/practicas`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      
+      if (!response.ok) throw new Error('Failed to fetch offers')
+      
+      const data = await response.json()
+      
+      // Fetch match percentages for each offer if we have a student ID
+      if (profileData.idAlumno) {
+        const offersWithMatches = await Promise.all(data.map(async offer => {
+          try {
+            const matchResponse = await fetch(
+              `${API_URL}/api/alumnos/${profileData.idAlumno}/match/practica/${offer.idPractica}`,
+              {
+                headers: {
+                  'Authorization': `Bearer ${token}`
+                }
+              }
+            )
+            
+            if (matchResponse.ok) {
+              const matchData = await matchResponse.json()
+              return {
+                ...offer,
+                matched: matchData.matchPercentage > 70,
+                matchPercentage: matchData.matchPercentage
+              }
+            }
+          } catch (err) {
+            console.error("Error calculating match:", err)
+          }
+          return offer
+        }))
+        
+        setOfertas(offersWithMatches)
+      } else {
+        setOfertas(data)
+      }
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  // Efecto para la animación de entrada y partículas
+  // Fetch student's applied offers
+  const fetchAppliedOffers = async () => {
+    if (!profileData.idAlumno) return
+    
+    try {
+      const token = localStorage.getItem("token")
+      const response = await fetch(`${API_URL}/api/postulaciones/alumno/${profileData.idAlumno}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        setAppliedOffers(data.map(post => post.practica.idPractica))
+      }
+    } catch (err) {
+      console.error("Error fetching applied offers:", err)
+    }
+  }
+
+  // Apply to an offer
+  const applyToOffer = async (offerId) => {
+    if (!profileData.idAlumno) return
+    
+    try {
+      const token = localStorage.getItem("token")
+      const response = await fetch(`${API_URL}/api/postulaciones`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          alumno: { idAlumno: profileData.idAlumno },
+          practica: { idPractica: offerId },
+          estado: "PENDIENTE"
+        })
+      })
+      
+      if (response.ok) {
+        setAppliedOffers([...appliedOffers, offerId])
+        createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+      } else {
+        throw new Error('Failed to apply to offer')
+      }
+    } catch (err) {
+      console.error("Error applying to offer:", err)
+    }
+  }
+
+  // Fetch profile data
+const fetchProfileData = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    
+    // Step 1: Get the user's basic info
+    const userResponse = await fetch(`${API_URL}/api/usuarios/current`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (!userResponse.ok) throw new Error('Failed to fetch user data');
+    const userData = await userResponse.json();
+
+    // Step 2: Get the student details using the user ID
+    const alumnoResponse = await fetch(`${API_URL}/api/alumnos/by-user/${userData.idUsuario}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (!alumnoResponse.ok) throw new Error('Failed to fetch student data');
+    const alumnoData = await alumnoResponse.json();
+
+    // Combine the data
+    setProfileData({
+      idAlumno: alumnoData.idAlumno,
+      nombre: userData.nombre,
+      apellido: userData.apellido,
+      email: userData.email,
+      escuela: alumnoData.educacion || "",
+      edad: alumnoData.edad || 0,
+      competencias: alumnoData.competencias || "",
+      ubicacion: userData.ubicacion || "",
+      nivelTecnico: alumnoData.nivelTecnico || "",
+      habilidades: alumnoData.competencias ? alumnoData.competencias.split(',').map(s => s.trim()) : [],
+      preferencias: alumnoData.preferencias ? alumnoData.preferencias.split(',').map(s => s.trim()) : []
+    });
+  } catch (err) {
+    console.error("Error fetching profile data:", err);
+  }
+};
+
   useEffect(() => {
-    // Marcar como cargado para iniciar animaciones
-    setTimeout(() => setLoaded(true), 100)
+    const initializeData = async () => {
+      await fetchProfileData()
+      await fetchOffers()
+      await fetchAppliedOffers()
+    }
+    
+    initializeData()
 
-    // Crear partículas iniciales
+    // Mark as loaded for animations
+    setTimeout(() => setLoaded(true), 100)
     createInitialParticles()
 
     // Seguimiento del ratón
@@ -271,10 +343,41 @@ const OfertasAlumnos = () => {
   // Función para postularse a una oferta
   const handleApplyToOffer = (offerId) => {
     if (!appliedOffers.includes(offerId)) {
-      setAppliedOffers([...appliedOffers, offerId])
-      createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+      applyToOffer(offerId)
     }
   }
+
+  const calculateDuration = (startDate, endDate) => {
+    if (!startDate || !endDate) return "Duración no especificada"
+    
+    const start = new Date(startDate)
+    const end = new Date(endDate)
+    const diffMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth())
+    
+    return diffMonths <= 0 ? "1 mes" : `${diffMonths} meses`
+  }
+  
+
+  const formatOffer = (offer) => ({
+    id: offer.idPractica,
+    titulo: offer.titulo,
+    empresa: offer.empresa?.nombre || "Empresa no especificada",
+    ubicacion: offer.empresa?.ubicacion || "Ubicación no especificada",
+    tipo: offer.modalidad || "No especificado",
+    duracion: calculateDuration(offer.fechaInicio, offer.fechaFin),
+    descripcion: offer.descripcion || "No hay descripción disponible",
+    requisitos: offer.requisitos?.split(',').map(s => s.trim()) || [],
+    fechaPublicacion: offer.fechaCreacion || new Date().toISOString(),
+    fechaLimite: offer.fechaFin || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    matched: offer.matched || false,
+    matchPercentage: offer.matchPercentage || 0
+  })
+
+
+  const offersPerPage = 3
+  const totalPages = Math.ceil(ofertas.length / offersPerPage)
+  const startIndex = (currentPage - 1) * offersPerPage
+  const currentOffers = ofertas.slice(startIndex, startIndex + offersPerPage).map(formatOffer)
 
   // Función para cambiar página
   const handlePageChange = (page) => {
@@ -291,23 +394,25 @@ const OfertasAlumnos = () => {
 
   return (
     <div className="oa-ofertas-page">
-      {/* Partículas de fondo */}
-      <div className="oa-particles-container">
-        {particles.map((particle) => (
-          <div
-            key={particle.id}
-            className="oa-particle"
-            style={{
-              left: `${particle.x}px`,
-              top: `${particle.y}px`,
-              width: `${particle.size}px`,
-              height: `${particle.size}px`,
-              backgroundColor: particle.color,
-              opacity: particle.opacity,
-            }}
-          />
-        ))}
-      </div>
+      {/* Loading state */}
+      {loading && (
+        <div className="oa-loading-overlay">
+          <div className="oa-loading-spinner"></div>
+          <p>Cargando ofertas...</p>
+        </div>
+      )}
+
+      {/* Error state */}
+      {error && (
+        <div className="oa-error-message">
+          <p>Error al cargar las ofertas: {error}</p>
+          <button onClick={() => {
+            setError(null)
+            setLoading(true)
+            fetchOffers()
+          }}>Reintentar</button>
+        </div>
+      )}
 
       {/* Efecto de luz que sigue al cursor */}
       <div
@@ -534,15 +639,6 @@ const OfertasAlumnos = () => {
                       </span>
                     ))}
                   </div>
-                </div>
-
-                <div className="oa-modal-section">
-                  <h4>Beneficios</h4>
-                  <ul>
-                    {selectedOffer.beneficios.map((beneficio, index) => (
-                      <li key={index}>{beneficio}</li>
-                    ))}
-                  </ul>
                 </div>
 
                 <div className="oa-modal-section">

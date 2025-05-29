@@ -9,6 +9,7 @@ import com.example.ezfct.Repository.AlumnoRepository;
 import com.example.ezfct.Repository.PracticasRepository;
 import com.example.ezfct.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -126,5 +127,27 @@ public class AlumnoController {
         resultado.put("totalRequisitos", total);
 
         return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/by-user/{idUsuario}")
+    public ResponseEntity<?> getAlumnoByUsuarioId(@PathVariable int idUsuario) {
+        try {
+            Alumno alumno = alumnoRepository.findByUsuarioId(idUsuario);
+            if (alumno == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("idAlumno", alumno.getIdAlumno());
+            response.put("educacion", alumno.getEducacion());
+            response.put("edad", "20");
+            response.put("competencias", alumno.getCompetencias());
+            response.put("nivelTecnico", "Practicas");
+            response.put("preferencias", "Sin preferencias");
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching student data");
+        }
     }
 }
