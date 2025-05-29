@@ -26,6 +26,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                        //.requestMatchers(HttpMethod.POST).permitAll()
+                        //.requestMatchers(HttpMethod.GET).permitAll()
                         .anyRequest().authenticated()
                 ).addFilterAfter(new JwtFilter(jwtUtil), LogoutFilter.class)
                 .cors(AbstractHttpConfigurer::disable);
