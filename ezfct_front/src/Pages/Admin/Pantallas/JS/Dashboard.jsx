@@ -31,7 +31,6 @@ const AdminDashboard = () => {
       if (!response.ok) throw new Error("Failed to fetch messages");
 
       const data = await response.json();
-      console.log("Full API response:", data); // Debug log
       setMessages(data);
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -63,7 +62,6 @@ const AdminDashboard = () => {
   }
 
   const handleMessageClick = (messageId) => {
-    console.log("Navigating to message ID:", messageId);
     navigate(`/admin/message/${messageId}`);
   }
 
