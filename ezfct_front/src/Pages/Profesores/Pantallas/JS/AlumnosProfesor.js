@@ -268,6 +268,7 @@ const EstudiantesProfesor = () => {
           top: `${mousePosition.y}px`,
         }}
       />
+
       {/* Barra de navegación superior */}
       <nav className={`top-navbar ${loaded ? "loaded" : ""}`}>
         <div className="navbar-left">
@@ -288,6 +289,7 @@ const EstudiantesProfesor = () => {
         </div>
       </nav>
 
+      {/* Contenedor principal */}
       <div className="estudiantes-container">
         {/* Header */}
         <header className={`page-header ${loaded ? "loaded" : ""}`}>

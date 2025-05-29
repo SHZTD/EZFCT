@@ -5,10 +5,11 @@ import PropTypes from "prop-types"
 import ButtonComp from "../../../../Components/JSX/ButtonComp.js"
 import LogoDefault from "../../../Imagenes/logo.gif"
 import { useNavigate } from "react-router-dom"
+import {API_URL} from "../../../../constants.js"
+
 import "../CSS/Login.css"
 
 const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
-  const API_URL = "http://192.168.1.139:7484/auth/userlogin"
   // Estados para el formulario
   const navigate = useNavigate()
   const [email, setEmail] = useState("")
@@ -132,7 +133,7 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")
 
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(API_URL + "/auth/userlogin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
