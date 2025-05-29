@@ -12,7 +12,7 @@ public class Alumno {
     private int idAlumno;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario") // Make sure this matches your DB column name
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
     @Enumerated(EnumType.STRING)

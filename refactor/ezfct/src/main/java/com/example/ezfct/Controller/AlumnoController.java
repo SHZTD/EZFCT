@@ -1,5 +1,6 @@
 package com.example.ezfct.Controller;
 
+import com.example.ezfct.DTO.AlumnoDTO;
 import com.example.ezfct.DTO.EstadoDTO;
 import com.example.ezfct.Entity.Alumno;
 import com.example.ezfct.Entity.Practicas;
@@ -60,7 +61,7 @@ public class AlumnoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateAlumno(@PathVariable int id, @RequestBody Alumno actualizado) {
+    public ResponseEntity<?> updateAlumno(@PathVariable int id, @RequestBody AlumnoDTO actualizado) {
         return alumnoRepository.findById(id).map(alumno -> {
             alumno.setBiografia(actualizado.getBiografia());
             alumno.setHabilidades(actualizado.getHabilidades());
@@ -73,6 +74,7 @@ public class AlumnoController {
             return ResponseEntity.ok(alumno);
         }).orElse(ResponseEntity.notFound().build());
     }
+
 
     @PatchMapping("/{id}/estado")
     public ResponseEntity<?> updateEstadoPractica(@PathVariable int id, @RequestBody EstadoDTO estadoDTO) {

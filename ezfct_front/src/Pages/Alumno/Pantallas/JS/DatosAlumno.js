@@ -188,9 +188,6 @@ const DatosAlumno = () => {
 
     // Simular guardado
     setTimeout(() => {
-      // Guardar en localStorage
-      localStorage.setItem("profileData", JSON.stringify(profileData))
-
       setIsSaving(false)
       setShowEditModal(false)
     }, 800)
