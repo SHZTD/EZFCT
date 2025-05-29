@@ -48,31 +48,6 @@ const DatosAlumno = () => {
     tutorEmail: "maria.garcia@techsolutions.com",
     descripcion:
       "Estudiante de desarrollo web con gran interés en tecnologías frontend. Busco oportunidades para aplicar mis conocimientos en React y mejorar mis habilidades en un entorno profesional.",
-    proyectos: [
-      {
-        nombre: "Aplicación de gestión de tareas",
-        descripcion: "Desarrollo de una aplicación web para gestionar tareas y proyectos del equipo.",
-        tecnologias: "React, Node.js, MongoDB",
-      },
-      {
-        nombre: "Rediseño de la página web corporativa",
-        descripcion: "Colaboración en el rediseño y desarrollo de la nueva web responsive de la empresa.",
-        tecnologias: "HTML, CSS, JavaScript, Figma",
-      },
-    ],
-    evaluaciones: [
-      {
-        fecha: "2025-02-15",
-        puntuacion: 4.5,
-        comentario: "Excelente progreso en el desarrollo frontend. Muestra iniciativa y capacidad de aprendizaje.",
-      },
-      {
-        fecha: "2025-03-30",
-        puntuacion: 4.8,
-        comentario:
-          "Ha mejorado significativamente en trabajo en equipo. Sus contribuciones al proyecto de rediseño han sido muy valiosas.",
-      },
-    ],
   })
 
   const profileMenuRef = useRef(null)
@@ -385,20 +360,7 @@ const DatosAlumno = () => {
                 <Briefcase size={16} />
                 <span>Prácticas</span>
               </button>
-              <button
-                className={`perfil-tab ${activeTab === "proyectos" ? "active" : ""}`}
-                onClick={() => setActiveTab("proyectos")}
-              >
-                <FileText size={16} />
-                <span>Proyectos</span>
-              </button>
-              <button
-                className={`perfil-tab ${activeTab === "evaluaciones" ? "active" : ""}`}
-                onClick={() => setActiveTab("evaluaciones")}
-              >
-                <BarChart size={16} />
-                <span>Evaluaciones</span>
-              </button>
+
             </div>
 
             <div className="perfil-content-area">
@@ -510,95 +472,6 @@ const DatosAlumno = () => {
                         <BookOpen size={16} />
                         <span>Ir al diario de prácticas</span>
                       </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Pestaña de Proyectos */}
-              {activeTab === "proyectos" && (
-                <div className="tab-content proyectos-tab">
-                  <div className="info-section">
-                    <h3 className="section-title">Proyectos realizados</h3>
-                    <div className="projects-list">
-                      {profileData.proyectos.map((proyecto, index) => (
-                        <div key={index} className="project-card">
-                          <h4 className="project-title">{proyecto.nombre}</h4>
-                          <p className="project-description">{proyecto.descripcion}</p>
-                          <div className="project-tech">
-                            <span className="tech-label">Tecnologías:</span>
-                            <div className="tech-tags">
-                              {proyecto.tecnologias.split(",").map((tech, techIndex) => (
-                                <span key={techIndex} className="tech-tag">
-                                  {tech.trim()}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="info-section">
-                    <h3 className="section-title">Añadir nuevo proyecto</h3>
-                    <div className="add-project-placeholder">
-                      <Zap size={24} />
-                      <p>
-                        Puedes añadir nuevos proyectos realizados durante tus prácticas para mantener un portafolio
-                        actualizado.
-                      </p>
-                      <button className="add-project-button">
-                        <span>Añadir proyecto</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Pestaña de Evaluaciones */}
-              {activeTab === "evaluaciones" && (
-                <div className="tab-content evaluaciones-tab">
-                  <div className="info-section">
-                    <h3 className="section-title">Evaluaciones del tutor</h3>
-                    <div className="evaluations-list">
-                      {profileData.evaluaciones.map((evaluacion, index) => (
-                        <div key={index} className="evaluation-card">
-                          <div className="evaluation-header">
-                            <div className="evaluation-date">{formatDate(evaluacion.fecha)}</div>
-                            <div className="evaluation-rating">
-                              {renderStars(evaluacion.puntuacion)}
-                              <span className="rating-value">{evaluacion.puntuacion.toFixed(1)}</span>
-                            </div>
-                          </div>
-                          <p className="evaluation-comment">{evaluacion.comentario}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="info-section">
-                    <h3 className="section-title">Resumen de evaluaciones</h3>
-                    <div className="evaluation-summary">
-                      <div className="summary-item">
-                        <span className="summary-label">Evaluaciones recibidas</span>
-                        <span className="summary-value">{profileData.evaluaciones.length}</span>
-                      </div>
-                      <div className="summary-item">
-                        <span className="summary-label">Puntuación media</span>
-                        <div className="summary-rating">
-                          {renderStars(
-                            profileData.evaluaciones.reduce((acc, curr) => acc + curr.puntuacion, 0) /
-                              profileData.evaluaciones.length,
-                          )}
-                          <span className="rating-value">
-                            {(
-                              profileData.evaluaciones.reduce((acc, curr) => acc + curr.puntuacion, 0) /
-                              profileData.evaluaciones.length
-                            ).toFixed(1)}
-                          </span>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>

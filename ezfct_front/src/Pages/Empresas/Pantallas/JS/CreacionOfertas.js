@@ -243,13 +243,6 @@ const OfertasPage = () => {
             <img src={usersIcon || "/placeholder.svg"} alt="Students" className="empresa-tab-icon" />
             <span>Students</span>
           </button>
-          <button
-            className={`empresa-tab-button ${activeTab === "help" ? "empresa-active" : ""}`}
-            onClick={() => navigateTo("empresas/HelpEmpresa")}
-          >
-            <img src={questionIcon || "/placeholder.svg"} alt="Help" className="empresa-tab-icon" />
-            <span>Help</span>
-          </button>
         </div>
 
         {/* Contenido principal con dos columnas */}

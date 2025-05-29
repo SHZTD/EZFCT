@@ -233,6 +233,27 @@ button:disabled {
   opacity: 1;
 }
 
+/* Estilos para los botones */
+.btn--empresas {
+  background-color: #f97316; /* Naranja */
+  color: white;
+}
+
+.btn--profesores {
+  background-color: #3b82f6; /* Azul */
+  color: white;
+}
+
+.btn--alumnos {
+  background-color: #10b981; /* Verde */
+  color: white;
+}
+
+.btn--admin {
+  background-color: #8b5cf6; /* Púrpura */
+  color: white;
+}
+
 /* Animaciones globales */
 @keyframes float {
   0%, 100% { transform: translateY(0) rotate(0deg); }

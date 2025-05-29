@@ -63,10 +63,10 @@ const EleccionUsuario = () => {
   };
 
   const buttons = [
-    { text: 'Empresas', route: '/empresas/inicio', icon: '🏢' },
-    { text: 'Profesores', route: '/profesores/inicio', icon: '👨‍🏫' },
-    { text: 'Alumnos', route: '/alumnos/login', icon: '👨‍🎓' },
-    { text: 'Admin', route: '/admin/login', icon: '⚙️' },
+   { text: "Empresas", route: "/empresas/inicio", icon: "🏢", className: "btn--empresas" },
+    { text: "Profesores", route: "/profesores/inicio", icon: "👨‍🏫", className: "btn--profesores" },
+    { text: "Alumnos", route: "/alumnos/login", icon: "👨‍🎓", className: "btn--alumnos" },
+    { text: "Admin", route: "/admin/login", icon: "⚙️", className: "btn--admin" },
   ];
 
   return (

@@ -164,13 +164,7 @@ const OfertasPublicadas = () => {
             <img src={usersIcon || "/placeholder.svg"} alt="Students" className="tab-icon"/>
             <span className="tab-text">Students</span>
           </button>
-          <button 
-            className={`tab-button ${activeTab === 'help' ? 'active' : ''}`}
-            onClick={() => navigateTo('empresas/Help')}
-          >
-            <img src={questionIcon || "/placeholder.svg"} alt="Help" className="tab-icon"/>
-            <span className="tab-text">Help</span>
-          </button>
+         
         </div>
 
         {/* Success Content */}

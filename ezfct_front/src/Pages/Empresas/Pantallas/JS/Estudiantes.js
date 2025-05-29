@@ -281,13 +281,8 @@ const Students = () => {
             <img src={usersIcon || "/placeholder.svg"} alt="Students" className="stud-tab-icon" />
             <span>Students</span>
           </button>
-          <button
-            className={`stud-tab-button ${activeTab === "help" ? "stud-active" : ""}`}
-            onClick={() => handleTabChange("help", "/empresas/HelpEmpresa")}
-          >
-            <img src={questionIcon || "/placeholder.svg"} alt="Help" className="stud-tab-icon" />
-            <span>Help</span>
-          </button>
+       
+          
         </div>
 
         {/* Contenido principal con dos columnas */}

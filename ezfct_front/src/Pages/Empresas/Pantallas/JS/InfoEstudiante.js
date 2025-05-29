@@ -190,8 +190,7 @@ const InfoEstudiante = () => {
   // Configuración de las pestañas
   const tabs = [
     { key: 'offers', label: 'Offers', icon: paperIcon, route: '/empresas/OfertasE' },
-    { key: 'students', label: 'Students', icon: usersIcon, route: '/empresas/Estudiantes' },
-    { key: 'help', label: 'Help', icon: questionIcon, route: '/empresas/HelpEmpresa' }
+    { key: 'students', label: 'Students', icon: usersIcon, route: '/empresas/Estudiantes' }
   ];
 
   if (!student) {
@@ -234,8 +233,7 @@ const InfoEstudiante = () => {
         }}
       />
       
-      <div className="student-info-container">
-        {/* Botón de volver */}
+       {/* Botón de volver */}
         <button 
           className={`back-button ${loaded ? 'loaded' : ''}`}
           onClick={handleBackClick}
@@ -243,6 +241,8 @@ const InfoEstudiante = () => {
           ← Volver
         </button>
         
+      <div className="student-info-container">
+       
         {/* Navigation Tabs usando el componente NavTabs */}
         <NavTabs 
           activeTab={activeTab}
