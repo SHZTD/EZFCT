@@ -58,73 +58,60 @@ const OfertasAlumnos = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(`${API_URL}/api/practicas`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { 'Authorization': `Bearer ${token}` }
       });
-
-      if (!response.ok) throw new Error("Failed to fetch offers");
-
+      
+      if (!response.ok) throw new Error('Failed to fetch offers');
+      
       const data = await response.json();
-
-      // Fetch match percentages for each offer if we have a student ID
+      
+      // Only calculate matches if we have a student ID
       if (profileData.idAlumno) {
         const offersWithMatches = await Promise.all(
-          data.map(async (offer) => {
+          data.map(async offer => {
             try {
               const matchResponse = await fetch(
                 `${API_URL}/api/alumnos/${profileData.idAlumno}/match/practica/${offer.idPractica}`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
-                }
+                { headers: { 'Authorization': `Bearer ${token}` } }
               );
-
+              
               if (matchResponse.ok) {
                 const matchData = await matchResponse.json();
                 return {
                   ...offer,
                   matched: matchData.matchPercentage > 70,
-                  matchPercentage: matchData.matchPercentage,
+                  matchPercentage: matchData.matchPercentage
                 };
               }
+              return offer;
             } catch (err) {
               console.error("Error calculating match:", err);
+              return offer;
             }
-            return offer;
           })
         );
-
         setOfertas(offersWithMatches);
       } else {
         setOfertas(data);
       }
     } catch (err) {
       setError(err.message);
-    } finally {
-      setLoading(false);
     }
   };
-
   // Fetch student's applied offers
-  const fetchAppliedOffers = async () => {
+const fetchAppliedOffers = async () => {
     if (!profileData.idAlumno) return;
-
+    
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
         `${API_URL}/api/postulaciones/alumno/${profileData.idAlumno}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { 'Authorization': `Bearer ${token}` } }
       );
-
+      
       if (response.ok) {
         const data = await response.json();
-        setAppliedOffers(data.map((post) => post.practica.idPractica));
+        setAppliedOffers(data.map(post => post.practica.idPractica));
       }
     } catch (err) {
       console.error("Error fetching applied offers:", err);
@@ -161,31 +148,28 @@ const OfertasAlumnos = () => {
     }
   };
 
-  const fetchProfileData = async () => {
+const fetchProfileData = async () => {
     try {
       const token = localStorage.getItem("token");
-
+      
+      // 1. Get user data first
       const userResponse = await fetch(`${API_URL}/api/usuarios/current`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { 'Authorization': `Bearer ${token}` }
       });
-
-      if (!userResponse.ok) throw new Error("Failed to fetch user data");
+      
+      if (!userResponse.ok) throw new Error('Failed to fetch user data');
       const userData = await userResponse.json();
 
-      const alumnoResponse = await fetch(
-        `${API_URL}/api/alumnos/by-user/${userData.idUsuario}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (!alumnoResponse.ok) throw new Error("Failed to fetch student data");
+      // 2. Get student data using user ID
+      const alumnoResponse = await fetch(`${API_URL}/api/alumnos/by-user/${userData.idUsuario}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (!alumnoResponse.ok) throw new Error('Failed to fetch student data');
       const alumnoData = await alumnoResponse.json();
 
-      if (!userData.idUsuario) throw new Error("User ID not found");
-      if (!alumnoData.idAlumno) throw new Error("Student ID not found");
-
-      setProfileData({
+      // 3. Set profile data with all required fields
+      const newProfileData = {
         idUsuario: userData.idUsuario,
         idAlumno: alumnoData.idAlumno,
         nombre: userData.nombre || "",
@@ -196,35 +180,38 @@ const OfertasAlumnos = () => {
         competencias: alumnoData.competencias || "",
         ubicacion: userData.ubicacion || "",
         nivelTecnico: alumnoData.nivelTecnico || "",
-        habilidades: alumnoData.competencias
-          ? alumnoData.competencias.split(",").map((s) => s.trim())
-          : [],
-        preferencias: alumnoData.preferencias
-          ? alumnoData.preferencias.split(",").map((s) => s.trim())
-          : [],
-      });
+        habilidades: alumnoData.competencias ? 
+          alumnoData.competencias.split(',').map(s => s.trim()) : [],
+        preferencias: alumnoData.preferencias ? 
+          alumnoData.preferencias.split(',').map(s => s.trim()) : []
+      };
 
-      return true; // Indicate success
+      setProfileData(newProfileData);
+      localStorage.setItem("profileData", JSON.stringify(newProfileData));
+      
+      return true;
     } catch (err) {
       console.error("Error fetching profile data:", err);
       setError(err.message);
-      return false; // Indicate failure
+      return false;
     }
   };
 
   useEffect(() => {
-    const initialize = async () => {
+  const initialize = async () => {
       setLoading(true);
       try {
-        // 1. First load profile data
         const profileSuccess = await fetchProfileData();
-
+        
         if (!profileSuccess) {
           throw new Error("Failed to load profile data");
         }
 
-        // 2. Then load other data
-        await Promise.all([fetchOffers(), fetchAppliedOffers()]);
+        await Promise.all([
+          fetchOffers(),
+          fetchAppliedOffers()
+        ]);
+        
       } catch (err) {
         setError(err.message);
       } finally {
@@ -458,6 +445,7 @@ const OfertasAlumnos = () => {
         const error = await alumnoResponse.json();
         throw new Error(error.message || "Failed to update student profile");
       }
+
 
       const updatedProfile = { ...profileData };
       localStorage.setItem("profileData", JSON.stringify(updatedProfile));
