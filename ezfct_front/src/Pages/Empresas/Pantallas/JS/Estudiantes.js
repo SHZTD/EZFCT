@@ -58,17 +58,81 @@ const Students = () => {
     }
   }
 
+  // Fetch applicants for a specific offer
+  const fetchApplicants = async (offerId) => {
+    try {
+      const response = await fetch(`${API_URL}/api/practicas/${offerId}/postulaciones`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch applicants")
+      }
+
+      return await response.json()
+    } catch (err) {
+      console.error("Error fetching applicants:", err)
+      return []
+    }
+  }
+
+  // Handle accepting an applicant
+  const handleAcceptApplicant = async (studentId) => {
+    try {
+      const response = await fetch(`${API_URL}/api/postulaciones/${studentId}/accept`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to accept applicant")
+      }
+
+      // Update the applicant's status in the UI
+      setApplicantStudents(prev => prev.map(student => 
+        student.id === studentId ? {...student, status: "accepted"} : student
+      ))
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+
+  // Handle rejecting an applicant
+  const handleRejectApplicant = async (studentId) => {
+    try {
+      const response = await fetch(`${API_URL}/api/postulaciones/${studentId}/reject`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to reject applicant")
+      }
+
+      // Update the applicant's status in the UI
+      setApplicantStudents(prev => prev.map(student => 
+        student.id === studentId ? {...student, status: "rejected"} : student
+      ))
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+
   // Fetch students data (mock data for now)
   const fetchStudents = async () => {
     // This would be replaced with actual API calls
     setAssignedStudents([
       { id: 1, name: "Michal Jack", time: "28 mins ago", avatar: "/usuario1.jpg", offerId: 1 },
       { id: 2, name: "Sarah Johnson", time: "45 mins ago", avatar: "/usuario2.jpg", offerId: 1 },
-    ])
-    
-    setApplicantStudents([
-      { id: 5, name: "David Chen", time: "3 hours ago", avatar: "/usuario2.jpg", offerId: 1, status: "pending" },
-      { id: 6, name: "Olivia Martinez", time: "Yesterday", avatar: "/usuario3.png", offerId: 1, status: "pending" },
     ])
   }
 
@@ -160,11 +224,32 @@ const Students = () => {
     setTimeout(() => navigate(`/empresas/InfoEstudiantes/${id}`), 300)
   }
 
-  // Open offer modal
-  const openOfferModal = (offer) => {
+  // Open offer modal and fetch applicants
+  const openOfferModal = async (offer) => {
+    setIsLoading(true)
     setSelectedOffer(offer)
-    setIsModalOpen(true)
-    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+    
+    try {
+      // Fetch applicants for this specific offer
+      const applicants = await fetchApplicants(offer.idPractica)
+      setApplicantStudents(applicants.map(applicant => ({
+        id: applicant.idEstudiante,
+        name: `${applicant.nombre} ${applicant.apellidos}`,
+        time: new Date(applicant.fechaPostulacion).toLocaleDateString(),
+        avatar: applicant.foto || "/usuario1.jpg",
+        offerId: offer.idPractica,
+        status: applicant.estado || "pending",
+        cvFileName: applicant.cvFileName,
+        motivacion: applicant.motivacion
+      })))
+      
+      setIsModalOpen(true)
+      createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   // Close modal
@@ -429,29 +514,52 @@ const Students = () => {
 
                 <div className="stud-modal-section">
                   <h3 className="stud-modal-section-title">Applicants</h3>
-                  {applicantStudents.filter(student => student.offerId === selectedOffer.idPractica).length > 0 ? (
+                  {applicantStudents.length > 0 ? (
                     <div className="stud-modal-students-grid">
-                      {applicantStudents
-                        .filter(student => student.offerId === selectedOffer.idPractica)
-                        .map((student) => (
-                          <div
-                            key={student.id}
-                            className="stud-modal-student-card"
-                            onClick={() => selectStudent(student.id)}
-                          >
-                            <div className="stud-student-avatar">
-                              <img
-                                src={student.avatar || "/placeholder.svg?height=40&width=40"}
-                                alt={`${student.name}'s avatar`}
-                              />
-                            </div>
-                            <div className="stud-student-info">
-                              <h3>{student.name}</h3>
-                              <p>{student.time}</p>
-                            </div>
-                            <div className="stud-student-status stud-pending">Pending</div>
+                      {applicantStudents.map((student) => (
+                        <div
+                          key={student.id}
+                          className="stud-modal-student-card"
+                          onClick={() => selectStudent(student.id)}
+                        >
+                          <div className="stud-student-avatar">
+                            <img
+                              src={student.avatar || "/placeholder.svg?height=40&width=40"}
+                              alt={`${student.name}'s avatar`}
+                            />
                           </div>
-                        ))}
+                          <div className="stud-student-info">
+                            <h3>{student.name}</h3>
+                            <p>Applied: {student.time}</p>
+                            <div className="stud-student-details">
+                              <span>CV: {student.cvFileName || "Not provided"}</span>
+                              <span>Motivation: {student.motivacion?.substring(0, 50)}...</span>
+                            </div>
+                          </div>
+                          <div className="stud-student-actions">
+                            <button 
+                              className={`stud-action-button stud-accept ${student.status === "accepted" ? "stud-disabled" : ""}`}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleAcceptApplicant(student.id)
+                              }}
+                              disabled={student.status === "accepted"}
+                            >
+                              {student.status === "accepted" ? "Accepted" : "Accept"}
+                            </button>
+                            <button 
+                              className={`stud-action-button stud-reject ${student.status === "rejected" ? "stud-disabled" : ""}`}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleRejectApplicant(student.id)
+                              }}
+                              disabled={student.status === "rejected"}
+                            >
+                              {student.status === "rejected" ? "Rejected" : "Reject"}
+                            </button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   ) : (
                     <div className="stud-no-students">

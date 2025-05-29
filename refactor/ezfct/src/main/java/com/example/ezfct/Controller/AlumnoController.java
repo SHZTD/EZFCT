@@ -31,7 +31,6 @@ public class AlumnoController {
     @Autowired
     private PracticasRepository practicasRepository;
 
-
     @GetMapping
     public List<Alumno> getAllAlumnos() {
         return alumnoRepository.findAll();
@@ -71,10 +70,9 @@ public class AlumnoController {
             alumno.setDisponibilidad(actualizado.getDisponibilidad());
             alumno.setPortfolio(actualizado.getPortfolio());
             alumnoRepository.save(alumno);
-            return ResponseEntity.ok(alumno);
+            return ResponseEntity.ok(actualizado); // devuelve el dto
         }).orElse(ResponseEntity.notFound().build());
     }
-
 
     @PatchMapping("/{id}/estado")
     public ResponseEntity<?> updateEstadoPractica(@PathVariable int id, @RequestBody EstadoDTO estadoDTO) {
@@ -90,8 +88,8 @@ public class AlumnoController {
     @GetMapping("/{idAlumno}/match/practica/{idPractica}")
     public ResponseEntity<?> calcularMatch(
             @PathVariable int idAlumno,
-            @PathVariable int idPractica
-    ) {
+            @PathVariable int idPractica) {
+
         Optional<Alumno> alumnoOpt = alumnoRepository.findById(idAlumno);
         Optional<Practicas> practicaOpt = practicasRepository.findById(idPractica);
 
@@ -102,8 +100,17 @@ public class AlumnoController {
         Alumno alumno = alumnoOpt.get();
         Practicas practica = practicaOpt.get();
 
-        if (alumno.getCompetencias() == null || practica.getRequisitos() == null) {
-            return ResponseEntity.badRequest().body("Faltan competencias o requisitos.");
+        String alumnoCompetencias = alumno.getCompetencias() != null ?
+                alumno.getCompetencias() : "Java";
+        String practicaRequisitos = practica.getRequisitos() != null ?
+                practica.getRequisitos() : "JavaScript";
+
+        if (alumnoCompetencias.isEmpty() || practicaRequisitos.isEmpty()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("matchPercentage", 0);
+            response.put("coincidencias", 0);
+            response.put("totalRequisitos", 0);
+            return ResponseEntity.ok(response);
         }
 
         Set<String> competencias = Arrays.stream(alumno.getCompetencias().split(","))
@@ -139,17 +146,22 @@ public class AlumnoController {
                 return ResponseEntity.notFound().build();
             }
 
+            // Ensure competencias is never null
+            String competencias = alumno.getCompetencias() != null ?
+                    alumno.getCompetencias() : "";
+
             Map<String, Object> response = new HashMap<>();
             response.put("idAlumno", alumno.getIdAlumno());
             response.put("educacion", alumno.getEducacion());
             response.put("edad", "20");
-            response.put("competencias", alumno.getCompetencias());
+            response.put("competencias", competencias); // Use the safe version
             response.put("nivelTecnico", "Practicas");
             response.put("preferencias", "Sin preferencias");
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching student data");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching student data");
         }
     }
 }

@@ -106,4 +106,24 @@ public class PostulacionController {
             return ResponseEntity.internalServerError().body("Error al actualizar la postulacion.");
         }
     }
+
+    @GetMapping("/alumno/{idAlumno}")
+    public ResponseEntity<?> getPostulacionesByAlumnoId(@PathVariable int idAlumno) {
+        try {
+            // Verify the student exists
+            if (!alumnoRepository.existsById(idAlumno)) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Get all postulations for the student
+            List<Postulacion> postulaciones = postulacionRepository.findByAlumnoIdAlumno(idAlumno);
+
+            // You might want to return a simplified DTO instead of the full entity
+            return ResponseEntity.ok(postulaciones);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError()
+                    .body("Error al obtener las postulaciones del alumno");
+        }
+    }
 }
