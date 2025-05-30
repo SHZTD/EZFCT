@@ -78,7 +78,7 @@ const Students = () => {
 
 
   // Fetch applicants for a specific offer
-const fetchApplicants = async (offerId) => {
+  const fetchApplicants = async (offerId) => {
     try {
       const response = await fetch(`${API_URL}/api/practicas/${offerId}/postulaciones`, {
         headers: {
@@ -90,9 +90,28 @@ const fetchApplicants = async (offerId) => {
       if (!response.ok) throw new Error("Failed to fetch applicants");
       
       const data = await response.json();
-      return data.map(applicant => ({
-        ...applicant,
-        idPractica: offerId // Ensure we have the offer ID
+      
+      return data.map(postulacion => ({
+        postulacionId: postulacion.idPostulacion,
+        estado: postulacion.estado,
+        fechaPostulacion: postulacion.fechaPostulacion,
+        
+        // Student info (from Usuario via Alumno)
+        nombre: postulacion.nombre || 'Unknown',
+        apellido: postulacion.apellido || 'Student', // Note singular
+        email: postulacion.email,
+        
+        // Student profile (from Alumno)
+        biografia: postulacion.biografia,
+        habilidades: postulacion.habilidades,
+        educacion: postulacion.educacion,
+        
+        // Offer info
+        idPractica: offerId, // From route parameter
+        tituloPractica: postulacion.tituloPractica || 'Unknown Offer',
+        
+        // Default avatar (since no foto field exists)
+        avatar: '/default-avatar.jpg'
       }));
 
     } catch (err) {
@@ -101,26 +120,24 @@ const fetchApplicants = async (offerId) => {
     }
   };
 
-  // Handle accepting an applicant
-  const handleAcceptApplicant = async (studentId) => {
-    try {
-      const response = await fetch(`${API_URL}/api/postulaciones/${studentId}/accept`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+const handleAcceptApplicant = async (postulacionId) => {
+  try {
+    const response = await fetch(`${API_URL}/api/postulaciones/${postulacionId}/accept`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
 
-      if (!response.ok) throw new Error("Failed to accept applicant");
-
-      await fetchOffers();
-      await fetchStudents();
-
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+    if (!response.ok) throw new Error("Failed to accept applicant");
+    
+    // Refresh the data
+    await fetchOffers();
+  } catch (err) {
+    setError(err.message);
+  }
+};
 
   // Handle rejecting an applicant
   const handleRejectApplicant = async (studentId) => {
@@ -432,12 +449,12 @@ const fetchApplicants = async (offerId) => {
                   <div className="stud-students-grid">
                     {applicantStudents.map((student) => (
                       <div
-                        key={student.id}
+                        key={student.postulacionId}
                         className="stud-student-card"
-                        onClick={() => selectStudent(student.id)}
+                        onClick={() => selectStudent(student.postulacionId)}
                         style={{
-                          animationDelay: `${0.1 + student.id * 0.05}s`,
-                          transitionDelay: `${0.1 + student.id * 0.05}s`,
+                          animationDelay: `${0.1 + student.postulacionId * 0.05}s`,
+                          transitionDelay: `${0.1 + student.postulacionId * 0.05}s`,
                         }}
                       >
                         <div className="stud-student-avatar">
@@ -487,9 +504,9 @@ const fetchApplicants = async (offerId) => {
                         .filter(student => student.offerId === selectedOffer.idPractica)
                         .map((student) => (
                           <div
-                            key={student.id}
+                            key={student.postulacionId}
                             className="stud-modal-student-card"
-                            onClick={() => selectStudent(student.id)}
+                            onClick={() => selectStudent(student.postulacionId)}
                           >
                             <div className="stud-student-avatar">
                               <img
@@ -518,9 +535,9 @@ const fetchApplicants = async (offerId) => {
                     <div className="stud-modal-students-grid">
                       {applicantStudents.map((student) => (
                         <div
-                          key={student.id}
+                          key={student.postulacionId}
                           className="stud-modal-student-card"
-                          onClick={() => selectStudent(student.id)}
+                          onClick={() => selectStudent(student.postulacionId)}
                         >
                           <div className="stud-student-avatar">
                             <img
@@ -541,7 +558,7 @@ const fetchApplicants = async (offerId) => {
                               className={`stud-action-button stud-accept ${student.status === "accepted" ? "stud-disabled" : ""}`}
                               onClick={(e) => {
                                 e.stopPropagation()
-                                handleAcceptApplicant(student.id)
+                                handleAcceptApplicant(student.postulacionId)
                               }}
                               disabled={student.status === "accepted"}
                             >
@@ -551,7 +568,7 @@ const fetchApplicants = async (offerId) => {
                               className={`stud-action-button stud-reject ${student.status === "rejected" ? "stud-disabled" : ""}`}
                               onClick={(e) => {
                                 e.stopPropagation()
-                                handleRejectApplicant(student.id)
+                                handleRejectApplicant(student.postulacionId)
                               }}
                               disabled={student.status === "rejected"}
                             >
