@@ -67,7 +67,6 @@ public class AlumnoController {
             alumno.setEducacion(actualizado.getEducacion());
             alumno.setExperiencia(actualizado.getExperiencia());
             alumno.setCompetencias(actualizado.getCompetencias());
-            alumno.setDisponibilidad(actualizado.getDisponibilidad());
             alumno.setPortfolio(actualizado.getPortfolio());
             alumnoRepository.save(alumno);
             return ResponseEntity.ok(actualizado); // devuelve el dto

@@ -34,50 +34,72 @@ const Students = () => {
 
   // Fetch offers from API
   const fetchOffers = async () => {
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
     try {
       const response = await fetch(API_URL + "/api/practicas/empresa", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      })
+      });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch offers")
-      }
+      if (!response.ok) throw new Error("Failed to fetch offers");
+      
+      const data = await response.json();
+      setOffers(data);
 
-      const data = await response.json()
-      setOffers(data)
+      // Fetch applicants for each offer
+      const applicantsPromises = data.map(offer => 
+        fetchApplicants(offer.idPractica)
+      );
+      const applicantsResults = await Promise.all(applicantsPromises);
+
+      // Combine all applicants into one array
+      const allApplicants = applicantsResults.flat();
+      setApplicantStudents(allApplicants.map(applicant => ({
+        id: applicant.idEstudiante,
+        name: `${applicant.nombre} ${applicant.apellidos}`,
+        time: new Date(applicant.fechaPostulacion).toLocaleDateString(),
+        avatar: applicant.foto || "/usuario1.jpg",
+        offerId: applicant.idPractica,
+        status: applicant.estado || "pending",
+        cvFileName: applicant.cvFileName,
+        motivacion: applicant.motivacion
+      })));
+
     } catch (err) {
-      setError(err.message)
-      console.error("Error fetching offers:", err)
+      setError(err.message);
+      console.error("Error fetching offers:", err);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
+
 
   // Fetch applicants for a specific offer
-  const fetchApplicants = async (offerId) => {
+const fetchApplicants = async (offerId) => {
     try {
       const response = await fetch(`${API_URL}/api/practicas/${offerId}/postulaciones`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      })
+      });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch applicants")
-      }
+      if (!response.ok) throw new Error("Failed to fetch applicants");
+      
+      const data = await response.json();
+      return data.map(applicant => ({
+        ...applicant,
+        idPractica: offerId // Ensure we have the offer ID
+      }));
 
-      return await response.json()
     } catch (err) {
-      console.error("Error fetching applicants:", err)
-      return []
+      console.error("Error fetching applicants:", err);
+      return [];
     }
-  }
+  };
 
   // Handle accepting an applicant
   const handleAcceptApplicant = async (studentId) => {
@@ -88,20 +110,17 @@ const Students = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      })
+      });
 
-      if (!response.ok) {
-        throw new Error("Failed to accept applicant")
-      }
+      if (!response.ok) throw new Error("Failed to accept applicant");
 
-      // Update the applicant's status in the UI
-      setApplicantStudents(prev => prev.map(student => 
-        student.id === studentId ? {...student, status: "accepted"} : student
-      ))
+      await fetchOffers();
+      await fetchStudents();
+
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     }
-  }
+  };
 
   // Handle rejecting an applicant
   const handleRejectApplicant = async (studentId) => {
@@ -112,20 +131,18 @@ const Students = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      })
+      });
 
-      if (!response.ok) {
-        throw new Error("Failed to reject applicant")
-      }
+      if (!response.ok) throw new Error("Failed to reject applicant");
 
-      // Update the applicant's status in the UI
-      setApplicantStudents(prev => prev.map(student => 
-        student.id === studentId ? {...student, status: "rejected"} : student
-      ))
+      // Refresh all data
+      await fetchOffers();
+      await fetchStudents();
+
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     }
-  }
+  };
 
   // Fetch students data (mock data for now)
   const fetchStudents = async () => {
@@ -226,31 +243,14 @@ const Students = () => {
 
   // Open offer modal and fetch applicants
   const openOfferModal = async (offer) => {
-    setIsLoading(true)
-    setSelectedOffer(offer)
-    
-    try {
-      // Fetch applicants for this specific offer
-      const applicants = await fetchApplicants(offer.idPractica)
-      setApplicantStudents(applicants.map(applicant => ({
-        id: applicant.idEstudiante,
-        name: `${applicant.nombre} ${applicant.apellidos}`,
-        time: new Date(applicant.fechaPostulacion).toLocaleDateString(),
-        avatar: applicant.foto || "/usuario1.jpg",
-        offerId: offer.idPractica,
-        status: applicant.estado || "pending",
-        cvFileName: applicant.cvFileName,
-        motivacion: applicant.motivacion
-      })))
-      
-      setIsModalOpen(true)
-      createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+    setSelectedOffer(offer);
+    setIsModalOpen(true);
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981");
+  };
+
+  const countApplicantsForOffer = (offerId) => {
+    return applicantStudents.filter(student => student.offerId === offerId).length;
+  };
 
   // Close modal
   const closeModal = () => {
@@ -406,7 +406,7 @@ const Students = () => {
                         <div className="stud-offer-stats">
                           <div className="stud-stat">
                             <span className="stud-stat-number">
-                              {applicantStudents.filter(student => student.offerId === offer.idPractica).length}
+                              {countApplicantsForOffer(offer.idPractica)}
                             </span>
                             <span className="stud-stat-label">Applicants</span>
                           </div>

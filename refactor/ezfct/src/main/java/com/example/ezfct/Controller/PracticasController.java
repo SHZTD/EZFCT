@@ -1,8 +1,11 @@
 package com.example.ezfct.Controller;
 
 import com.example.ezfct.DTO.PracticaDTO;
+import com.example.ezfct.Entity.Postulacion;
 import com.example.ezfct.Entity.Practicas;
 import com.example.ezfct.Entity.Empresa;
+import com.example.ezfct.Model.Enums.EstadoPostulacion;
+import com.example.ezfct.Repository.PostulacionRepository;
 import com.example.ezfct.Repository.PracticasRepository;
 import com.example.ezfct.Repository.EmpresaRepository;
 import com.example.ezfct.Security.JwtUtil;
@@ -24,6 +27,9 @@ public class PracticasController {
 
     @Autowired
     private EmpresaRepository empresaRepository;
+
+    @Autowired
+    private PostulacionRepository postulacionRepository;
 
     @GetMapping
     public List<Practicas> getAllPracticas() {
@@ -168,6 +174,57 @@ public class PracticasController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Error al eliminar la práctica.");
+        }
+    }
+
+    @GetMapping("/{idPractica}/postulaciones")
+    public ResponseEntity<?> getPostulacionesByPractica(@PathVariable int idPractica) {
+        try {
+            Optional<Practicas> practicaOpt = practicasRepository.findById(idPractica);
+            if (practicaOpt.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Assuming you have a PostulacionRepository with a findByPractica method
+            List<Postulacion> postulaciones = postulacionRepository.findByPractica(practicaOpt.get());
+
+            return ResponseEntity.ok(postulaciones);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error fetching applications");
+        }
+    }
+
+    @PostMapping("/postulaciones/{idPostulacion}/accept")
+    public ResponseEntity<?> acceptPostulacion(@PathVariable int idPostulacion) {
+        try {
+            Postulacion postulacion = postulacionRepository.findById(idPostulacion).orElse(null);
+            if (postulacion == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            postulacion.setEstado(EstadoPostulacion.ACEPTADA);
+            postulacionRepository.save(postulacion);
+
+            return ResponseEntity.ok("Application accepted");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error accepting application");
+        }
+    }
+
+    @PostMapping("/postulaciones/{idPostulacion}/reject")
+    public ResponseEntity<?> rejectPostulacion(@PathVariable int idPostulacion) {
+        try {
+            Postulacion postulacion = postulacionRepository.findById(idPostulacion).orElse(null);
+            if (postulacion == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            postulacion.setEstado(EstadoPostulacion.RECHAZADA);
+            postulacionRepository.save(postulacion);
+
+            return ResponseEntity.ok("Application rejected");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error rejecting application");
         }
     }
 }

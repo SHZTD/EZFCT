@@ -28,7 +28,6 @@ public class Alumno {
     private String educacion;
     private String experiencia;
     private String competencias;
-    private String disponibilidad;
     private String portfolio;
 
     @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
@@ -106,14 +105,6 @@ public class Alumno {
 
     public void setExperiencia(String experiencia) {
         this.experiencia = experiencia;
-    }
-
-    public String getDisponibilidad() {
-        return disponibilidad;
-    }
-
-    public void setDisponibilidad(String disponibilidad) {
-        this.disponibilidad = disponibilidad;
     }
 
     public String getPortfolio() {
