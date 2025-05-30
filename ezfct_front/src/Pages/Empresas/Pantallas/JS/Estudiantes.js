@@ -122,7 +122,7 @@ const Students = () => {
 
 const handleAcceptApplicant = async (postulacionId) => {
   try {
-    const response = await fetch(`${API_URL}/api/postulaciones/${postulacionId}/accept`, {
+    const response = await fetch(`${API_URL}/api/practicas/postulaciones/${postulacionId}/accept`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -140,9 +140,10 @@ const handleAcceptApplicant = async (postulacionId) => {
 };
 
   // Handle rejecting an applicant
-  const handleRejectApplicant = async (studentId) => {
+  const handleRejectApplicant = async (postulacionId) => {
     try {
-      const response = await fetch(`${API_URL}/api/postulaciones/${studentId}/reject`, {
+      console.log(postulacionId)
+      const response = await fetch(`${API_URL}/api/practicas/postulaciones/${postulacionId}/reject`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

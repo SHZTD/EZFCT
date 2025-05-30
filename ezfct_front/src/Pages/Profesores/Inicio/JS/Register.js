@@ -6,9 +6,8 @@ import ButtonComp from "../../../../Components/JSX/ButtonComp.js"
 import "../CSS/Register.css"
 import logo from "../../../Imagenes/logo.gif"
 import { useNavigate } from "react-router-dom"
-
+import { API_URL } from "../../../../constants.js"
 const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) => {
-  const API_URL = "http://192.168.1.139:7484/auth/registeruser"
   // Estados para el formulario
   const [profesor, setProfesor] = useState({
     nombre: "",
@@ -177,7 +176,7 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
     }
 
     // Enviar datos a la API
-    fetch(API_URL, {
+    fetch(API_URL + "/auth/registeruser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
