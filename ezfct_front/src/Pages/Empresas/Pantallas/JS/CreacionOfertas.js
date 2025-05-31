@@ -217,9 +217,9 @@ const OfertasPage = () => {
           <div className="empresa-decorative-circle empresa-circle-1"></div>
           <div className="empresa-decorative-circle empresa-circle-2"></div>
 
-          <h1 className={`empresa-title ${loaded ? "empresa-loaded" : ""}`}>OFFERS</h1>
+          <h1 className={`empresa-title ${loaded ? "empresa-loaded" : ""}`}>OFERTAS</h1>
           <div className={`empresa-divider ${loaded ? "empresa-loaded" : ""}`}></div>
-          <p className={`empresa-subtitle ${loaded ? "empresa-loaded" : ""}`}>Create and manage your job offers</p>
+          <p className={`empresa-subtitle ${loaded ? "empresa-loaded" : ""}`}>Crea y gestiona tus ofertas de trabajo</p>
         </div>
 
         {/* Navigation Tabs */}
@@ -228,36 +228,39 @@ const OfertasPage = () => {
             className={`empresa-tab-button ${activeTab === "offers" ? "empresa-active" : ""}`}
             onClick={() => setActiveTab("offers")}
           >
-            <img src={paperIcon || "/placeholder.svg"} alt="Offers" className="empresa-tab-icon" />
-            <span>Offers</span>
+            <img src={paperIcon || "/placeholder.svg"} alt="Ofertas" className="empresa-tab-icon" />
+            <span>Ofertas</span>
           </button>
           <button
             className={`empresa-tab-button ${activeTab === "students" ? "empresa-active" : ""}`}
             onClick={() => navigateTo("empresas/Estudiantes")}
           >
-            <img src={usersIcon || "/placeholder.svg"} alt="Students" className="empresa-tab-icon" />
-            <span>Students</span>
+            <img src={usersIcon || "/placeholder.svg"} alt="Estudiantes" className="empresa-tab-icon" />
+            <span>Estudiantes</span>
           </button>
         </div>
 
         {/* Contenido principal con dos columnas */}
-        <div className="empresa-main-content">
-          <div className="empresa-split-layout" style={{ minHeight: "450px" }}>
+        <div className="empresa-main-content" style={{ borderRadius: "0 0 0 0" }}>
+          <div className="empresa-split-layout" style={{ minHeight: "520px" }}>
             {/* Columna izquierda: Creación de ofertas */}
-            <div className="empresa-split-column empresa-create-column" style={{ maxHeight: "450px" }}>
-              <div className="empresa-slide-content">
+            <div className="empresa-split-column empresa-create-column" style={{ maxHeight: "520px" }}>
+              <div className="empresa-slide-content" style={{ height: "100%", borderRadius: "0" }}>
                 <h2 className="empresa-section-title">
                   <span className="empresa-section-icon">✏️</span>
-                  Create New Offer
+                  Crear Nueva Oferta
                 </h2>
-                <div className="empresa-form-content">
-                  <div className={`empresa-form-card ${loaded ? "empresa-loaded" : ""}`}>
+                <div className="empresa-form-content" style={{ flex: 1 }}>
+                  <div
+                    className={`empresa-form-card ${loaded ? "empresa-loaded" : ""}`}
+                    style={{ borderRadius: "16px", height: "100%" }}
+                  >
                     <div
                       className={`empresa-form-group ${loaded ? "empresa-loaded" : ""}`}
                       style={{ transitionDelay: "0.3s" }}
                     >
                       <div className="empresa-input-container">
-                        <label htmlFor="title">Title of Offer</label>
+                        <label htmlFor="title">Título de la Oferta</label>
                         <div className="empresa-input-wrapper">
                           <span className="empresa-input-icon">📝</span>
                           <input
@@ -265,7 +268,7 @@ const OfertasPage = () => {
                             id="title"
                             name="title"
                             className="empresa-custom-input"
-                            placeholder="Enter the title of your offer"
+                            placeholder="Introduce el título de tu oferta"
                             value={formData.title}
                             onChange={handleInputChange}
                           />
@@ -278,14 +281,14 @@ const OfertasPage = () => {
                       style={{ transitionDelay: "0.4s" }}
                     >
                       <div className="empresa-textarea-container">
-                        <label htmlFor="description">Description</label>
+                        <label htmlFor="description">Descripción</label>
                         <div className="empresa-input-wrapper">
                           <span className="empresa-input-icon empresa-textarea-icon">📄</span>
                           <textarea
                             id="description"
                             name="description"
                             className="empresa-custom-textarea"
-                            placeholder="Describe the offer in detail"
+                            placeholder="Describe la oferta en detalle"
                             rows="4"
                             value={formData.description}
                             onChange={handleInputChange}
@@ -299,7 +302,7 @@ const OfertasPage = () => {
                       style={{ transitionDelay: "0.5s" }}
                     >
                       <div className="empresa-input-container">
-                        <label htmlFor="skills">Skills Required</label>
+                        <label htmlFor="skills">Habilidades Requeridas</label>
                         <div className="empresa-input-wrapper">
                           <span className="empresa-input-icon">🔧</span>
                           <input
@@ -307,7 +310,7 @@ const OfertasPage = () => {
                             id="skills"
                             name="skills"
                             className="empresa-custom-input"
-                            placeholder="e.g. JavaScript, React, CSS"
+                            placeholder="ej. JavaScript, React, CSS"
                             value={formData.skills}
                             onChange={handleInputChange}
                           />
@@ -322,7 +325,7 @@ const OfertasPage = () => {
                     >
                       <div className="empresa-date-inputs">
                         <div className="empresa-input-container">
-                          <label htmlFor="startDate">Start Date</label>
+                          <label htmlFor="startDate">Fecha de Inicio</label>
                           <div className="empresa-input-wrapper">
                             <span className="empresa-input-icon">📅</span>
                             <input
@@ -336,7 +339,7 @@ const OfertasPage = () => {
                           </div>
                         </div>
                         <div className="empresa-input-container">
-                          <label htmlFor="endDate">End Date</label>
+                          <label htmlFor="endDate">Fecha de Fin</label>
                           <div className="empresa-input-wrapper">
                             <span className="empresa-input-icon">📅</span>
                             <input
@@ -358,7 +361,7 @@ const OfertasPage = () => {
                       style={{ transitionDelay: "0.7s" }}
                     >
                       <div className="empresa-select-container">
-                        <label htmlFor="modality">Modality</label>
+                        <label htmlFor="modality">Modalidad</label>
                         <div className="empresa-input-wrapper">
                           <span className="empresa-input-icon">🌐</span>
                           <select
@@ -381,7 +384,7 @@ const OfertasPage = () => {
                       style={{ transitionDelay: "0.8s" }}
                     >
                       <div className="empresa-select-container">
-                        <label htmlFor="vacancies">Vacancies</label>
+                        <label htmlFor="vacancies">Vacantes</label>
                         <div className="empresa-input-wrapper">
                           <span className="empresa-input-icon">👥</span>
                           <select
@@ -405,7 +408,7 @@ const OfertasPage = () => {
                     >
                       <button className="empresa-publish-button" onClick={publishOffer}>
                         <span className="empresa-button-icon">✈️</span>
-                        Publish Offer
+                        Publicar Oferta
                       </button>
                     </div>
                   </div>
@@ -414,12 +417,12 @@ const OfertasPage = () => {
             </div>
 
             {/* Columna derecha: Visualización de ofertas */}
-            <div className="empresa-split-column empresa-view-column" style={{ maxHeight: "450px" }}>
-              <div className="empresa-slide-content">
+            <div className="empresa-split-column empresa-view-column" style={{ maxHeight: "520px" }}>
+              <div className="empresa-slide-content" style={{ height: "100%", borderRadius: "0" }}>
                 <div className={`empresa-offers-list-header ${loaded ? "empresa-loaded" : ""}`}>
                   <h2 className="empresa-section-title">
                     <span className="empresa-section-icon">👁️</span>
-                    Your Published Offers
+                    Tus Ofertas Publicadas
                   </h2>
                   <div className="empresa-offers-stats">
                     <div className="empresa-stat-item">
@@ -430,104 +433,110 @@ const OfertasPage = () => {
                       <span className="empresa-stat-value">
                         {offers.reduce((acc, curr) => acc + (curr.postulaciones?.length || 0), 0)}
                       </span>
-                      <span className="empresa-stat-label">Applications</span>
+                      <span className="empresa-stat-label">Solicitudes</span>
                     </div>
                   </div>
                 </div>
 
-                {offers.length === 0 ? (
-                  <div className="empresa-no-offers">
-                    <div className="empresa-no-offers-icon">📭</div>
-                    <h3>No offers published yet</h3>
-                    <p>Create your first job offer to start receiving applications</p>
-                  </div>
-                ) : (
-                  <div className="empresa-offers-list">
-                    {offers.map((offer, index) => (
-                      <div
-                        key={offer.idPractica}
-                        className="empresa-offer-card"
-                        style={{
-                          animationDelay: `${0.1 + index * 0.05}s`,
-                          transitionDelay: `${0.1 + index * 0.05}s`,
-                        }}
-                      >
-                        <div className="empresa-offer-header">
-                          <h3 className="empresa-offer-title">{offer.titulo}</h3>
-                          <div className="empresa-offer-badges">
-                            <span className="empresa-date-badge">{formatDate(offer.fechaInicio)}</span>
+                <div style={{ flex: 1, overflow: "hidden" }}>
+                  {offers.length === 0 ? (
+                    <div className="empresa-no-offers">
+                      <div className="empresa-no-offers-icon">📭</div>
+                      <h3>No hay ofertas publicadas aún</h3>
+                      <p>Crea tu primera oferta de trabajo para empezar a recibir solicitudes</p>
+                    </div>
+                  ) : (
+                    <div className="empresa-offers-list">
+                      {offers.map((offer, index) => (
+                        <div
+                          key={offer.idPractica}
+                          className="empresa-offer-card"
+                          style={{
+                            animationDelay: `${0.1 + index * 0.05}s`,
+                            transitionDelay: `${0.1 + index * 0.05}s`,
+                          }}
+                        >
+                          <div className="empresa-offer-header">
+                            <h3 className="empresa-offer-title">{offer.titulo}</h3>
+                            <div className="empresa-offer-badges">
+                              <span className="empresa-date-badge">{formatDate(offer.fechaInicio)}</span>
+                            </div>
                           </div>
-                        </div>
 
-                        <div className="empresa-offer-description">
-                          <p>{offer.descripcion}</p>
-                        </div>
+                          <div className="empresa-offer-description">
+                            <p>{offer.descripcion}</p>
+                          </div>
 
-                        <div className="empresa-offer-details">
-                          <div className="empresa-detail-item">
-                            <span className="empresa-detail-icon">🔧</span>
-                            <span className="empresa-detail-text">{offer.requisitos}</span>
+                          <div className="empresa-offer-details">
+                            <div className="empresa-detail-item">
+                              <span className="empresa-detail-icon">🔧</span>
+                              <span className="empresa-detail-text">{offer.requisitos}</span>
+                            </div>
+                            <div className="empresa-detail-item">
+                              <span className="empresa-detail-icon">📅</span>
+                              <span className="empresa-detail-text">
+                                {formatDate(offer.fechaInicio)} a {formatDate(offer.fechaFin)}
+                              </span>
+                            </div>
+                            <div className="empresa-detail-item">
+                              <span className="empresa-detail-icon">{getModalityIcon(offer.modalidad)}</span>
+                              <span
+                                className="empresa-detail-text empresa-modality-badge"
+                                style={{
+                                  backgroundColor: `${getModalityColor(offer.modalidad)}20`,
+                                  color: getModalityColor(offer.modalidad),
+                                }}
+                              >
+                                {offer.modalidad?.toLowerCase()}
+                              </span>
+                            </div>
+                            <div className="empresa-detail-item">
+                              <span className="empresa-detail-icon">👥</span>
+                              <span className="empresa-detail-text">
+                                {offer.vacantes} {offer.vacantes === 1 ? "vacante" : "vacantes"}
+                              </span>
+                            </div>
                           </div>
-                          <div className="empresa-detail-item">
-                            <span className="empresa-detail-icon">📅</span>
-                            <span className="empresa-detail-text">
-                              {formatDate(offer.fechaInicio)} to {formatDate(offer.fechaFin)}
-                            </span>
+
+                          <div className="empresa-offer-stats">
+                            <div className="empresa-stat">
+                              <span className="empresa-stat-number">{offer.postulaciones?.length || 0}</span>
+                              <span className="empresa-stat-label">Solicitudes</span>
+                            </div>
                           </div>
-                          <div className="empresa-detail-item">
-                            <span className="empresa-detail-icon">{getModalityIcon(offer.modalidad)}</span>
-                            <span
-                              className="empresa-detail-text empresa-modality-badge"
-                              style={{
-                                backgroundColor: `${getModalityColor(offer.modalidad)}20`,
-                                color: getModalityColor(offer.modalidad),
+
+                          <div className="empresa-offer-actions">
+                            <button
+                              className="empresa-action-button empresa-view"
+                              onClick={() => {
+                                setSelectedOffer(offer)
+                                setIsModalOpen(true)
                               }}
                             >
-                              {offer.modalidad?.toLowerCase()}
-                            </span>
-                          </div>
-                          <div className="empresa-detail-item">
-                            <span className="empresa-detail-icon">👥</span>
-                            <span className="empresa-detail-text">
-                              {offer.vacantes} {offer.vacantes === 1 ? "vacancy" : "vacancies"}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="empresa-offer-stats">
-                          <div className="empresa-stat">
-                            <span className="empresa-stat-number">{offer.postulaciones?.length || 0}</span>
-                            <span className="empresa-stat-label">Applications</span>
+                              <span className="empresa-action-icon">👁️</span>
+                              Ver Detalles
+                            </button>
+                            <button
+                              className="empresa-action-button empresa-delete"
+                              onClick={() => deleteOffer(offer.idPractica)}
+                            >
+                              <span className="empresa-action-icon">🗑️</span>
+                              Eliminar
+                            </button>
                           </div>
                         </div>
-
-                        <div className="empresa-offer-actions">
-                          <button
-                            className="empresa-action-button empresa-view"
-                            onClick={() => {
-                              // Set the selected offer and open the modal
-                              setSelectedOffer(offer)
-                              setIsModalOpen(true)
-                            }}
-                          >
-                            <span className="empresa-action-icon">👁️</span>
-                            View Details
-                          </button>
-                          <button
-                            className="empresa-action-button empresa-delete"
-                            onClick={() => deleteOffer(offer.idPractica)}
-                          >
-                            <span className="empresa-action-icon">🗑️</span>
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Footer unificado */}
+        <div className="empresa-footer" style={{ borderRadius: "0 0 24px 24px" }}>
+          <p className={loaded ? "empresa-loaded" : ""}>© 2025 EasyFCT - Innovación Educativa</p>
         </div>
 
         {/* Modal component */}
@@ -544,25 +553,25 @@ const OfertasPage = () => {
 
               <div className="empresa-modal-body">
                 <div className="empresa-modal-section">
-                  <h3 className="empresa-modal-section-title">Description</h3>
+                  <h3 className="empresa-modal-section-title">Descripción</h3>
                   <p className="empresa-modal-text">{selectedOffer.descripcion}</p>
                 </div>
 
                 <div className="empresa-modal-section">
-                  <h3 className="empresa-modal-section-title">Details</h3>
+                  <h3 className="empresa-modal-section-title">Detalles</h3>
                   <div className="empresa-modal-details">
                     <div className="empresa-modal-detail-item">
-                      <span className="empresa-modal-detail-label">Skills Required:</span>
+                      <span className="empresa-modal-detail-label">Habilidades Requeridas:</span>
                       <span className="empresa-modal-detail-value">{selectedOffer.requisitos}</span>
                     </div>
                     <div className="empresa-modal-detail-item">
-                      <span className="empresa-modal-detail-label">Period:</span>
+                      <span className="empresa-modal-detail-label">Periodo:</span>
                       <span className="empresa-modal-detail-value">
-                        {formatDate(selectedOffer.fechaInicio)} to {formatDate(selectedOffer.fechaFin)}
+                        {formatDate(selectedOffer.fechaInicio)} a {formatDate(selectedOffer.fechaFin)}
                       </span>
                     </div>
                     <div className="empresa-modal-detail-item">
-                      <span className="empresa-modal-detail-label">Modality:</span>
+                      <span className="empresa-modal-detail-label">Modalidad:</span>
                       <span
                         className="empresa-modal-detail-value empresa-modality-badge"
                         style={{
@@ -574,13 +583,13 @@ const OfertasPage = () => {
                       </span>
                     </div>
                     <div className="empresa-modal-detail-item">
-                      <span className="empresa-modal-detail-label">Vacancies:</span>
+                      <span className="empresa-modal-detail-label">Vacantes:</span>
                       <span className="empresa-modal-detail-value">
-                        {selectedOffer.vacantes} {selectedOffer.vacantes === 1 ? "vacancy" : "vacancies"}
+                        {selectedOffer.vacantes} {selectedOffer.vacantes === 1 ? "vacante" : "vacantes"}
                       </span>
                     </div>
                     <div className="empresa-modal-detail-item">
-                      <span className="empresa-modal-detail-label">Applications:</span>
+                      <span className="empresa-modal-detail-label">Solicitudes:</span>
                       <span className="empresa-modal-detail-value">{selectedOffer.postulaciones?.length || 0}</span>
                     </div>
                   </div>
@@ -595,17 +604,13 @@ const OfertasPage = () => {
                     }}
                   >
                     <span className="empresa-button-icon">👨‍🎓</span>
-                    View Students
+                    Ver Estudiantes
                   </button>
                 </div>
               </div>
             </div>
           </div>
         )}
-
-        <div className="empresa-footer">
-          <p className={loaded ? "empresa-loaded" : ""}>© 2025 EasyFCT - Innovación Educativa</p>
-        </div>
       </div>
     </div>
   )
