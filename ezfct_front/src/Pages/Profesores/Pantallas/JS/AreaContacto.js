@@ -235,15 +235,6 @@ const ContactoProfesor = () => {
         ))}
       </div>
 
-      {/* Cursor light effect */}
-      <div
-        className="cursor-light"
-        style={{
-          left: `${mousePosition.x}px`,
-          top: `${mousePosition.y}px`,
-        }}
-      />
-
       <div className="contacto-container">
         {/* Header */}
         <header className={`page-header ${loaded ? "loaded" : ""}`}>
