@@ -1,9 +1,7 @@
 package com.example.ezfct.Controller;
 
-import com.example.ezfct.DTO.PracticaDTO;
-import com.example.ezfct.Entity.Postulacion;
-import com.example.ezfct.Entity.Practicas;
-import com.example.ezfct.Entity.Empresa;
+import com.example.ezfct.DTO.PostulacionDTO;
+import com.example.ezfct.Entity.*;
 import com.example.ezfct.Model.Enums.EstadoPostulacion;
 import com.example.ezfct.Repository.PostulacionRepository;
 import com.example.ezfct.Repository.PracticasRepository;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/practicas")
@@ -180,18 +179,37 @@ public class PracticasController {
     @GetMapping("/{idPractica}/postulaciones")
     public ResponseEntity<?> getPostulacionesByPractica(@PathVariable int idPractica) {
         try {
-            Optional<Practicas> practicaOpt = practicasRepository.findById(idPractica);
-            if (practicaOpt.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
+            Optional<Practicas> practica = practicasRepository.findById(idPractica);
 
-            // Assuming you have a PostulacionRepository with a findByPractica method
-            List<Postulacion> postulaciones = postulacionRepository.findByPractica(practicaOpt.get());
+            List<Postulacion> postulaciones = postulacionRepository.findByPractica(practica.orElse(null));
 
-            return ResponseEntity.ok(postulaciones);
+            List<PostulacionDTO> response = postulaciones.stream()
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Error fetching applications");
         }
+    }
+
+    private PostulacionDTO convertToDto(Postulacion postulacion) {
+        Alumno alumno = postulacion.getAlumno();
+        Usuario usuario = alumno != null ? alumno.getUsuario() : null;
+        Practicas practica = postulacion.getPractica();
+
+        return new PostulacionDTO(
+                postulacion.getIdPostulacion(),
+                postulacion.getEstado().toString(),
+                postulacion.getFechaPostulacion(),
+                usuario != null ? usuario.getNombre() : "Unknown",
+                usuario != null ? usuario.getApellido() : "Student",
+                usuario != null ? usuario.getEmail() : "",
+                alumno != null ? alumno.getBiografia() : "",
+                alumno != null ? alumno.getHabilidades() : "",
+                alumno != null ? alumno.getEducacion() : "",
+                practica != null ? practica.getTitulo() : "Unknown Offer"
+        );
     }
 
     @PostMapping("/postulaciones/{idPostulacion}/accept")
