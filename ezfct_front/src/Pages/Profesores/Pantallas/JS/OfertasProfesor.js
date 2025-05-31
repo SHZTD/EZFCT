@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 import "../CSS/OfertasProfesor.css"
 import {
   Search,
-  Filter,
+  HelpCircle,
   ChevronRight,
   Calendar,
   Users,
@@ -324,9 +324,9 @@ const ProfesorOffers = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <button className="filter-button">
-              <Filter size={18} />
-              <span>Filters</span>
+            <button className="filter-button" onClick={() => navigate("/profesores/areaContacto")}>
+              <HelpCircle size={18} />
+              <span>Help</span>
             </button>
           </div>
 
