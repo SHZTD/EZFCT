@@ -59,7 +59,7 @@ const Students = () => {
       const allApplicants = applicantsResults.flat();
       setApplicantStudents(allApplicants.map(applicant => ({
         id: applicant.idEstudiante,
-        name: `${applicant.nombre} ${applicant.apellidos}`,
+        name: `${applicant.nombre} ${applicant.apellido}`,
         time: new Date(applicant.fechaPostulacion).toLocaleDateString(),
         avatar: applicant.foto || "/usuario1.jpg",
         offerId: applicant.idPractica,
