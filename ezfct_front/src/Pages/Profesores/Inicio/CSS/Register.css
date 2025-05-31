@@ -30,18 +30,6 @@
   transition: opacity 0.5s ease;
 }
 
-/* Efecto de luz que sigue al cursor */
-.profesor-cursor-light {
-  position: fixed;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 1;
-}
-
 /* Botón de volver atrás */
 .profesor-back-button {
   position: fixed;

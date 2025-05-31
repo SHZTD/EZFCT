@@ -271,15 +271,6 @@ const ProfesorOffers = () => {
         ))}
       </div>
 
-      {/* Efecto de luz que sigue al cursor */}
-      <div
-        className="cursor-light"
-        style={{
-          left: `${mousePosition.x}px`,
-          top: `${mousePosition.y}px`,
-        }}
-      />
-
       {/* Barra de navegación superior */}
       <nav className={`top-navbar ${loaded ? "loaded" : ""}`}>
         <div className="navbar-left">

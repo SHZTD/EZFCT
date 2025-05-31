@@ -68,10 +68,7 @@ const Inicio = () => {
           className="inicio-particle"
           style={{ left:`${pt.x}px`, top:`${pt.y}px`, width:`${pt.size}px`, height:`${pt.size}px`, backgroundColor:pt.color, opacity:pt.opacity }}
         />))}
-      <div
-        className="inicio-light"
-        style={{ left:`${mousePos.x}px`, top:`${mousePos.y}px` }}
-      />
+  
 
       {/* botón volver atrás */}
       <button

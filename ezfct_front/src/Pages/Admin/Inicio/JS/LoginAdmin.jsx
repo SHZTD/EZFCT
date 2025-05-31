@@ -149,14 +149,6 @@ const handleLogin = async (e) => {
         ))}
       </div>
 
-      <div
-        className="admin-cursor-light"
-        style={{
-          left: `${mousePosition.x}px`,
-          top: `${mousePosition.y}px`,
-        }}
-      />
-
       <button className={`admin-back-button ${loaded ? "loaded" : ""}`} onClick={handleBack} aria-label="Volver">
         ←
       </button>

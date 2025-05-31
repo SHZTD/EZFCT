@@ -365,15 +365,6 @@ const OfertaDetalleProfesor = () => {
         ))}
       </div>
 
-      {/* Efecto de luz que sigue al cursor */}
-      <div
-        className="cursor-light"
-        style={{
-          left: `${mousePosition.x}px`,
-          top: `${mousePosition.y}px`,
-        }}
-      />
-
       <div className="oferta-detalle-container">
         {/* Botón de volver */}
         <button className={`back-button ${loaded ? "loaded" : ""}`} onClick={handleNavigateBack}>

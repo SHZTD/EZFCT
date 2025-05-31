@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useRef } from "react"
 import PropTypes from "prop-types"
 import ButtonComp from "../../../../Components/JSX/ButtonComp.js"
@@ -228,14 +226,6 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
         ))}
       </div>
 
-      {/* Efecto de luz que sigue al cursor */}
-      <div
-        className="empresa-cursor-light"
-        style={{
-          left: `${mousePosition.x}px`,
-          top: `${mousePosition.y}px`,
-        }}
-      />
 
       {/* Botón de volver atrás */}
       <button

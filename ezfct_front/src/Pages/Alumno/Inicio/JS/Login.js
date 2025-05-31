@@ -176,16 +176,7 @@ const Login = ({ onLogin = () => {}, onBack = () => {}, logo }) => {
           />
         ))}
       </div>
-
-      {/* Efecto de luz que sigue al cursor */}
-      <div
-        className="alumno-cursor-light"
-        style={{
-          left: `${mousePosition.x}px`,
-          top: `${mousePosition.y}px`,
-        }}
-      />
-
+      
       {/* Botón de volver atrás */}
       <button className={`alumno-back-button ${loaded ? "loaded" : ""}`} onClick={handleBack} aria-label="Volver">
         ←

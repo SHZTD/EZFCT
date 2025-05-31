@@ -228,15 +228,6 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
         ))}
       </div>
 
-      {/* Efecto de luz que sigue al cursor */}
-      <div
-        className="profesor-cursor-light"
-        style={{
-          left: `${mousePosition.x}px`,
-          top: `${mousePosition.y}px`,
-        }}
-      />
-
       {/* Botón de volver atrás */}
       <button
         className={`profesor-back-button ${loaded ? "loaded" : ""}`}

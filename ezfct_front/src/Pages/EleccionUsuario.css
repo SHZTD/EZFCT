@@ -21,17 +21,7 @@
   z-index: 0;
 }
 
-/* Luz que sigue al cursor */
-.eu-light {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 1;
-}
+
 
 /* Panel principal */
 .eu-main {

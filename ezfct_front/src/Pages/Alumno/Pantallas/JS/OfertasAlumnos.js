@@ -486,15 +486,6 @@ const fetchProfileData = async () => {
         </div>
       )}
 
-      {/* Efecto de luz que sigue al cursor */}
-      <div
-        className="oa-cursor-light"
-        style={{
-          left: `${mousePosition.x}px`,
-          top: `${mousePosition.y}px`,
-        }}
-      />
-
       {/* Barra de navegación superior */}
       <nav className={`oa-top-navbar ${loaded ? "oa-loaded" : ""}`}>
         <div className="oa-navbar-left">

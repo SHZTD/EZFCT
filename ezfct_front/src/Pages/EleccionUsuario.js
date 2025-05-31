@@ -87,11 +87,7 @@ const EleccionUsuario = () => {
         />
       ))}
 
-      {/* Luz radial bajo el cursor */}
-      <div
-        className="eu-light"
-        style={{ left: `${mousePosition.x}px`, top: `${mousePosition.y}px` }}
-      />
+
 
       {/* Panel principal con animación */}
       <main className={`eu-main${loaded ? ' loaded' : ''}`} role="main">
