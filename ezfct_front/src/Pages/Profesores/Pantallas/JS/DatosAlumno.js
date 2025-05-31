@@ -202,12 +202,12 @@ const DatosAlumno = () => {
         ))}
       </div>
 
-      <div className="da-student-info-container">
-        {/* Botón de volver */}
-        <button className={`da-back-button ${loaded ? "loaded" : ""}`} onClick={handleBackClick}>
-          ← Volver
-        </button>
+      {/* Botón de volver */}
+      <button className={`da-back-button ${loaded ? "loaded" : ""}`} onClick={handleBackClick}>
+        ← Volver
+      </button>
 
+      <div className="da-student-info-container">
         {/* Contenido principal */}
         <div className="da-info-content">
           {/* Panel lateral con foto y datos básicos */}
