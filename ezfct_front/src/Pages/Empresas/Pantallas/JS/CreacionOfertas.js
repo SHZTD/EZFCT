@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../CSS/CreacionOfertas.css"
@@ -5,13 +7,10 @@ import "../CSS/CreacionOfertas.css"
 // Importamos las imágenes
 import paperIcon from "../../../Imagenes/paper.png"
 import usersIcon from "../../../Imagenes/users.png"
-import questionIcon from "../../../Imagenes/question.png"
-import logo from "../../../Imagenes/logo.gif"
 import { API_URL } from "../../../../constants"
 const OfertasPage = () => {
+  const obtenerPracticasEmpresaEndpoint = "/api/practicas/empresa"
 
-  let obtenerPracticasEmpresaEndpoint = "/api/practicas/empresa"
-  
   const [activeTab, setActiveTab] = useState("offers")
   const [isLoading, setIsLoading] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -22,7 +21,7 @@ const OfertasPage = () => {
     startDate: "",
     endDate: "",
     modality: "PRESENCIAL", // en caso de que no se haya establecido por antes
-    vacancies: "1" // en caso de que no se haya establecido anteriormente una
+    vacancies: "1", // en caso de que no se haya establecido anteriormente una
   })
 
   // Estado para las ofertas publicadas (conectado al backend)
@@ -101,7 +100,7 @@ const OfertasPage = () => {
         vacantes: Number.parseInt(formData.vacancies),
       }
 
-      let PRACTICAS_URL = API_URL + "/api/practicas";
+      const PRACTICAS_URL = API_URL + "/api/practicas"
       const response = await fetch(PRACTICAS_URL, {
         method: "POST",
         headers: {
@@ -111,7 +110,7 @@ const OfertasPage = () => {
         body: JSON.stringify(offerData),
       })
 
-      console.log("intentando post con token:" + localStorage.getItem('token'))
+      console.log("intentando post con token:" + localStorage.getItem("token"))
 
       if (response.ok) {
         // Resetear el formulario
@@ -139,7 +138,7 @@ const OfertasPage = () => {
 
   // Función para eliminar una oferta
   const deleteOffer = async (id) => {
-    let DELETE_URL = API_URL + `/api/practicas/${id}`
+    const DELETE_URL = API_URL + `/api/practicas/${id}`
     try {
       const response = await fetch(DELETE_URL, {
         method: "DELETE",
@@ -213,14 +212,10 @@ const OfertasPage = () => {
   return (
     <div className="empresa-offers-page">
       <div className="empresa-offers-container">
-        {/* Header con logo */}
+        {/* Header con título */}
         <div className={`empresa-offers-header ${loaded ? "empresa-loaded" : ""}`}>
           <div className="empresa-decorative-circle empresa-circle-1"></div>
           <div className="empresa-decorative-circle empresa-circle-2"></div>
-
-          <div className={`empresa-logo-container ${loaded ? "empresa-loaded" : ""}`}>
-            <img src={logo || "/placeholder.svg"} alt="Logo" className="empresa-logo" />
-          </div>
 
           <h1 className={`empresa-title ${loaded ? "empresa-loaded" : ""}`}>OFFERS</h1>
           <div className={`empresa-divider ${loaded ? "empresa-loaded" : ""}`}></div>
@@ -247,9 +242,9 @@ const OfertasPage = () => {
 
         {/* Contenido principal con dos columnas */}
         <div className="empresa-main-content">
-          <div className="empresa-split-layout">
+          <div className="empresa-split-layout" style={{ minHeight: "450px" }}>
             {/* Columna izquierda: Creación de ofertas */}
-            <div className="empresa-split-column empresa-create-column">
+            <div className="empresa-split-column empresa-create-column" style={{ maxHeight: "450px" }}>
               <div className="empresa-slide-content">
                 <h2 className="empresa-section-title">
                   <span className="empresa-section-icon">✏️</span>
@@ -419,7 +414,7 @@ const OfertasPage = () => {
             </div>
 
             {/* Columna derecha: Visualización de ofertas */}
-            <div className="empresa-split-column empresa-view-column">
+            <div className="empresa-split-column empresa-view-column" style={{ maxHeight: "450px" }}>
               <div className="empresa-slide-content">
                 <div className={`empresa-offers-list-header ${loaded ? "empresa-loaded" : ""}`}>
                   <h2 className="empresa-section-title">
