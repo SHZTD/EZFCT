@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { Send, MessageSquare, X, ArrowLeft, Clock } from "lucide-react"
 import "../CSS/AreaContacto.css"
+import { API_URL } from "../../../../constants"
 
 const ContactoProfesor = () => {
   const [loaded, setLoaded] = useState(false)
@@ -10,52 +11,61 @@ const ContactoProfesor = () => {
   const [showModal, setShowModal] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [questionHistory, setQuestionHistory] = useState([
-    {
-      id: 1,
-      question: "¿Cuándo comienza el periodo de prácticas?",
-      answer: "El periodo de prácticas comienza el 15 de mayo de 2025 y finaliza el 30 de julio de 2025.",
-      date: "2025-03-10T14:30:00",
-      status: "answered",
-    },
-    {
-      id: 2,
-      question: "¿Puedo cambiar de empresa una vez asignada?",
-      answer:
-        "Sí, es posible cambiar de empresa si hay una razón justificada. Debes solicitarlo con al menos 2 semanas de antelación.",
-      date: "2025-03-15T09:45:00",
-      status: "answered",
-    },
-    {
-      id: 3,
-      question: "¿Cómo se evalúan las prácticas?",
-      answer:
-        "Las prácticas se evalúan mediante un informe del tutor de empresa (60%) y un trabajo final que debes presentar (40%).",
-      date: "2025-03-20T16:15:00",
-      status: "answered",
-    },
-  ])
+  const [questionHistory, setQuestionHistory] = useState([])
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false)
+  const [error, setError] = useState(null)
 
   const navigate = useNavigate()
   const modalRef = useRef(null)
   const textareaRef = useRef(null)
 
-  // Efecto para la animación de entrada y partículas
-  useEffect(() => {
-    // Marcar como cargado para iniciar animaciones
-    setTimeout(() => setLoaded(true), 100)
+  // Fetch question history from API
+  const fetchQuestionHistory = async () => {
+    setIsLoadingHistory(true)
+    setError(null)
+    try {
+      const token = localStorage.getItem("token")
+      const response = await fetch(`${API_URL}/api/reporte/profesor`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
 
-    // Crear partículas iniciales
+      if (!response.ok) throw new Error("Failed to fetch question history")
+      
+      const data = await response.json()
+      // Map the API response to our expected format
+      const mappedData = data.map(report => ({
+        id: report.idReporte,
+        question: report.mensaje,
+        answer: report.respuesta, // This should now include admin responses
+        date: report.fechaCreacion || new Date().toISOString(),
+        status: report.respuesta ? "answered" : "pending",
+      }))
+      
+      // Sort by date, newest first
+      mappedData.sort((a, b) => new Date(b.date) - new Date(a.date))
+      setQuestionHistory(mappedData)
+    } catch (err) {
+      setError(err.message)
+      console.error("Error fetching question history:", err)
+    } finally {
+      setIsLoadingHistory(false)
+    }
+  }
+
+  // Initialization and particle effects
+  useEffect(() => {
+    setTimeout(() => setLoaded(true), 100)
     createInitialParticles()
 
-    // Seguimiento del ratón
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.pageX, y: e.pageY })
     }
 
     window.addEventListener("mousemove", handleMouseMove)
 
-    // Intervalo para animar partículas
     const interval = setInterval(() => {
       setParticles((prevParticles) =>
         prevParticles.map((particle) => ({
@@ -66,12 +76,10 @@ const ContactoProfesor = () => {
       )
     }, 50)
 
-    // Ajustar partículas al cambiar el tamaño de la ventana
     const handleResize = () => {
       createInitialParticles()
     }
 
-    // Cerrar modal al hacer clic fuera
     const handleClickOutside = (e) => {
       if (modalRef.current && !modalRef.current.contains(e.target) && showModal) {
         closeModal()
@@ -81,7 +89,6 @@ const ContactoProfesor = () => {
     window.addEventListener("resize", handleResize)
     document.addEventListener("mousedown", handleClickOutside)
 
-    // Limpieza al desmontar
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("resize", handleResize)
@@ -90,7 +97,14 @@ const ContactoProfesor = () => {
     }
   }, [showModal])
 
-  // Función para crear partículas iniciales
+  // Load history when modal opens
+  useEffect(() => {
+    if (showModal) {
+      fetchQuestionHistory()
+    }
+  }, [showModal])
+
+  // Particle effects functions
   const createInitialParticles = () => {
     const newParticles = Array.from({ length: 50 }, () => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -106,7 +120,6 @@ const ContactoProfesor = () => {
     setParticles(newParticles)
   }
 
-  // Función para crear efecto de explosión de partículas
   const createExplosionEffect = (x, y, color) => {
     const explosionParticles = Array.from({ length: 30 }, () => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -121,12 +134,12 @@ const ContactoProfesor = () => {
 
     setParticles((prev) => [...prev, ...explosionParticles])
 
-    // Eliminar partículas de explosión después de un tiempo
     setTimeout(() => {
       setParticles((prev) => prev.slice(0, 50))
     }, 1000)
   }
 
+  // UI interaction handlers
   const handleGoBack = () => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#f43f5e")
     setTimeout(() => navigate(-1), 300)
@@ -142,8 +155,7 @@ const ContactoProfesor = () => {
     setShowModal(false)
   }
 
-  const handleSubmitQuestion = (e) => {
-    alert("test")
+  const handleSubmitQuestion = async (e) => {
     e.preventDefault()
 
     if (!currentQuestion.trim()) return
@@ -151,28 +163,47 @@ const ContactoProfesor = () => {
     setIsSubmitting(true)
     createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
 
-    // Simular envío a backend
-    setTimeout(() => {
+    try {
+      const token = localStorage.getItem("token")
+      const response = await fetch(`${API_URL}/api/reporte/profesor`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          mensaje: currentQuestion
+        }),
+      })
+
+      if (!response.ok) throw new Error("Failed to submit question")
+
+      const newReport = await response.json()
+      
+      // Add the new question to our local state
       const newQuestion = {
-        id: Date.now(),
-        question: currentQuestion,
-        answer: null,
+        id: newReport.idReporte,
+        question: newReport.mensaje,
+        answer: newReport.respuesta || null,
         date: new Date().toISOString(),
-        status: "pending",
+        status: newReport.respuesta ? "answered" : "pending",
       }
 
       setQuestionHistory((prev) => [newQuestion, ...prev])
       setCurrentQuestion("")
-      setIsSubmitting(false)
-
-      // Enfocar el textarea después de enviar
+      
       if (textareaRef.current) {
         textareaRef.current.focus()
       }
-    }, 1000)
+    } catch (err) {
+      setError(err.message)
+      console.error("Error submitting question:", err)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
-  // Formatear fecha para mostrar
+  // Format date for display
   const formatDate = (dateString) => {
     const date = new Date(dateString)
     return new Intl.DateTimeFormat("es-ES", {
@@ -186,7 +217,7 @@ const ContactoProfesor = () => {
 
   return (
     <div className="contacto-page">
-      {/* Partículas de fondo */}
+      {/* Background particles */}
       <div className="particles-container">
         {particles.map((particle) => (
           <div
@@ -204,6 +235,15 @@ const ContactoProfesor = () => {
         ))}
       </div>
 
+      {/* Cursor light effect */}
+      <div
+        className="cursor-light"
+        style={{
+          left: `${mousePosition.x}px`,
+          top: `${mousePosition.y}px`,
+        }}
+      />
+
       <div className="contacto-container">
         {/* Header */}
         <header className={`page-header ${loaded ? "loaded" : ""}`}>
@@ -218,7 +258,7 @@ const ContactoProfesor = () => {
           <div className="header-gradient"></div>
         </header>
 
-        {/* Contenido principal */}
+        {/* Main content */}
         <div className={`contacto-content ${loaded ? "loaded" : ""}`}>
           <div className="contacto-card">
             <div className="card-header">
@@ -270,7 +310,7 @@ const ContactoProfesor = () => {
           </div>
         </div>
 
-        {/* Modal de respuestas */}
+        {/* Responses modal */}
         {showModal && (
           <div className="modal-overlay">
             <div className="modal-container" ref={modalRef}>
@@ -282,7 +322,17 @@ const ContactoProfesor = () => {
               </div>
 
               <div className="modal-content">
-                {questionHistory.length === 0 ? (
+                {isLoadingHistory ? (
+                  <div className="loading-history">
+                    <span className="spinner"></span>
+                    <p>Cargando historial...</p>
+                  </div>
+                ) : error ? (
+                  <div className="error-message">
+                    <p>Error al cargar el historial: {error}</p>
+                    <button onClick={fetchQuestionHistory}>Reintentar</button>
+                  </div>
+                ) : questionHistory.length === 0 ? (
                   <div className="no-questions">
                     <MessageSquare size={40} />
                     <p>No hay consultas realizadas</p>
@@ -310,12 +360,12 @@ const ContactoProfesor = () => {
 
                         {item.answer ? (
                           <div className="answer-content">
-                            <h3>Respuesta:</h3>
+                            <h3>Respuesta del administrador:</h3>
                             <p>{item.answer}</p>
                           </div>
                         ) : (
                           <div className="pending-message">
-                            <p>Esperando respuesta...</p>
+                            <p>Esperando respuesta del administrador...</p>
                           </div>
                         )}
                       </div>
@@ -327,7 +377,7 @@ const ContactoProfesor = () => {
           </div>
         )}
 
-        {/* Pie de página */}
+        {/* Footer */}
         <footer className={`page-footer ${loaded ? "loaded" : ""}`}>
           <p>© 2025 EasyFCT - Innovación Educativa</p>
         </footer>
