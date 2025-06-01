@@ -41,13 +41,11 @@ const EstudiantesProfesor = () => {
         setStudents(data.map(student => ({
           id: student.idAlumno,
           name: student.usuario?.nombre || 'Nombre no disponible',
-          school: "Ins Puig Castellar", // You might want to get this from student data
-          age: student.edad || 'N/A',
+          school: "Ins Puig Castellar",
           education: student.educacion || 'N/A',
           competencies: student.competencias || 'N/A',
           occupation: 'Student',
           location: 'Barcelona',
-          techLiterate: student.nivelTecnico || 'N/A',
           image: "/usuario1.jpg",
           estadoPractica: student.estadoPractica || 'N/A',
           biografia: student.biografia || '',
@@ -328,10 +326,6 @@ return (
                     <div className="meta-item">
                       <GraduationCap size={16} />
                       <span>{student.school}</span>
-                    </div>
-                    <div className="meta-tags">
-                      <span className="meta-tag">Age: {student.age}</span>
-                      <span className="meta-tag">{student.techLiterate}</span>
                     </div>
                   </div>
                   <p className="student-competencies">
