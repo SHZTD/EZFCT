@@ -427,19 +427,19 @@ const CrearAlumno = () => {
 
       {/* Modal de edición de perfil */}
       {showProfileModal && (
-        <div className="ca-modal-overlay">
-          <div className="ca-modal-container profile-modal">
-            <div className="ca-modal-header">
-              <h2 className="ca-modal-title">Editar Perfil</h2>
-              <button className="ca-close-button" onClick={() => setShowProfileModal(false)}>
+        <div className="ca-profile-modal-overlay">
+          <div className="ca-profile-modal-container">
+            <div className="ca-profile-modal-header">
+              <h2 className="ca-profile-modal-title">Editar Perfil</h2>
+              <button className="ca-profile-close-button" onClick={() => setShowProfileModal(false)}>
                 ×
               </button>
             </div>
 
-            <div className="ca-modal-content">
+            <div className="ca-profile-modal-content">
               <div className="ca-profile-form">
                 <div className="ca-profile-form-grid">
-                  <div className="form-group">
+                  <div className="ca-form-group">
                     <label htmlFor="nombre">Nombre</label>
                     <input
                       type="text"
@@ -448,7 +448,7 @@ const CrearAlumno = () => {
                       onChange={(e) => setProfileData({ ...profileData, nombre: e.target.value })}
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="ca-form-group">
                     <label htmlFor="apellido">Apellido</label>
                     <input
                       type="text"
@@ -457,7 +457,7 @@ const CrearAlumno = () => {
                       onChange={(e) => setProfileData({ ...profileData, apellido: e.target.value })}
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="ca-form-group">
                     <label htmlFor="email">Email</label>
                     <input
                       type="email"
@@ -466,7 +466,7 @@ const CrearAlumno = () => {
                       onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="ca-form-group">
                     <label htmlFor="instituto">Instituto</label>
                     <input
                       type="text"
@@ -475,7 +475,7 @@ const CrearAlumno = () => {
                       onChange={(e) => setProfileData({ ...profileData, instituto: e.target.value })}
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="ca-form-group">
                     <label htmlFor="departamento">Departamento</label>
                     <input
                       type="text"
@@ -484,7 +484,7 @@ const CrearAlumno = () => {
                       onChange={(e) => setProfileData({ ...profileData, departamento: e.target.value })}
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="ca-form-group">
                     <label htmlFor="experiencia">Experiencia</label>
                     <input
                       type="text"
@@ -493,7 +493,7 @@ const CrearAlumno = () => {
                       onChange={(e) => setProfileData({ ...profileData, experiencia: e.target.value })}
                     />
                   </div>
-                  <div className="form-group full-width">
+                  <div className="ca-form-group ca-full-width">
                     <label htmlFor="especialidad">Especialidad</label>
                     <input
                       type="text"
@@ -506,11 +506,11 @@ const CrearAlumno = () => {
               </div>
             </div>
 
-            <div className="ca-modal-footer">
-              <button className="ca-cancel-button" onClick={() => setShowProfileModal(false)}>
+            <div className="ca-profile-modal-footer">
+              <button className="ca-profile-cancel-button" onClick={() => setShowProfileModal(false)}>
                 Cancelar
               </button>
-              <button className="ca-save-button" onClick={saveProfileData}>
+              <button className="ca-profile-save-button" onClick={saveProfileData}>
                 <Edit size={18} />
                 <span>Guardar cambios</span>
               </button>

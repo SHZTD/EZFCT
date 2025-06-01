@@ -185,14 +185,14 @@
   color: #ef4444;
 }
 
-/* Modal Styles */
-.ca-modal-overlay {
+/* Profile Modal Styles - Unique to Create Student Page */
+.ca-profile-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -201,59 +201,40 @@
   animation: fadeIn 0.3s ease-out;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.ca-modal-container {
-  background: white;
+.ca-profile-modal-container {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
   border-radius: 20px;
   max-width: 600px;
   width: 90%;
   max-height: 80vh;
   overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   animation: slideUp 0.3s ease-out;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.ca-modal-header {
+.ca-profile-modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem 2rem;
-  border-bottom: 1px solid rgba(59, 130, 246, 0.1);
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.ca-modal-title {
+.ca-profile-modal-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1f2937;
+  color: white;
   margin: 0;
 }
 
-.ca-close-button {
+.ca-profile-close-button {
   width: 32px;
   height: 32px;
   border-radius: 8px;
   border: none;
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.2);
   color: #ef4444;
   cursor: pointer;
   display: flex;
@@ -263,12 +244,12 @@
   transition: all 0.3s ease;
 }
 
-.ca-close-button:hover {
-  background: rgba(239, 68, 68, 0.2);
+.ca-profile-close-button:hover {
+  background: rgba(239, 68, 68, 0.3);
   transform: scale(1.1);
 }
 
-.ca-modal-content {
+.ca-profile-modal-content {
   padding: 2rem;
   max-height: 60vh;
   overflow-y: auto;
@@ -280,16 +261,54 @@
   gap: 1.5rem;
 }
 
-.ca-modal-footer {
+.ca-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ca-form-group.ca-full-width {
+  grid-column: 1 / -1;
+}
+
+.ca-form-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.25rem;
+}
+
+.ca-form-group input {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.ca-form-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.ca-form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ca-profile-modal-footer {
   display: flex;
   gap: 1rem;
   padding: 1.5rem 2rem;
-  border-top: 1px solid rgba(59, 130, 246, 0.1);
-  background: rgba(249, 250, 251, 0.5);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
 }
 
-.ca-cancel-button,
-.ca-save-button {
+.ca-profile-cancel-button,
+.ca-profile-save-button {
   flex: 1;
   padding: 0.75rem 1.5rem;
   border-radius: 12px;
@@ -302,24 +321,24 @@
   gap: 0.5rem;
 }
 
-.ca-cancel-button {
-  background: rgba(107, 114, 128, 0.1);
-  border: 1px solid rgba(107, 114, 128, 0.2);
-  color: #6b7280;
+.ca-profile-cancel-button {
+  background: rgba(107, 114, 128, 0.3);
+  border: 1px solid rgba(107, 114, 128, 0.4);
+  color: rgba(255, 255, 255, 0.8);
 }
 
-.ca-cancel-button:hover {
-  background: rgba(107, 114, 128, 0.2);
+.ca-profile-cancel-button:hover {
+  background: rgba(107, 114, 128, 0.4);
   transform: translateY(-2px);
 }
 
-.ca-save-button {
+.ca-profile-save-button {
   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
   border: none;
   color: white;
 }
 
-.ca-save-button:hover {
+.ca-profile-save-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
 }

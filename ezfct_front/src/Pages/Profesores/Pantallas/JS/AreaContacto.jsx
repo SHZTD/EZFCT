@@ -1,6 +1,20 @@
+"use client"
+
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import { Send, MessageSquare, X, ArrowLeft, Clock } from "lucide-react"
+import {
+  Send,
+  MessageSquare,
+  X,
+  ArrowLeft,
+  Clock,
+  User,
+  LogOut,
+  Edit,
+  ChevronDown,
+  UserPlus,
+  Search,
+} from "lucide-react"
 import "../CSS/AreaContacto.css"
 import { API_URL } from "../../../../constants"
 
@@ -14,10 +28,23 @@ const ContactoProfesor = () => {
   const [questionHistory, setQuestionHistory] = useState([])
   const [isLoadingHistory, setIsLoadingHistory] = useState(false)
   const [error, setError] = useState(null)
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [showProfileModal, setShowProfileModal] = useState(false)
+  const [profileData, setProfileData] = useState({
+    nombre: "Prof. García",
+    apellido: "Martínez",
+    email: "garcia.martinez@instituto.edu",
+    instituto: "Ins Puig Castellar",
+    departamento: "Informática",
+    experiencia: "15 años",
+    especialidad: "Desarrollo Web",
+  })
 
   const navigate = useNavigate()
   const modalRef = useRef(null)
   const textareaRef = useRef(null)
+  const profileMenuRef = useRef(null)
+  const profileButtonRef = useRef(null)
 
   // Fetch question history from API
   const fetchQuestionHistory = async () => {
@@ -33,17 +60,17 @@ const ContactoProfesor = () => {
       })
 
       if (!response.ok) throw new Error("Failed to fetch question history")
-      
+
       const data = await response.json()
       // Map the API response to our expected format
-      const mappedData = data.map(report => ({
+      const mappedData = data.map((report) => ({
         id: report.idReporte,
         question: report.mensaje,
         answer: report.respuesta, // This should now include admin responses
         date: report.fechaCreacion || new Date().toISOString(),
         status: report.respuesta ? "answered" : "pending",
       }))
-      
+
       // Sort by date, newest first
       mappedData.sort((a, b) => new Date(b.date) - new Date(a.date))
       setQuestionHistory(mappedData)
@@ -86,16 +113,37 @@ const ContactoProfesor = () => {
       }
     }
 
+    // Cerrar menú de perfil al hacer clic fuera
+    const handleClickOutsideProfileMenu = (e) => {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(e.target) &&
+        profileButtonRef.current &&
+        !profileButtonRef.current.contains(e.target) &&
+        showProfileMenu
+      ) {
+        setShowProfileMenu(false)
+      }
+    }
+
     window.addEventListener("resize", handleResize)
     document.addEventListener("mousedown", handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutsideProfileMenu)
+
+    // Cargar datos del perfil desde localStorage
+    const savedProfile = localStorage.getItem("profesorProfileData")
+    if (savedProfile) {
+      setProfileData(JSON.parse(savedProfile))
+    }
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("resize", handleResize)
       document.removeEventListener("mousedown", handleClickOutside)
+      document.removeEventListener("mousedown", handleClickOutsideProfileMenu)
       clearInterval(interval)
     }
-  }, [showModal])
+  }, [showModal, showProfileMenu])
 
   // Load history when modal opens
   useEffect(() => {
@@ -145,6 +193,29 @@ const ContactoProfesor = () => {
     setTimeout(() => navigate(-1), 300)
   }
 
+  const handleProfileButtonClick = () => {
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#3b82f6")
+    setShowProfileMenu(!showProfileMenu)
+  }
+
+  const handleNavigateToOffers = () => {
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+    setShowProfileMenu(false)
+    setTimeout(() => navigate("/profesores/Ofertas"), 300)
+  }
+
+  const handleNavigateToCreateStudent = () => {
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+    setShowProfileMenu(false)
+    setTimeout(() => navigate("/profesores/crearAlumno"), 300)
+  }
+
+  const saveProfileData = () => {
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6")
+    localStorage.setItem("profesorProfileData", JSON.stringify(profileData))
+    setShowProfileModal(false)
+  }
+
   const openModal = () => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6")
     setShowModal(true)
@@ -172,14 +243,14 @@ const ContactoProfesor = () => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          mensaje: currentQuestion
+          mensaje: currentQuestion,
         }),
       })
 
       if (!response.ok) throw new Error("Failed to submit question")
 
       const newReport = await response.json()
-      
+
       // Add the new question to our local state
       const newQuestion = {
         id: newReport.idReporte,
@@ -191,7 +262,7 @@ const ContactoProfesor = () => {
 
       setQuestionHistory((prev) => [newQuestion, ...prev])
       setCurrentQuestion("")
-      
+
       if (textareaRef.current) {
         textareaRef.current.focus()
       }
@@ -216,13 +287,13 @@ const ContactoProfesor = () => {
   }
 
   return (
-    <div className="contacto-page">
+    <>
       {/* Background particles */}
-      <div className="particles-container">
+      <div className="cp-particles-container">
         {particles.map((particle) => (
           <div
             key={particle.id}
-            className="particle"
+            className="cp-particle"
             style={{
               left: `${particle.x}px`,
               top: `${particle.y}px`,
@@ -235,84 +306,107 @@ const ContactoProfesor = () => {
         ))}
       </div>
 
-      <div className="contacto-container">
-        {/* Header */}
-        <header className={`page-header ${loaded ? "loaded" : ""}`}>
-          <button className="back-button" onClick={handleGoBack}>
-            <ArrowLeft size={20} />
+      {/* Barra de navegación superior */}
+      <nav className={`cp-top-navbar ${loaded ? "loaded" : ""}`}>
+        <div className="cp-navbar-left">
+          <button className="cp-nav-button" onClick={handleGoBack}>
+            <ArrowLeft size={18} />
             <span>Volver</span>
           </button>
-          <div className="header-content">
-            <h1 className="page-title">Área de Contacto</h1>
-            <p className="page-subtitle">Envía tus consultas y revisa las respuestas</p>
-          </div>
-          <div className="header-gradient"></div>
-        </header>
+        </div>
+        <div className="cp-navbar-title">
+          <h2>EasyFCT</h2>
+        </div>
+        <div className="cp-navbar-right">
+          <button ref={profileButtonRef} className="cp-user-button" onClick={handleProfileButtonClick}>
+            <User size={18} />
+            <span className="cp-user-name">{profileData.nombre}</span>
+            <ChevronDown size={14} className={`cp-user-chevron ${showProfileMenu ? "open" : ""}`} />
+          </button>
+        </div>
+      </nav>
 
-        {/* Main content */}
-        <div className={`contacto-content ${loaded ? "loaded" : ""}`}>
-          <div className="contacto-card">
-            <div className="card-header">
-              <MessageSquare className="card-icon" size={24} />
-              <h2>Envía tu consulta</h2>
+      <div className="contacto-page">
+        <div className="contacto-container">
+          {/* Header */}
+          <header className={`page-header ${loaded ? "loaded" : ""}`}>
+            <div className="header-content">
+              <h1 className="page-title">Área de Contacto</h1>
+              <p className="page-subtitle">Envía tus consultas y revisa las respuestas</p>
             </div>
+            <div className="header-gradient"></div>
+          </header>
 
-            <form onSubmit={handleSubmitQuestion} className="contacto-form">
-              <div className="form-group">
-                <label htmlFor="question">Tu pregunta</label>
-                <textarea
-                  ref={textareaRef}
-                  id="question"
-                  placeholder="Escribe aquí tu consulta..."
-                  value={currentQuestion}
-                  onChange={(e) => setCurrentQuestion(e.target.value)}
-                  rows={5}
-                  required
-                ></textarea>
+          {/* Main content */}
+          <div className={`contacto-content ${loaded ? "loaded" : ""}`}>
+            <div className="contacto-card">
+              <div className="card-header">
+                <MessageSquare className="card-icon" size={24} />
+                <h2>Envía tu consulta</h2>
               </div>
 
-              <div className="form-actions">
-                <button type="submit" className="submit-button" disabled={isSubmitting || !currentQuestion.trim()}>
-                  {isSubmitting ? (
-                    <>
-                      <span className="spinner"></span>
-                      <span>Enviando...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send size={18} />
-                      <span>Enviar consulta</span>
-                    </>
-                  )}
-                </button>
+              <form onSubmit={handleSubmitQuestion} className="contacto-form">
+                <div className="form-group">
+                  <label htmlFor="question">Tu pregunta</label>
+                  <textarea
+                    ref={textareaRef}
+                    id="question"
+                    placeholder="Escribe aquí tu consulta..."
+                    value={currentQuestion}
+                    onChange={(e) => setCurrentQuestion(e.target.value)}
+                    rows={5}
+                    required
+                  ></textarea>
+                </div>
 
-                <button type="button" className="view-responses-button" onClick={openModal}>
-                  <MessageSquare size={18} />
-                  <span>Ver respuestas</span>
-                </button>
+                <div className="form-actions">
+                  <button type="submit" className="submit-button" disabled={isSubmitting || !currentQuestion.trim()}>
+                    {isSubmitting ? (
+                      <>
+                        <span className="spinner"></span>
+                        <span>Enviando...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send size={18} />
+                        <span>Enviar consulta</span>
+                      </>
+                    )}
+                  </button>
+
+                  <button type="button" className="view-responses-button" onClick={openModal}>
+                    <MessageSquare size={18} />
+                    <span>Ver respuestas</span>
+                  </button>
+                </div>
+              </form>
+
+              <div className="contact-info">
+                <p>
+                  <strong>Nota:</strong> Las respuestas suelen tardar entre 24-48 horas laborables.
+                </p>
               </div>
-            </form>
-
-            <div className="contact-info">
-              <p>
-                <strong>Nota:</strong> Las respuestas suelen tardar entre 24-48 horas laborables.
-              </p>
             </div>
           </div>
+
+          {/* Footer */}
+          <footer className={`page-footer ${loaded ? "loaded" : ""}`}>
+            <p>© 2025 EasyFCT - Innovación Educativa</p>
+          </footer>
         </div>
 
         {/* Responses modal */}
         {showModal && (
-          <div className="modal-overlay">
-            <div className="modal-container" ref={modalRef}>
-              <div className="modal-header">
+          <div className="cp-modal-overlay">
+            <div className="cp-modal-container" ref={modalRef}>
+              <div className="cp-modal-header">
                 <h2>Historial de consultas</h2>
-                <button className="close-button" onClick={closeModal}>
+                <button className="cp-close-button" onClick={closeModal}>
                   <X size={20} />
                 </button>
               </div>
 
-              <div className="modal-content">
+              <div className="cp-modal-content">
                 {isLoadingHistory ? (
                   <div className="loading-history">
                     <span className="spinner"></span>
@@ -367,13 +461,137 @@ const ContactoProfesor = () => {
             </div>
           </div>
         )}
-
-        {/* Footer */}
-        <footer className={`page-footer ${loaded ? "loaded" : ""}`}>
-          <p>© 2025 EasyFCT - Innovación Educativa</p>
-        </footer>
       </div>
-    </div>
+
+      {/* Menú de perfil flotante */}
+      {showProfileMenu && (
+        <div className="cp-fixed-profile-menu" ref={profileMenuRef}>
+          <button className="cp-profile-menu-item" onClick={handleNavigateToOffers}>
+            <Search size={16} />
+            <span>Ver Ofertas</span>
+          </button>
+          <button className="cp-profile-menu-item" onClick={handleNavigateToCreateStudent}>
+            <UserPlus size={16} />
+            <span>Crear Alumno</span>
+          </button>
+          <button
+            className="cp-profile-menu-item"
+            onClick={() => {
+              createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+              setShowProfileMenu(false)
+              setShowProfileModal(true)
+            }}
+          >
+            <Edit size={16} />
+            <span>Editar perfil</span>
+          </button>
+          <button
+            className="cp-profile-menu-item logout"
+            onClick={() => {
+              createExplosionEffect(mousePosition.x, mousePosition.y, "#f43f5e")
+              setTimeout(() => navigate("/"), 300)
+            }}
+          >
+            <LogOut size={16} />
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
+      )}
+
+      {/* Modal de edición de perfil */}
+      {showProfileModal && (
+        <div className="cp-profile-modal-overlay">
+          <div className="cp-profile-modal-container">
+            <div className="cp-profile-modal-header">
+              <h2 className="cp-profile-modal-title">Editar Perfil</h2>
+              <button className="cp-profile-close-button" onClick={() => setShowProfileModal(false)}>
+                ×
+              </button>
+            </div>
+
+            <div className="cp-profile-modal-content">
+              <div className="cp-profile-form">
+                <div className="cp-profile-form-grid">
+                  <div className="cp-form-group">
+                    <label htmlFor="nombre">Nombre</label>
+                    <input
+                      type="text"
+                      id="nombre"
+                      value={profileData.nombre}
+                      onChange={(e) => setProfileData({ ...profileData, nombre: e.target.value })}
+                    />
+                  </div>
+                  <div className="cp-form-group">
+                    <label htmlFor="apellido">Apellido</label>
+                    <input
+                      type="text"
+                      id="apellido"
+                      value={profileData.apellido}
+                      onChange={(e) => setProfileData({ ...profileData, apellido: e.target.value })}
+                    />
+                  </div>
+                  <div className="cp-form-group">
+                    <label htmlFor="email">Email</label>
+                    <input
+                      type="email"
+                      id="email"
+                      value={profileData.email}
+                      onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
+                    />
+                  </div>
+                  <div className="cp-form-group">
+                    <label htmlFor="instituto">Instituto</label>
+                    <input
+                      type="text"
+                      id="instituto"
+                      value={profileData.instituto}
+                      onChange={(e) => setProfileData({ ...profileData, instituto: e.target.value })}
+                    />
+                  </div>
+                  <div className="cp-form-group">
+                    <label htmlFor="departamento">Departamento</label>
+                    <input
+                      type="text"
+                      id="departamento"
+                      value={profileData.departamento}
+                      onChange={(e) => setProfileData({ ...profileData, departamento: e.target.value })}
+                    />
+                  </div>
+                  <div className="cp-form-group">
+                    <label htmlFor="experiencia">Experiencia</label>
+                    <input
+                      type="text"
+                      id="experiencia"
+                      value={profileData.experiencia}
+                      onChange={(e) => setProfileData({ ...profileData, experiencia: e.target.value })}
+                    />
+                  </div>
+                  <div className="cp-form-group cp-full-width">
+                    <label htmlFor="especialidad">Especialidad</label>
+                    <input
+                      type="text"
+                      id="especialidad"
+                      value={profileData.especialidad}
+                      onChange={(e) => setProfileData({ ...profileData, especialidad: e.target.value })}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="cp-profile-modal-footer">
+              <button className="cp-profile-cancel-button" onClick={() => setShowProfileModal(false)}>
+                Cancelar
+              </button>
+              <button className="cp-profile-save-button" onClick={saveProfileData}>
+                <Edit size={18} />
+                <span>Guardar cambios</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
