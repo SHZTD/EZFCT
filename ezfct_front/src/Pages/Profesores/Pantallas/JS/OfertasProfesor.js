@@ -17,6 +17,7 @@ import {
   ChevronDown,
   UserPlus,
 } from "lucide-react"
+import { API_URL } from "../../../../constants.js"
 
 const ProfesorOffers = () => {
   const [loaded, setLoaded] = useState(false)
@@ -35,84 +36,56 @@ const ProfesorOffers = () => {
     experiencia: "15 años",
     especialidad: "Desarrollo Web",
   })
+  const [offers, setOffers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   const navigate = useNavigate()
   const profileMenuRef = useRef(null)
   const profileButtonRef = useRef(null)
 
-  // Datos de ofertas
-  const offers = [
-    {
-      id: 1,
-      title: "Programmer Database",
-      subtitle: "For students DAM",
-      category: "programming",
-      company: "TechSolutions",
-      location: "Madrid",
-      date: "2025-04-15",
-      students: 3,
-    },
-    {
-      id: 2,
-      title: "UI Design",
-      subtitle: "For students DAW",
-      category: "design",
-      company: "CreativeMinds",
-      location: "Barcelona",
-      date: "2025-04-20",
-      students: 2,
-    },
-    {
-      id: 3,
-      title: "Interface Developer",
-      subtitle: "For students DAW",
-      category: "programming",
-      company: "WebInnovate",
-      location: "Valencia",
-      date: "2025-05-01",
-      students: 1,
-    },
-    {
-      id: 4,
-      title: "Java programmer",
-      subtitle: "For students DAM",
-      category: "programming",
-      company: "JavaTech",
-      location: "Sevilla",
-      date: "2025-05-10",
-      students: 4,
-    },
-    {
-      id: 5,
-      title: "Laptop Technician",
-      subtitle: "For students ASIX",
-      category: "hardware",
-      company: "HardwarePro",
-      location: "Bilbao",
-      date: "2025-05-15",
-      students: 2,
-    },
-    {
-      id: 6,
-      title: "Programmer Python",
-      subtitle: "For students DAM",
-      category: "programming",
-      company: "DataScience Inc.",
-      location: "Málaga",
-      date: "2025-05-20",
-      students: 3,
-    },
-  ]
+  // Fetch offers from API
+  useEffect(() => {
+    const fetchOffers = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/practicas`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // Transform API data to match frontend structure
+        const transformedOffers = data.map(offer => ({
+          id: offer.idPractica,
+          title: offer.titulo,
+          subtitle: offer.descripcion,
+          category: offer.modalidad,
+          company: offer.empresa?.nombre || 'Unknown Company',
+          location: offer.empresa?.ubicacion || 'Remote',
+          date: offer.fechaInicio ? new Date(offer.fechaInicio).toLocaleDateString() : 'Not specified',
+          students: offer.vecesPostulada
+        }));
 
-  // Categorías para filtrar
+        setOffers(transformedOffers);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching offers:", err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchOffers()
+  }, [])
+
   const categories = [
-    { id: "all", name: "All Offers", count: offers.length },
-    { id: "programming", name: "Programming", count: offers.filter((o) => o.category === "programming").length },
-    { id: "design", name: "Design", count: offers.filter((o) => o.category === "design").length },
-    { id: "hardware", name: "Hardware", count: offers.filter((o) => o.category === "hardware").length },
+    { id: "all", name: "Todas las ofertas", count: offers.length },
+    { id: "PRESENCIAL", name: "Presencial", count: offers.filter((o) => o.category === "PRESENCIAL").length },
+    { id: "HIBRIDO", name: "Hibrido", count: offers.filter((o) => o.category === "HIBRIDO").length },
+    { id: "REMOTO", name: "Remoto", count: offers.filter((o) => o.category === "REMOTO").length },
   ]
 
-  // Funciones del topbar
+  // Rest of your existing functions remain the same...
   const handleGoBack = () => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6")
     setTimeout(() => navigate(-1), 300)
@@ -249,6 +222,26 @@ const ProfesorOffers = () => {
   const handleViewOffer = (id) => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6")
     navigate(`/profesores/detalles/${id}`)
+  }
+
+  // Render loading or error states
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading offers...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <h2>Error loading offers</h2>
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()}>Try Again</button>
+      </div>
+    )
   }
 
   return (
