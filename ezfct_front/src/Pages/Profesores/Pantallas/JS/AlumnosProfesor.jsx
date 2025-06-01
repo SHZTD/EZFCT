@@ -162,7 +162,7 @@ const EstudiantesProfesor = () => {
   const handleGoToStudent = (student) => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
     setTimeout(() => {
-      navigate("/profesores/datosAlumno", { state: student })
+      navigate(`/profesores/datosAlumno/${student.id}`, { state: { student } })
     }, 300)
   }
 

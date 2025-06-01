@@ -63,7 +63,8 @@ function App() {
           <Route path="/profesores/Ofertas" element={<OfertasProfesor />} />
           <Route path="/profesores/detalles/:id" element={<DetallesOferta />} />
           <Route path="/profesores/alumnos" element={<AlumnosProfesor />} />
-          <Route path="/profesores/datosAlumno" element={<DatosAlumnosProfesor />} />
+          {/*<Route path="/profesores/datosAlumno" element={<DatosAlumnosProfesor />} />*/}
+          <Route path="/profesores/datosAlumno/:id" element={<DatosAlumnosProfesor />} />
           <Route path="/profesores/areaContacto" element={<AreaContactoProfesor />} />
           <Route path="/profesores/crearAlumno" element={<CrearAlumno />} />
 

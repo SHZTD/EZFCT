@@ -1,129 +1,18 @@
-"use client"
-
 import { useState, useEffect } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, useLocation } from "react-router-dom"
+import { API_URL } from "../../../../constants"
 import "../CSS/DatosAlumno.css"
 
 const DatosAlumno = () => {
   const navigate = useNavigate()
   const { id } = useParams()
+  const location = useLocation()
   const [loaded, setLoaded] = useState(false)
   const [bubbles, setBubbles] = useState([])
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [student, setStudent] = useState(null)
-
-  // Datos de ejemplo para estudiantes (en una aplicación real, esto vendría de una API)
-  const studentsData = [
-    {
-      id: 1,
-      name: "Jaydon Herwitz",
-      time: "28 mins ago",
-      avatar: "/usuario1.jpg",
-      selected: false,
-      role: "Frontend Developer",
-      skills: ["JavaScript", "React", "CSS", "HTML"],
-      education: "Desarrollo de Aplicaciones Web, Ins Puig Castellar",
-      experience: "120 horas en TechSolutions Barcelona",
-      email: "jaydon.herwitz@example.com",
-      phone: "+34 612 345 678",
-      location: "Barcelona",
-      availability: "Disponible desde Junio 2025",
-      portfolio: "https://jaydonherwitz.dev",
-      bio: "Estudiante de desarrollo web con gran interés en tecnologías frontend. Busco oportunidades para aplicar mis conocimientos en React y mejorar mis habilidades en un entorno profesional.",
-    },
-    {
-      id: 2,
-      name: "Sarah Johnson",
-      time: "45 mins ago",
-      avatar: "/usuario2.jpg",
-      selected: false,
-      role: "UX/UI Designer",
-      skills: ["Figma", "Adobe XD", "Sketch", "Prototyping"],
-      education: "Diseño Gráfico, Escuela de Arte",
-      experience: "3 meses en Agencia Creativa",
-      email: "sarah.johnson@example.com",
-      phone: "+34 623 456 789",
-      location: "Madrid",
-      availability: "Disponible inmediatamente",
-      portfolio: "https://sarahjohnson.design",
-      bio: "Diseñadora creativa enfocada en crear experiencias de usuario hermosas y funcionales. Creo en el diseño que comunica claramente y deleita a los usuarios.",
-    },
-    {
-      id: 3,
-      name: "Alex Rivera",
-      time: "1 hour ago",
-      avatar: "/usuario3.png",
-      selected: true,
-      role: "Full Stack Developer",
-      skills: ["JavaScript", "Python", "React", "Node.js", "MongoDB"],
-      education: "Ingeniería Informática, Universidad Politécnica",
-      experience: "200 horas en Tech Innovators",
-      email: "alex.rivera@example.com",
-      phone: "+34 634 567 890",
-      location: "Valencia",
-      availability: "Disponible desde Julio 2025",
-      portfolio: "https://alexrivera.dev",
-      bio: "Desarrollador full stack con pasión por construir aplicaciones web escalables. Disfruto enfrentando problemas complejos y aprendiendo nuevas tecnologías.",
-    },
-  ]
-
-  // Efecto para cargar datos del estudiante
-  useEffect(() => {
-    const studentId = Number.parseInt(id) || 1
-    const foundStudent = studentsData.find((s) => s.id === studentId)
-
-    if (foundStudent) {
-      setStudent(foundStudent)
-    } else {
-      // Si no se encuentra el estudiante, usar el primero por defecto
-      setStudent(studentsData[0])
-    }
-
-    // Marcar como cargado para iniciar animaciones
-    setTimeout(() => setLoaded(true), 100)
-
-    // Crear burbujas iniciales
-    createInitialBubbles()
-
-    // Seguimiento del ratón
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-
-    window.addEventListener("mousemove", handleMouseMove)
-
-    // Intervalo para animar burbujas
-    const interval = setInterval(() => {
-      setBubbles((prevBubbles) =>
-        prevBubbles.map((bubble) => ({
-          ...bubble,
-          x: bubble.x + bubble.speedX,
-          y: bubble.y - bubble.speedY, // Las burbujas suben
-          // Si la burbuja sale de la pantalla, la reposicionamos abajo
-          ...(bubble.y < -50
-            ? {
-                y: window.innerHeight + 50,
-                x: Math.random() * window.innerWidth,
-              }
-            : {}),
-        })),
-      )
-    }, 50)
-
-    // Ajustar burbujas al cambiar el tamaño de la ventana
-    const handleResize = () => {
-      createInitialBubbles()
-    }
-
-    window.addEventListener("resize", handleResize)
-
-    // Limpieza al desmontar
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
-      window.removeEventListener("resize", handleResize)
-      clearInterval(interval)
-    }
-  }, [id, navigate])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   // Función para crear burbujas iniciales (en lugar de partículas)
   const createInitialBubbles = () => {
@@ -161,6 +50,109 @@ const DatosAlumno = () => {
     setTimeout(() => {
       setBubbles((prev) => prev.slice(0, 30))
     }, 2000)
+  }
+
+  // Efecto para cargar datos del estudiante
+  useEffect(() => {
+    if (location.state?.student) {
+      setStudent(location.state.student)
+      setIsLoading(false)
+      setTimeout(() => setLoaded(true), 100)
+    } else {
+      // Fetch student data if not passed via state
+      const fetchStudent = async () => {
+        try {
+          const response = await fetch(`${API_URL}/api/alumnos/${id}`)
+          if (!response.ok) {
+            throw new Error('Failed to fetch student data')
+          }
+          const data = await response.json()
+          
+          // Map the API response to your student structure
+          setStudent({
+            id: data.idAlumno,
+            name: data.usuario?.nombre || 'Nombre no disponible',
+            role: "Estudiante",
+            skills: data.competencias ? data.competencias.split(',').map(s => s.trim()) : [],
+            education: data.educacion || 'No especificado',
+            experience: data.experiencia || 'Sin experiencia registrada',
+            email: data.usuario?.email || 'No disponible',
+            phone: data.usuario?.telefono || 'No disponible',
+            location: 'Barcelona', // You might want to get this from student data
+            availability: data.estadoPractica || 'No disponible',
+            portfolio: data.portfolio || '#',
+            bio: data.biografia || 'No hay biografía disponible',
+            avatar: "/usuario1.jpg"
+          })
+        } catch (err) {
+          setError(err.message)
+          console.error('Error fetching student:', err)
+        } finally {
+          setIsLoading(false)
+          setTimeout(() => setLoaded(true), 100)
+        }
+      }
+
+      fetchStudent()
+    }
+
+    createInitialBubbles()
+
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY })
+    }
+
+    window.addEventListener("mousemove", handleMouseMove)
+
+    const interval = setInterval(() => {
+      setBubbles((prevBubbles) =>
+        prevBubbles.map((bubble) => ({
+          ...bubble,
+          x: bubble.x + bubble.speedX,
+          y: bubble.y - bubble.speedY,
+          ...(bubble.y < -50
+            ? {
+                y: window.innerHeight + 50,
+                x: Math.random() * window.innerWidth,
+              }
+            : {}),
+        })),
+      )
+    }, 50)
+
+    const handleResize = () => {
+      createInitialBubbles()
+    }
+
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("resize", handleResize)
+      clearInterval(interval)
+    }
+  }, [id, location.state])
+
+  if (isLoading) {
+    return (
+      <div className="da-loading-screen">
+        <div className="da-loading-container">
+          <div className="da-spinner"></div>
+          <p>Cargando información...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="da-loading-screen">
+        <div className="da-error-container">
+          <p>Error al cargar los datos: {error}</p>
+          <button onClick={() => window.location.reload()}>Intentar de nuevo</button>
+        </div>
+      </div>
+    )
   }
 
   // Función para volver a la página anterior
@@ -259,20 +251,23 @@ const DatosAlumno = () => {
             </div>
 
             {/* Sección de habilidades */}
-            <div
-              className={`da-detail-card da-skills-card ${loaded ? "loaded" : ""}`}
-              style={{ transitionDelay: "0.1s" }}
-            >
-              <h3 className="da-card-title">Habilidades</h3>
-              <div className="da-skills-container">
-                {student.skills.map((skill, index) => (
-                  <span key={index} className="da-skill-tag">
-                    {skill}
-                  </span>
-                ))}
+              <div
+                className={`da-detail-card da-skills-card ${loaded ? "loaded" : ""}`}
+                style={{ transitionDelay: "0.1s" }}
+              >
+                <h3 className="da-card-title">Habilidades</h3>
+                <div className="da-skills-container">
+                  {(student.skills || []).length > 0 ? (
+                    (student.skills || []).map((skill, index) => (
+                      <span key={index} className="da-skill-tag">
+                        {skill}
+                      </span>
+                    ))
+                  ) : (
+                    <p className="da-no-skills">No hay habilidades registradas</p>
+                  )}
+                </div>
               </div>
-            </div>
-
             {/* Sección de educación y experiencia */}
             <div className="da-details-row">
               <div
