@@ -17,6 +17,7 @@ import {
   ChevronDown,
   UserPlus,
 } from "lucide-react"
+import { API_URL } from "../../../../constants.js"
 
 const ProfesorOffers = () => {
   const [loaded, setLoaded] = useState(false)
@@ -35,34 +36,56 @@ const ProfesorOffers = () => {
     experiencia: "15 años",
     especialidad: "Desarrollo Web",
   })
+  const [offers, setOffers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   const navigate = useNavigate()
   const profileMenuRef = useRef(null)
   const profileButtonRef = useRef(null)
 
-  // Datos de ofertas
-  const offers = [
-    {
-      id: 1,
-      title: "Programmer Database",
-      subtitle: "For students DAM",
-      category: "programming",
-      company: "TechSolutions",
-      location: "Madrid",
-      date: "2025-04-15",
-      students: 3,
-    }
-  ]
+  // Fetch offers from API
+  useEffect(() => {
+    const fetchOffers = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/practicas`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // Transform API data to match frontend structure
+        const transformedOffers = data.map(offer => ({
+          id: offer.idPractica,
+          title: offer.titulo,
+          subtitle: offer.descripcion,
+          category: offer.modalidad,
+          company: offer.empresa?.nombre || 'Unknown Company',
+          location: offer.empresa?.ubicacion || 'Remote',
+          date: offer.fechaInicio ? new Date(offer.fechaInicio).toLocaleDateString() : 'Not specified',
+          students: offer.vecesPostulada
+        }));
 
-  // Categorías para filtrar
+        setOffers(transformedOffers);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching offers:", err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchOffers()
+  }, [])
+
   const categories = [
-    { id: "all", name: "All Offers", count: offers.length },
-    { id: "programming", name: "Programming", count: offers.filter((o) => o.category === "programming").length },
-    { id: "design", name: "Design", count: offers.filter((o) => o.category === "design").length },
-    { id: "hardware", name: "Hardware", count: offers.filter((o) => o.category === "hardware").length },
+    { id: "all", name: "Todas las ofertas", count: offers.length },
+    { id: "PRESENCIAL", name: "Presencial", count: offers.filter((o) => o.category === "PRESENCIAL").length },
+    { id: "HIBRIDO", name: "Hibrido", count: offers.filter((o) => o.category === "HIBRIDO").length },
+    { id: "REMOTO", name: "Remoto", count: offers.filter((o) => o.category === "REMOTO").length },
   ]
 
-  // Funciones del topbar
+  // Rest of your existing functions remain the same...
   const handleGoBack = () => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6")
     setTimeout(() => navigate(-1), 300)
@@ -199,6 +222,26 @@ const ProfesorOffers = () => {
   const handleViewOffer = (id) => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6")
     navigate(`/profesores/detalles/${id}`)
+  }
+
+  // Render loading or error states
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading offers...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <h2>Error loading offers</h2>
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()}>Try Again</button>
+      </div>
+    )
   }
 
   return (
