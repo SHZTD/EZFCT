@@ -1,13 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import "../CSS/Estudiantes.css"
 
 import paperIcon from "../../../Imagenes/paper.png"
 import usersIcon from "../../../Imagenes/users.png"
-import questionIcon from "../../../Imagenes/question.png"
-import logo from "../../../Imagenes/logo.gif"
 import { API_URL } from "../../../../constants"
 
 const Students = () => {
@@ -32,28 +30,29 @@ const Students = () => {
   // State for applicant students
   const [applicantStudents, setApplicantStudents] = useState([])
 
+  const [showUserMenu, setShowUserMenu] = useState(false)
+  const userMenuRef = useRef(null)
+
   // Fetch offers from API
   const fetchOffers = async () => {
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(true)
+    setError(null)
     try {
       const response = await fetch(API_URL + "/api/practicas/empresa", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      });
+      })
 
-      if (!response.ok) throw new Error("Failed to fetch offers");
-      
-      const data = await response.json();
-      setOffers(data);
+      if (!response.ok) throw new Error("Failed to fetch offers")
+
+      const data = await response.json()
+      setOffers(data)
 
       // Fetch applicants for each offer
-      const applicantsPromises = data.map(offer => 
-        fetchApplicants(offer.idPractica)
-      );
-      const applicantsResults = await Promise.all(applicantsPromises);
+      const applicantsPromises = data.map((offer) => fetchApplicants(offer.idPractica))
+      const applicantsResults = await Promise.all(applicantsPromises)
 
       // Combine all applicants into one array
       const allApplicants = applicantsResults.flat();
@@ -69,13 +68,12 @@ const Students = () => {
       })));
 
     } catch (err) {
-      setError(err.message);
-      console.error("Error fetching offers:", err);
+      setError(err.message)
+      console.error("Error fetching offers:", err)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
-
+  }
 
   // Fetch applicants for a specific offer
   const fetchApplicants = async (offerId) => {
@@ -85,59 +83,58 @@ const Students = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      });
+      })
 
-      if (!response.ok) throw new Error("Failed to fetch applicants");
-      
-      const data = await response.json();
+      if (!response.ok) throw new Error("Failed to fetch applicants")
 
-      return data.map(postulacion => ({
+      const data = await response.json()
+
+      return data.map((postulacion) => ({
         postulacionId: postulacion.idPostulacion,
         estado: postulacion.estado,
         fechaPostulacion: postulacion.fechaPostulacion,
-        
+
         // Student info (from Usuario via Alumno)
-        nombre: postulacion.nombre || 'Unknown',
-        apellido: postulacion.apellido || 'Student', // Note singular
+        nombre: postulacion.nombre || "Unknown",
+        apellido: postulacion.apellido || "Student", // Note singular
         email: postulacion.email,
-        
+
         // Student profile (from Alumno)
         biografia: postulacion.biografia,
         habilidades: postulacion.habilidades,
         educacion: postulacion.educacion,
-        
+
         // Offer info
         idPractica: offerId, // From route parameter
-        tituloPractica: postulacion.tituloPractica || 'Unknown Offer',
-        
+        tituloPractica: postulacion.tituloPractica || "Unknown Offer",
+
         // Default avatar (since no foto field exists)
-        avatar: '/default-avatar.jpg'
-      }));
-
+        avatar: "/default-avatar.jpg",
+      }))
     } catch (err) {
-      console.error("Error fetching applicants:", err);
-      return [];
+      console.error("Error fetching applicants:", err)
+      return []
     }
-  };
-
-const handleAcceptApplicant = async (postulacionId) => {
-  try {
-    const response = await fetch(`${API_URL}/api/practicas/postulaciones/${postulacionId}/accept`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-
-    if (!response.ok) throw new Error("Failed to accept applicant");
-    
-    // Refresh the data
-    await fetchOffers();
-  } catch (err) {
-    setError(err.message);
   }
-};
+
+  const handleAcceptApplicant = async (postulacionId) => {
+    try {
+      const response = await fetch(`${API_URL}/api/practicas/postulaciones/${postulacionId}/accept`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+
+      if (!response.ok) throw new Error("Failed to accept applicant")
+
+      // Refresh the data
+      await fetchOffers()
+    } catch (err) {
+      setError(err.message)
+    }
+  }
 
   // Handle rejecting an applicant
   const handleRejectApplicant = async (postulacionId) => {
@@ -149,18 +146,22 @@ const handleAcceptApplicant = async (postulacionId) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      });
+      })
 
-      if (!response.ok) throw new Error("Failed to reject applicant");
+      if (!response.ok) throw new Error("Failed to reject applicant")
 
       // Refresh all data
-      await fetchOffers();
-      await fetchStudents();
-
+      await fetchOffers()
+      await fetchStudents()
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     }
-  };
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    navigate("/")
+  }
 
   // Fetch students data (mock data for now)
   const fetchStudents = async () => {
@@ -200,10 +201,19 @@ const handleAcceptApplicant = async (postulacionId) => {
 
     window.addEventListener("resize", handleResize)
 
+    const handleClickOutside = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setShowUserMenu(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("resize", handleResize)
       clearInterval(interval)
+      document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
 
@@ -261,14 +271,14 @@ const handleAcceptApplicant = async (postulacionId) => {
 
   // Open offer modal and fetch applicants
   const openOfferModal = async (offer) => {
-    setSelectedOffer(offer);
-    setIsModalOpen(true);
-    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981");
-  };
+    setSelectedOffer(offer)
+    setIsModalOpen(true)
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+  }
 
   const countApplicantsForOffer = (offerId) => {
-    return applicantStudents.filter(student => student.offerId === offerId).length;
-  };
+    return applicantStudents.filter((student) => student.offerId === offerId).length
+  }
 
   // Close modal
   const closeModal = () => {
@@ -279,22 +289,30 @@ const handleAcceptApplicant = async (postulacionId) => {
   // Get modality color
   const getModalityColor = (modality) => {
     switch (modality?.toLowerCase()) {
-      case "presencial": return "#10b981"
-      case "remota": return "#3b82f6"
+      case "presencial":
+        return "#10b981"
+      case "remota":
+        return "#3b82f6"
       case "híbrido":
-      case "hibrido": return "#8b5cf6"
-      default: return "#f59e0b"
+      case "hibrido":
+        return "#8b5cf6"
+      default:
+        return "#f59e0b"
     }
   }
 
   // Get modality icon
   const getModalityIcon = (modality) => {
     switch (modality?.toLowerCase()) {
-      case "presencial": return "🏢"
-      case "remota": return "🏠"
+      case "presencial":
+        return "🏢"
+      case "remota":
+        return "🏠"
       case "híbrido":
-      case "hibrido": return "🔄"
-      default: return "📍"
+      case "hibrido":
+        return "🔄"
+      default:
+        return "📍"
     }
   }
 
@@ -325,16 +343,23 @@ const handleAcceptApplicant = async (postulacionId) => {
         ))}
       </div>
 
+      <div className="user-icon" onClick={() => setShowUserMenu(!showUserMenu)}>
+        🙎🏻‍♂️
+      </div>
+
+      {showUserMenu && (
+      <div ref={userMenuRef} className="user-menu">
+        <div className="user-menu-item" onClick={handleLogout}>
+          <span>Cerrar Sesión</span>
+        </div>
+      </div>
+      )}
+
       <div className="stud-container">
-        {/* Header with logo */}
+        {/* Header */}
         <div className={`stud-header ${loaded ? "stud-loaded" : ""}`}>
           <div className="stud-decorative-circle stud-circle-1"></div>
           <div className="stud-decorative-circle stud-circle-2"></div>
-
-          <div className={`stud-logo-container ${loaded ? "stud-loaded" : ""}`}>
-            <img src={logo || "/placeholder.svg"} alt="Logo" className="stud-logo" />
-          </div>
-
           <h1 className={`stud-title ${loaded ? "stud-loaded" : ""}`}>STUDENTS</h1>
           <div className={`stud-divider ${loaded ? "stud-loaded" : ""}`}></div>
           <p className={`stud-subtitle ${loaded ? "stud-loaded" : ""}`}>Find and connect with talented students</p>
@@ -359,133 +384,147 @@ const handleAcceptApplicant = async (postulacionId) => {
         </div>
 
         {/* Main content */}
-        <div className="stud-main-content">
-          {isLoading ? (
-            <div className="stud-loading">
-              <div className="stud-spinner"></div>
-              <p>Loading offers...</p>
-            </div>
-          ) : error ? (
-            <div className="stud-error">
-              <p>Error loading offers: {error}</p>
-              <button onClick={fetchOffers}>Retry</button>
-            </div>
-          ) : (
-            <div className="stud-split-layout">
-              {/* Left column: My Offers */}
-              <div className="stud-split-column stud-offers-column">
-                <div className="stud-slide-content">
-                  <h2 className="stud-section-title">
-                    <span className="stud-section-icon">📋</span>
-                    My Offers
-                  </h2>
-                  <div className="stud-offers-list">
-                    {offers.map((offer, index) => (
-                      <div
-                        key={offer.idPractica}
-                        className={`stud-offer-card-mini ${offer.estado !== "ACTIVA" ? "stud-paused" : ""}`}
-                        onClick={() => openOfferModal(offer)}
-                        style={{
-                          animationDelay: `${0.1 + index * 0.05}s`,
-                          transitionDelay: `${0.1 + index * 0.05}s`,
-                        }}
-                      >
-                        <div className="stud-offer-header">
-                          <h3 className="stud-offer-title">{offer.titulo}</h3>
-                          <div className="stud-offer-badges">
-                            <span className={`stud-status-badge stud-${offer.estado?.toLowerCase()}`}>
-                              {offer.estado === "ACTIVA" ? "Active" : "Inactive"}
-                            </span>
+        <div className="stud-main-content" style={{ borderRadius: "0 0 0 0" }}>
+          <div className="stud-split-layout" style={{ minHeight: "520px" }}>
+            {isLoading ? (
+              <div className="stud-loading">
+                <div className="stud-spinner"></div>
+                <p>Loading offers...</p>
+              </div>
+            ) : error ? (
+              <div className="stud-error">
+                <p>Error loading offers: {error}</p>
+                <button onClick={fetchOffers}>Retry</button>
+              </div>
+            ) : (
+              <>
+                {/* Left column: My Offers */}
+                <div className="stud-split-column stud-offers-column" style={{ maxHeight: "520px" }}>
+                  <div className="stud-slide-content" style={{ height: "100%", borderRadius: "0" }}>
+                    <h2 className="stud-section-title">
+                      <span className="stud-section-icon">📋</span>
+                      My Offers
+                    </h2>
+                    <div className="stud-offers-list">
+                      {offers.map((offer, index) => (
+                        <div
+                          key={offer.idPractica}
+                          className={`stud-offer-card-mini ${offer.estado !== "ACTIVA" ? "stud-paused" : ""}`}
+                          onClick={() => openOfferModal(offer)}
+                          style={{
+                            animationDelay: `${0.1 + index * 0.05}s`,
+                            transitionDelay: `${0.1 + index * 0.05}s`,
+                          }}
+                        >
+                          <div className="stud-offer-header">
+                            <h3 className="stud-offer-title">{offer.titulo}</h3>
+                            <div className="stud-offer-badges">
+                              <span className={`stud-status-badge stud-${offer.estado?.toLowerCase()}`}>
+                                {offer.estado === "ACTIVA" ? "Active" : "Inactive"}
+                              </span>
+                            </div>
                           </div>
-                        </div>
 
-                        <div className="stud-offer-details">
-                          <div className="stud-detail-item">
-                            <span className="stud-detail-icon">👥</span>
-                            <span className="stud-detail-text">
-                              {assignedStudents.filter(student => student.offerId === offer.idPractica).length} /{" "}
-                              {offer.vacantes}
-                            </span>
+                          <div className="stud-offer-details">
+                            <div className="stud-detail-item">
+                              <span className="stud-detail-icon">👥</span>
+                              <span className="stud-detail-text">
+                                {assignedStudents.filter((student) => student.offerId === offer.idPractica).length} /{" "}
+                                {offer.vacantes}
+                              </span>
+                            </div>
+                            <div className="stud-detail-item">
+                              <span className="stud-detail-icon">{getModalityIcon(offer.modalidad)}</span>
+                              <span
+                                className="stud-detail-text stud-modality-badge"
+                                style={{
+                                  backgroundColor: `${getModalityColor(offer.modalidad)}20`,
+                                  color: getModalityColor(offer.modalidad),
+                                }}
+                              >
+                                {offer.modalidad?.toLowerCase()}
+                              </span>
+                            </div>
                           </div>
-                          <div className="stud-detail-item">
-                            <span className="stud-detail-icon">{getModalityIcon(offer.modalidad)}</span>
-                            <span
-                              className="stud-detail-text stud-modality-badge"
-                              style={{
-                                backgroundColor: `${getModalityColor(offer.modalidad)}20`,
-                                color: getModalityColor(offer.modalidad),
-                              }}
-                            >
-                              {offer.modalidad?.toLowerCase()}
-                            </span>
-                          </div>
-                        </div>
 
-                        <div className="stud-offer-stats">
-                          <div className="stud-stat">
-                            <span className="stud-stat-number">
-                              {countApplicantsForOffer(offer.idPractica)}
-                            </span>
-                            <span className="stud-stat-label">Applicants</span>
+                          <div className="stud-offer-stats">
+                            <div className="stud-stat">
+                              <span className="stud-stat-number">{countApplicantsForOffer(offer.idPractica)}</span>
+                              <span className="stud-stat-label">Applicants</span>
+                            </div>
+                          </div>
+
+                          <div className="stud-view-details">
+                            <span className="stud-view-icon">👁️</span>
+                            <span>View Students</span>
                           </div>
                         </div>
-
-                        <div className="stud-view-details">
-                          <span className="stud-view-icon">👁️</span>
-                          <span>View Students</span>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Right column: Applicants */}
-              <div className="stud-split-column stud-applicants-column">
-                <div className="stud-slide-content">
-                  <h2 className="stud-section-title">
-                    <span className="stud-section-icon">👨‍🎓</span>
-                    All Applicants
-                  </h2>
-                  <div className="stud-students-grid">
-                    {applicantStudents.map((student) => (
-                      <div
-                        key={student.postulacionId}
-                        className="stud-student-card"
-                        onClick={() => selectStudent(student.postulacionId)}
-                        style={{
-                          animationDelay: `${0.1 + student.postulacionId * 0.05}s`,
-                          transitionDelay: `${0.1 + student.postulacionId * 0.05}s`,
-                        }}
-                      >
-                        <div className="stud-student-avatar">
-                          <img
-                            src={student.avatar || "/placeholder.svg?height=40&width=40"}
-                            alt={`${student.name}'s avatar`}
-                          />
-                        </div>
-                        <div className="stud-student-info">
-                          <h3>{student.name}</h3>
-                          <p>{student.time}</p>
-                          <div className="stud-student-offer-badge">
-                            {offers.find(offer => offer.idPractica === student.offerId)?.titulo || "Unknown Offer"}
+                {/* Right column: Applicants */}
+                <div className="stud-split-column stud-applicants-column" style={{ maxHeight: "520px" }}>
+                  <div className="stud-slide-content" style={{ height: "100%", borderRadius: "0" }}>
+                    <h2 className="stud-section-title">
+                      <span className="stud-section-icon">👨‍🎓</span>
+                      All Applicants
+                    </h2>
+                    <div style={{ flex: 1, overflow: "hidden" }}>
+                      <div className="stud-students-grid">
+                        {applicantStudents.map((student) => (
+                          <div
+                            key={student.postulacionId}
+                            className="stud-student-card"
+                            onClick={() => selectStudent(student.postulacionId)}
+                            style={{
+                              animationDelay: `${0.1 + student.postulacionId * 0.05}s`,
+                              transitionDelay: `${0.1 + student.postulacionId * 0.05}s`,
+                            }}
+                          >
+                            <div className="stud-student-avatar">
+                              <img
+                                src={student.avatar || "/placeholder.svg?height=40&width=40"}
+                                alt={`${student.name}'s avatar`}
+                              />
+                            </div>
+                            <div className="stud-student-info">
+                              <h3>{student.name}</h3>
+                              <p>{student.time}</p>
+                              <div className="stud-student-offer-badge">
+                                {offers.find((offer) => offer.idPractica === student.offerId)?.titulo ||
+                                  "Unknown Offer"}
+                              </div>
+                            </div>
+                            <div className="stud-selection-indicator"></div>
                           </div>
-                        </div>
-                        <div className="stud-selection-indicator"></div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Footer unificado */}
+        <div className="stud-footer" style={{ borderRadius: "0 0 24px 24px" }}>
+          <p className={loaded ? "stud-loaded" : ""}>© 2025 EasyFCT - Innovación Educativa</p>
         </div>
 
         {/* Offer modal */}
         {isModalOpen && selectedOffer && (
           <div className="stud-modal-overlay" onClick={closeModal}>
             <div className="stud-modal-content" onClick={(e) => e.stopPropagation()}>
-              <button className="stud-modal-close" onClick={closeModal}>
+               <button
+                className="empresa-modal-close"
+                onClick={() => setIsModalOpen(false)}
+                style={{ transform: "none !important" }}
+                onMouseEnter={(e) => (e.target.style.transform = "none")}
+                onMouseLeave={(e) => (e.target.style.transform = "none")}
+              >
                 ✕
               </button>
 
@@ -499,10 +538,10 @@ const handleAcceptApplicant = async (postulacionId) => {
               <div className="stud-modal-body">
                 <div className="stud-modal-section">
                   <h3 className="stud-modal-section-title">Students in Internship</h3>
-                  {assignedStudents.filter(student => student.offerId === selectedOffer.idPractica).length > 0 ? (
+                  {assignedStudents.filter((student) => student.offerId === selectedOffer.idPractica).length > 0 ? (
                     <div className="stud-modal-students-grid">
                       {assignedStudents
-                        .filter(student => student.offerId === selectedOffer.idPractica)
+                        .filter((student) => student.offerId === selectedOffer.idPractica)
                         .map((student) => (
                           <div
                             key={student.postulacionId}
@@ -555,7 +594,7 @@ const handleAcceptApplicant = async (postulacionId) => {
                             </div>
                           </div>
                           <div className="stud-student-actions">
-                            <button 
+                            <button
                               className={`stud-action-button stud-accept ${student.status === "accepted" ? "stud-disabled" : ""}`}
                               onClick={(e) => {
                                 e.stopPropagation()
@@ -565,7 +604,7 @@ const handleAcceptApplicant = async (postulacionId) => {
                             >
                               {student.status === "accepted" ? "Accepted" : "Accept"}
                             </button>
-                            <button 
+                            <button
                               className={`stud-action-button stud-reject ${student.status === "rejected" ? "stud-disabled" : ""}`}
                               onClick={(e) => {
                                 e.stopPropagation()
@@ -604,11 +643,6 @@ const handleAcceptApplicant = async (postulacionId) => {
             </div>
           </div>
         )}
-
-        {/* Footer */}
-        <div className="stud-footer">
-          <p className={loaded ? "stud-loaded" : ""}>© 2025 EasyFCT - Innovación Educativa</p>
-        </div>
       </div>
     </div>
   )

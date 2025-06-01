@@ -386,7 +386,7 @@ const fetchProfileData = async () => {
     id: offer.idPractica,
     titulo: offer.titulo,
     empresa: offer.empresa?.nombre || "Empresa no especificada",
-    ubicacion: offer.empresa?.ubicacion || "Ubicación no especificada",
+    ubicacion: offer.empresa?.ubicacion || "Madrid",
     tipo: offer.modalidad || "No especificado",
     duracion: calculateDuration(offer.fechaInicio, offer.fechaFin),
     descripcion: offer.descripcion || "No hay descripción disponible",
