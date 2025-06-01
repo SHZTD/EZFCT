@@ -90,7 +90,7 @@ const Students = () => {
       if (!response.ok) throw new Error("Failed to fetch applicants");
       
       const data = await response.json();
-      
+
       return data.map(postulacion => ({
         postulacionId: postulacion.idPostulacion,
         estado: postulacion.estado,
