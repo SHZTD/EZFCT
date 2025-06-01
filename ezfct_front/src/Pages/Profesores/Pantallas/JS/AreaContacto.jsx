@@ -397,16 +397,16 @@ const ContactoProfesor = () => {
 
         {/* Responses modal */}
         {showModal && (
-          <div className="modal-overlay">
-            <div className="modal-container" ref={modalRef}>
-              <div className="modal-header">
+          <div className="cp-modal-overlay">
+            <div className="cp-modal-container" ref={modalRef}>
+              <div className="cp-modal-header">
                 <h2>Historial de consultas</h2>
-                <button className="close-button" onClick={closeModal}>
+                <button className="cp-close-button" onClick={closeModal}>
                   <X size={20} />
                 </button>
               </div>
 
-              <div className="modal-content">
+              <div className="cp-modal-content">
                 {isLoadingHistory ? (
                   <div className="loading-history">
                     <span className="spinner"></span>
@@ -500,19 +500,19 @@ const ContactoProfesor = () => {
 
       {/* Modal de edición de perfil */}
       {showProfileModal && (
-        <div className="cp-modal-overlay">
-          <div className="cp-modal-container profile-modal">
-            <div className="cp-modal-header">
-              <h2 className="cp-modal-title">Editar Perfil</h2>
-              <button className="cp-close-button" onClick={() => setShowProfileModal(false)}>
+        <div className="cp-profile-modal-overlay">
+          <div className="cp-profile-modal-container">
+            <div className="cp-profile-modal-header">
+              <h2 className="cp-profile-modal-title">Editar Perfil</h2>
+              <button className="cp-profile-close-button" onClick={() => setShowProfileModal(false)}>
                 ×
               </button>
             </div>
 
-            <div className="cp-modal-content">
+            <div className="cp-profile-modal-content">
               <div className="cp-profile-form">
                 <div className="cp-profile-form-grid">
-                  <div className="form-group">
+                  <div className="cp-form-group">
                     <label htmlFor="nombre">Nombre</label>
                     <input
                       type="text"
@@ -521,7 +521,7 @@ const ContactoProfesor = () => {
                       onChange={(e) => setProfileData({ ...profileData, nombre: e.target.value })}
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="cp-form-group">
                     <label htmlFor="apellido">Apellido</label>
                     <input
                       type="text"
@@ -530,7 +530,7 @@ const ContactoProfesor = () => {
                       onChange={(e) => setProfileData({ ...profileData, apellido: e.target.value })}
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="cp-form-group">
                     <label htmlFor="email">Email</label>
                     <input
                       type="email"
@@ -539,7 +539,7 @@ const ContactoProfesor = () => {
                       onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="cp-form-group">
                     <label htmlFor="instituto">Instituto</label>
                     <input
                       type="text"
@@ -548,7 +548,7 @@ const ContactoProfesor = () => {
                       onChange={(e) => setProfileData({ ...profileData, instituto: e.target.value })}
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="cp-form-group">
                     <label htmlFor="departamento">Departamento</label>
                     <input
                       type="text"
@@ -557,7 +557,7 @@ const ContactoProfesor = () => {
                       onChange={(e) => setProfileData({ ...profileData, departamento: e.target.value })}
                     />
                   </div>
-                  <div className="form-group">
+                  <div className="cp-form-group">
                     <label htmlFor="experiencia">Experiencia</label>
                     <input
                       type="text"
@@ -566,7 +566,7 @@ const ContactoProfesor = () => {
                       onChange={(e) => setProfileData({ ...profileData, experiencia: e.target.value })}
                     />
                   </div>
-                  <div className="form-group full-width">
+                  <div className="cp-form-group cp-full-width">
                     <label htmlFor="especialidad">Especialidad</label>
                     <input
                       type="text"
@@ -579,11 +579,11 @@ const ContactoProfesor = () => {
               </div>
             </div>
 
-            <div className="cp-modal-footer">
-              <button className="cp-cancel-button" onClick={() => setShowProfileModal(false)}>
+            <div className="cp-profile-modal-footer">
+              <button className="cp-profile-cancel-button" onClick={() => setShowProfileModal(false)}>
                 Cancelar
               </button>
-              <button className="cp-save-button" onClick={saveProfileData}>
+              <button className="cp-profile-save-button" onClick={saveProfileData}>
                 <Edit size={18} />
                 <span>Guardar cambios</span>
               </button>
