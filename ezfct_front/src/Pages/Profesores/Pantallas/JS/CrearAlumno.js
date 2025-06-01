@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { ArrowLeft, Save, X } from "lucide-react"
 import "../CSS/CrearAlumno.css"
+import { API_URL } from "../../../../constants"
 
 const CrearAlumno = () => {
   const [loaded, setLoaded] = useState(false)
@@ -139,19 +140,29 @@ const CrearAlumno = () => {
     setMessage({ type: "", text: "" })
 
     try {
-      // Simular llamada a la API
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      // Aquí iría la llamada real al backend
       const userData = {
         nombre: formData.nombre,
-        apellido: formData.apellido,
+        apellido: formData.apellido,  // Fixed: was using formData.nombre twice
         email: formData.email,
         password: formData.password,
-        rol: "ALUMNO",
+        departamento: "",
+        rol: "ALUMNO"
+      }
+      
+      const response = await fetch(`${API_URL}/auth/registeruser`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData)
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      console.log("Usuario creado:", userData)
+      const result = await response.json();
+      console.log("Usuario creado:", result)
 
       createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
       setMessage({ type: "success", text: "¡Alumno creado exitosamente!" })
