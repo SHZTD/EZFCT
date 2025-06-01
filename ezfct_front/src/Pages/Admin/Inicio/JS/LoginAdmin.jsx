@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import PropTypes from "prop-types"
-import ButtonComp from "../../../../Components/JSX/ButtonComp.js"
+import ButtonComp from "../../../../Components/JSX/ButtonComp.jsx"
 import LogoDefault from "../../../Imagenes/ajuste.png"
 import { useNavigate } from "react-router-dom"
 import "../CSS/LoginAdmin.css"

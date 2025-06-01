@@ -1,7 +1,6 @@
-// src/pages/empresa/NavTabs.jsx
-import React from 'react';
+
 import PropTypes from 'prop-types';
-import ButtonComp from './ButtonComp.js';
+import ButtonComp from './ButtonComp.jsx';
 
 const NavTabs = ({ activeTab, loaded, tabs, onTabChange }) => (
   <div className={`nav-tabs ${loaded?'loaded':''}`}>

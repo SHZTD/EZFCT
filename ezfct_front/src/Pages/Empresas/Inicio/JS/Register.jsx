@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import PropTypes from "prop-types"
-import ButtonComp from "../../../../Components/JSX/ButtonComp.js"
+import ButtonComp from "../../../../Components/JSX/ButtonComp.jsx"
 import "../CSS/Register.css"
 import logo from "../../../Imagenes/logo.gif"
 import { useNavigate } from "react-router-dom"

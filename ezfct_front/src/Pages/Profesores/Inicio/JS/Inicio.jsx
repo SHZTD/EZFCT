@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../Imagenes/logo.gif';
-import ButtonComp from '../../../../Components/JSX/ButtonComp.js';
+import ButtonComp from '../../../../Components/JSX/ButtonComp.jsx';
 import '../CSS/Inicio.css';
 
 const Inicio = () => {
@@ -56,8 +56,8 @@ const Inicio = () => {
   };
 
   const actions = [
-    { text: 'Login',    route: '/empresas/login',    icon:'🔑'},
-    { text: 'Register', route: '/empresas/register', icon:'✨'}
+    { text: 'Login',    route: '/profesores/login',    icon:'🔑'},
+    { text: 'Register', route: '/profesores/register', icon:'✨'}
   ];
 
   return (
@@ -68,7 +68,7 @@ const Inicio = () => {
           className="inicio-particle"
           style={{ left:`${pt.x}px`, top:`${pt.y}px`, width:`${pt.size}px`, height:`${pt.size}px`, backgroundColor:pt.color, opacity:pt.opacity }}
         />))}
-
+  
 
       {/* botón volver atrás */}
       <button

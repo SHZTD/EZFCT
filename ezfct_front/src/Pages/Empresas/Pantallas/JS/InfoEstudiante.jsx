@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import NavTabs from "../../../../Components/JSX/NavTabs.js"
+import NavTabs from "../../../../Components/JSX/NavTabs.jsx"
 import paperIcon from "../../../Imagenes/paper.png"
 import usersIcon from "../../../Imagenes/users.png"
 import "../CSS/InfoEstudiante.css"
 import { User, UserRound, UserCircle } from "lucide-react"
-import { API_URL } from "../../../../constants"
+import { API_URL } from "../../../../constants.js"
 
 const InfoEstudiante = () => {
   const navigate = useNavigate()

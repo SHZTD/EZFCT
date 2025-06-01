@@ -5,32 +5,32 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import EleccionUsuario from "./Pages/EleccionUsuario"
 
 /* Imports Empresa*/
-import InicioEmpresa from "./Pages/Empresas/Inicio/JS/Inicio"
-import LoginEmpresa from "./Pages/Empresas/Inicio/JS/Login"
-import RegisterEmpresa from "./Pages/Empresas/Inicio/JS/Register"
-import CreacionOfertas from "./Pages/Empresas/Pantallas/JS/CreacionOfertas.js"
-import OfertasPublicadas from "./Pages/Empresas/Pantallas/JS/OfertasPublicadas.js"
-import EstudiantesEmpresa from "./Pages/Empresas/Pantallas/JS/Estudiantes.js"
-import InfoEstudianteEmpresa from "./Pages/Empresas/Pantallas/JS/InfoEstudiante.js"
+import InicioEmpresa from "./Pages/Empresas/Inicio/JS/Inicio.jsx"
+import LoginEmpresa from "./Pages/Empresas/Inicio/JS/Login.jsx"
+import RegisterEmpresa from "./Pages/Empresas/Inicio/JS/Register.jsx"
+import CreacionOfertas from "./Pages/Empresas/Pantallas/JS/CreacionOfertas.jsx"
+import OfertasPublicadas from "./Pages/Empresas/Pantallas/JS/OfertasPublicadas.jsx"
+import EstudiantesEmpresa from "./Pages/Empresas/Pantallas/JS/Estudiantes.jsx"
+import InfoEstudianteEmpresa from "./Pages/Empresas/Pantallas/JS/InfoEstudiante.jsx"
 
 /* Imports profesor*/
 
-import InicioProfesor from "./Pages/Profesores/Inicio/JS/Inicio.js"
-import LoginProfesor from "./Pages/Profesores/Inicio/JS/Login.js"
-import RegisterProfesor from "./Pages/Profesores/Inicio/JS/Register.js"
-import OfertasProfesor from "./Pages/Profesores/Pantallas/JS/OfertasProfesor.js"
-import DetallesOferta from "./Pages/Profesores/Pantallas/JS/DetallesOferta.js"
-import AlumnosProfesor from "./Pages/Profesores/Pantallas/JS/AlumnosProfesor.js"
-import DatosAlumnosProfesor from "./Pages/Profesores/Pantallas/JS/DatosAlumno.js"
-import AreaContactoProfesor from "./Pages/Profesores/Pantallas/JS/AreaContacto.js"
-import CrearAlumno from "./Pages/Profesores/Pantallas/JS/CrearAlumno.js"
+import InicioProfesor from "./Pages/Profesores/Inicio/JS/Inicio.jsx"
+import LoginProfesor from "./Pages/Profesores/Inicio/JS/Login.jsx"
+import RegisterProfesor from "./Pages/Profesores/Inicio/JS/Register.jsx"
+import OfertasProfesor from "./Pages/Profesores/Pantallas/JS/OfertasProfesor.jsx"
+import DetallesOferta from "./Pages/Profesores/Pantallas/JS/DetallesOferta.jsx"
+import AlumnosProfesor from "./Pages/Profesores/Pantallas/JS/AlumnosProfesor.jsx"
+import DatosAlumnosProfesor from "./Pages/Profesores/Pantallas/JS/DatosAlumno.jsx"
+import AreaContactoProfesor from "./Pages/Profesores/Pantallas/JS/AreaContacto.jsx"
+import CrearAlumno from "./Pages/Profesores/Pantallas/JS/CrearAlumno.jsx"
 
 /* Imports alumnos*/
 
-import LoginAlumno from "./Pages/Alumno/Inicio/JS/Login.js"
-import DiarioAlumno from "./Pages/Alumno/Pantallas/JS/Diario.js"
-import DatosAlumno from "./Pages/Alumno/Pantallas/JS/DatosAlumno.js"
-import OfertasAlumnos from "./Pages/Alumno/Pantallas/JS/OfertasAlumnos.js"
+import LoginAlumno from "./Pages/Alumno/Inicio/JS/Login.jsx"
+import DiarioAlumno from "./Pages/Alumno/Pantallas/JS/Diario.jsx"
+import DatosAlumno from "./Pages/Alumno/Pantallas/JS/DatosAlumno.jsx"
+import OfertasAlumnos from "./Pages/Alumno/Pantallas/JS/OfertasAlumnos.jsx"
 
 /* Imports Admin*/
 import LoginAdmin from "./Pages/Admin/Inicio/JS/LoginAdmin"
