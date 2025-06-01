@@ -7,6 +7,7 @@ import "../CSS/Estudiantes.css"
 import paperIcon from "../../../Imagenes/paper.png"
 import usersIcon from "../../../Imagenes/users.png"
 import { API_URL } from "../../../../constants"
+import { User, UserRound, UserCircle } from "lucide-react"
 
 const Students = () => {
   const navigate = useNavigate()
@@ -33,6 +34,21 @@ const Students = () => {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const userMenuRef = useRef(null)
 
+  // Function to get random user icon based on ID
+  const getUserIcon = (id) => {
+    const randomNum = id % 3
+    switch (randomNum) {
+      case 0:
+        return <User className="w-8 h-8 text-gray-700" />
+      case 1:
+        return <UserRound className="w-8 h-8 text-gray-700" />
+      case 2:
+        return <UserCircle className="w-8 h-8 text-gray-700" />
+      default:
+        return <User className="w-8 h-8 text-gray-700" />
+    }
+  }
+
   // Fetch offers from API
   const fetchOffers = async () => {
     setIsLoading(true)
@@ -55,18 +71,20 @@ const Students = () => {
       const applicantsResults = await Promise.all(applicantsPromises)
 
       // Combine all applicants into one array
-      const allApplicants = applicantsResults.flat();
-      setApplicantStudents(allApplicants.map(applicant => ({
-        id: applicant.idEstudiante,
-        name: `${applicant.nombre} ${applicant.apellido}`,
-        time: new Date(applicant.fechaPostulacion).toLocaleDateString(),
-        avatar: applicant.foto || "/usuario1.jpg",
-        offerId: applicant.idPractica,
-        status: applicant.estado || "pending",
-        cvFileName: applicant.cvFileName,
-        motivacion: applicant.motivacion
-      })));
-
+      const allApplicants = applicantsResults.flat()
+      setApplicantStudents(
+        allApplicants.map((applicant) => ({
+          id: applicant.idEstudiante,
+          name: `${applicant.nombre} ${applicant.apellido}`,
+          time: new Date(applicant.fechaPostulacion).toLocaleDateString(),
+          avatar: applicant.foto || "/usuario1.jpg",
+          offerId: applicant.idPractica,
+          status: applicant.estado || "pending",
+          cvFileName: applicant.cvFileName,
+          motivacion: applicant.motivacion,
+          postulacionId: applicant.idPostulacion,
+        })),
+      )
     } catch (err) {
       setError(err.message)
       console.error("Error fetching offers:", err)
@@ -96,7 +114,7 @@ const Students = () => {
 
         // Student info (from Usuario via Alumno)
         nombre: postulacion.nombre || "Unknown",
-        apellido: postulacion.apellido || "Student", // Note singular
+        apellido: postulacion.apellido || "Student",
         email: postulacion.email,
 
         // Student profile (from Alumno)
@@ -105,11 +123,9 @@ const Students = () => {
         educacion: postulacion.educacion,
 
         // Offer info
-        idPractica: offerId, // From route parameter
+        idPractica: offerId,
         tituloPractica: postulacion.tituloPractica || "Unknown Offer",
 
-        // Default avatar (since no foto field exists)
-        avatar: "/default-avatar.jpg",
       }))
     } catch (err) {
       console.error("Error fetching applicants:", err)
@@ -165,11 +181,31 @@ const Students = () => {
 
   // Fetch students data (mock data for now)
   const fetchStudents = async () => {
-    // This would be replaced with actual API calls
-    setAssignedStudents([
-      { id: 1, name: "Michal Jack", time: "28 mins ago", avatar: "/usuario1.jpg", offerId: 1 },
-      { id: 2, name: "Sarah Johnson", time: "45 mins ago", avatar: "/usuario2.jpg", offerId: 1 },
-    ])
+    try {
+      const response = await fetch(API_URL + "/api/practicas/asignados", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+
+      if (!response.ok) throw new Error("Failed to fetch assigned students")
+
+      const data = await response.json()
+      setAssignedStudents(
+        data.map((student) => ({
+          id: student.idEstudiante,
+          name: `${student.nombre} ${student.apellido}`,
+          time: new Date(student.fechaAsignacion).toLocaleDateString(),
+          avatar: student.foto || "/usuario1.jpg",
+          offerId: student.idPractica,
+          postulacionId: student.idPostulacion,
+        })),
+      )
+    } catch (err) {
+      setError(err.message)
+      console.error("Error fetching assigned students:", err)
+    }
   }
 
   // Initial load effect
@@ -263,10 +299,11 @@ const Students = () => {
     }
   }
 
-  // Select student
-  const selectStudent = (id) => {
+  // Select student - FIXED ROUTE
+  const selectStudent = (student) => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#6366f1")
-    setTimeout(() => navigate(`/empresas/InfoEstudiantes/${id}`), 300)
+    // Use the actual student ID from the postulation data
+    setTimeout(() => navigate(`/empresas/InforEstudiante/${student.postulacionId}`), 300)
   }
 
   // Open offer modal and fetch applicants
@@ -348,11 +385,11 @@ const Students = () => {
       </div>
 
       {showUserMenu && (
-      <div ref={userMenuRef} className="user-menu">
-        <div className="user-menu-item" onClick={handleLogout}>
-          <span>Cerrar Sesión</span>
+        <div ref={userMenuRef} className="user-menu">
+          <div className="user-menu-item" onClick={handleLogout}>
+            <span>Cerrar Sesión</span>
+          </div>
         </div>
-      </div>
       )}
 
       <div className="stud-container">
@@ -477,17 +514,17 @@ const Students = () => {
                           <div
                             key={student.postulacionId}
                             className="stud-student-card"
-                            onClick={() => selectStudent(student.postulacionId)}
+                            onClick={() => selectStudent(student)}
                             style={{
                               animationDelay: `${0.1 + student.postulacionId * 0.05}s`,
                               transitionDelay: `${0.1 + student.postulacionId * 0.05}s`,
                             }}
                           >
-                            <div className="stud-student-avatar">
-                              <img
-                                src={student.avatar || "/placeholder.svg?height=40&width=40"}
-                                alt={`${student.name}'s avatar`}
-                              />
+                            <div
+                              className="stud-student-avatar"
+                              style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+                            >
+                              {getUserIcon(student.postulacionId)}
                             </div>
                             <div className="stud-student-info">
                               <h3>{student.name}</h3>
@@ -518,7 +555,7 @@ const Students = () => {
         {isModalOpen && selectedOffer && (
           <div className="stud-modal-overlay" onClick={closeModal}>
             <div className="stud-modal-content" onClick={(e) => e.stopPropagation()}>
-               <button
+              <button
                 className="empresa-modal-close"
                 onClick={() => setIsModalOpen(false)}
                 style={{ transform: "none !important" }}
@@ -546,14 +583,9 @@ const Students = () => {
                           <div
                             key={student.postulacionId}
                             className="stud-modal-student-card"
-                            onClick={() => selectStudent(student.postulacionId)}
+                            onClick={() => selectStudent(student)}
                           >
-                            <div className="stud-student-avatar">
-                              <img
-                                src={student.avatar || "/placeholder.svg?height=40&width=40"}
-                                alt={`${student.name}'s avatar`}
-                              />
-                            </div>
+                            <div className="stud-student-avatar">{getUserIcon(student.postulacionId)}</div>
                             <div className="stud-student-info">
                               <h3>{student.name}</h3>
                               <p>{student.time}</p>
@@ -577,14 +609,9 @@ const Students = () => {
                         <div
                           key={student.postulacionId}
                           className="stud-modal-student-card"
-                          onClick={() => selectStudent(student.postulacionId)}
+                          onClick={() => selectStudent(student)}
                         >
-                          <div className="stud-student-avatar">
-                            <img
-                              src={student.avatar || "/placeholder.svg?height=40&width=40"}
-                              alt={`${student.name}'s avatar`}
-                            />
-                          </div>
+                          <div className="stud-student-avatar">{getUserIcon(student.postulacionId)}</div>
                           <div className="stud-student-info">
                             <h3>{student.name}</h3>
                             <p>Applied: {student.time}</p>
@@ -593,7 +620,15 @@ const Students = () => {
                               <span>Motivation: {student.motivacion?.substring(0, 50)}...</span>
                             </div>
                           </div>
-                          <div className="stud-student-actions">
+                          <div
+                            className="stud-student-actions"
+                            style={{
+                              display: "flex",
+                              gap: "8px",
+                              marginTop: "8px",
+                              justifyContent: "flex-end",
+                            }}
+                          >
                             <button
                               className={`stud-action-button stud-accept ${student.status === "accepted" ? "stud-disabled" : ""}`}
                               onClick={(e) => {
@@ -601,6 +636,18 @@ const Students = () => {
                                 handleAcceptApplicant(student.postulacionId)
                               }}
                               disabled={student.status === "accepted"}
+                              style={{
+                                padding: "8px 16px",
+                                borderRadius: "6px",
+                                backgroundColor: student.status === "accepted" ? "#9ca3af" : "#10b981",
+                                color: "white",
+                                fontWeight: "600",
+                                marginRight: "8px",
+                                border: "none",
+                                cursor: student.status === "accepted" ? "not-allowed" : "pointer",
+                                fontSize: "14px",
+                                transition: "all 0.2s ease",
+                              }}
                             >
                               {student.status === "accepted" ? "Accepted" : "Accept"}
                             </button>
@@ -611,6 +658,17 @@ const Students = () => {
                                 handleRejectApplicant(student.postulacionId)
                               }}
                               disabled={student.status === "rejected"}
+                              style={{
+                                padding: "8px 16px",
+                                borderRadius: "6px",
+                                backgroundColor: student.status === "rejected" ? "#9ca3af" : "#ef4444",
+                                color: "white",
+                                fontWeight: "600",
+                                border: "none",
+                                cursor: student.status === "rejected" ? "not-allowed" : "pointer",
+                                fontSize: "14px",
+                                transition: "all 0.2s ease",
+                              }}
                             >
                               {student.status === "rejected" ? "Rejected" : "Reject"}
                             </button>

@@ -20,13 +20,6 @@ const CrearAlumno = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    departamento: "",
-    biografia: "",
-    habilidades: "",
-    educacion: "",
-    experiencia: "",
-    disponibilidad: "Tiempo completo",
-    portfolio: "",
   })
 
   // Efecto para la animación de entrada y partículas
@@ -155,22 +148,10 @@ const CrearAlumno = () => {
         apellido: formData.apellido,
         email: formData.email,
         password: formData.password,
-        departamento: formData.departamento,
         rol: "ALUMNO",
       }
 
-      const alumnoData = {
-        biografia: formData.biografia,
-        habilidades: formData.habilidades,
-        educacion: formData.educacion,
-        experiencia: formData.experiencia,
-        disponibilidad: formData.disponibilidad,
-        portfolio: formData.portfolio,
-        estadoPractica: "PENDIENTE",
-      }
-
       console.log("Usuario creado:", userData)
-      console.log("Datos del alumno:", alumnoData)
 
       createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
       setMessage({ type: "success", text: "¡Alumno creado exitosamente!" })
@@ -183,13 +164,6 @@ const CrearAlumno = () => {
           email: "",
           password: "",
           confirmPassword: "",
-          departamento: "",
-          biografia: "",
-          habilidades: "",
-          educacion: "",
-          experiencia: "",
-          disponibilidad: "Tiempo completo",
-          portfolio: "",
         })
         setMessage({ type: "", text: "" })
       }, 3000)
@@ -208,13 +182,6 @@ const CrearAlumno = () => {
       email: "",
       password: "",
       confirmPassword: "",
-      departamento: "",
-      biografia: "",
-      habilidades: "",
-      educacion: "",
-      experiencia: "",
-      disponibilidad: "Tiempo completo",
-      portfolio: "",
     })
     setMessage({ type: "", text: "" })
   }
@@ -239,6 +206,12 @@ const CrearAlumno = () => {
         ))}
       </div>
 
+      {/* Botón de volver en la esquina superior izquierda */}
+      <button className="back-button" onClick={handleGoBack}>
+        <ArrowLeft size={20} />
+        <span>Volver</span>
+      </button>
+
       <div className="crear-alumno-container">
         {/* Header */}
         <header className={`page-header ${loaded ? "loaded" : ""}`}>
@@ -250,14 +223,6 @@ const CrearAlumno = () => {
           </div>
           <div className="header-gradient"></div>
         </header>
-
-        {/* Botón de volver */}
-        <div className={`actions-container ${loaded ? "loaded" : ""}`}>
-          <button className="back-button" onClick={handleGoBack}>
-            <ArrowLeft size={20} />
-            <span>Back</span>
-          </button>
-        </div>
 
         {/* Formulario */}
         <div className={`form-container ${loaded ? "loaded" : ""} ${loading ? "loading" : ""}`}>
@@ -291,7 +256,7 @@ const CrearAlumno = () => {
                 />
               </div>
 
-              <div className="form-group">
+              <div className="form-group full-width">
                 <label className="form-label">Email *</label>
                 <input
                   type="email"
@@ -301,18 +266,6 @@ const CrearAlumno = () => {
                   className="form-input"
                   placeholder="ejemplo@email.com"
                   required
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Departamento</label>
-                <input
-                  type="text"
-                  name="departamento"
-                  value={formData.departamento}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  placeholder="Departamento académico"
                 />
               </div>
 
@@ -339,79 +292,6 @@ const CrearAlumno = () => {
                   className="form-input"
                   placeholder="Repite la contraseña"
                   required
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Educación</label>
-                <input
-                  type="text"
-                  name="educacion"
-                  value={formData.educacion}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  placeholder="Nivel educativo actual"
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Disponibilidad</label>
-                <select
-                  name="disponibilidad"
-                  value={formData.disponibilidad}
-                  onChange={handleInputChange}
-                  className="form-select"
-                >
-                  <option value="Tiempo completo">Tiempo completo</option>
-                  <option value="Medio tiempo">Medio tiempo</option>
-                  <option value="Fines de semana">Fines de semana</option>
-                  <option value="Flexible">Flexible</option>
-                </select>
-              </div>
-
-              <div className="form-group full-width">
-                <label className="form-label">Habilidades</label>
-                <input
-                  type="text"
-                  name="habilidades"
-                  value={formData.habilidades}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  placeholder="Ej: JavaScript, Python, Comunicación, Trabajo en equipo..."
-                />
-              </div>
-
-              <div className="form-group full-width">
-                <label className="form-label">Portfolio/Enlaces</label>
-                <input
-                  type="url"
-                  name="portfolio"
-                  value={formData.portfolio}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  placeholder="https://portfolio.ejemplo.com"
-                />
-              </div>
-
-              <div className="form-group full-width">
-                <label className="form-label">Biografía</label>
-                <textarea
-                  name="biografia"
-                  value={formData.biografia}
-                  onChange={handleInputChange}
-                  className="form-textarea"
-                  placeholder="Breve descripción del estudiante, sus intereses y objetivos..."
-                />
-              </div>
-
-              <div className="form-group full-width">
-                <label className="form-label">Experiencia</label>
-                <textarea
-                  name="experiencia"
-                  value={formData.experiencia}
-                  onChange={handleInputChange}
-                  className="form-textarea"
-                  placeholder="Experiencia previa, proyectos realizados, trabajos anteriores..."
                 />
               </div>
             </div>
