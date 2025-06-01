@@ -1,8 +1,7 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../CSS/GestionProfesores.css"
+import { API_URL } from "../../../../constants"
 
 const GestionProfesores = () => {
   const [activeTab, setActiveTab] = useState("profesores")
@@ -10,33 +9,11 @@ const GestionProfesores = () => {
   const [modalType, setModalType] = useState("")
   const [editingItem, setEditingItem] = useState(null)
   const [searchTerm, setSearchTerm] = useState("")
+  const [isLoading, setIsLoading] = useState(false) 
+  const [error, setError] = useState(null)
   const navigate = useNavigate()
 
-  // Estados para datos
-  const [profesores, setProfesores] = useState([
-    {
-      id: 1,
-      nombre: "Dr. Ana Martín",
-      email: "ana@universidad.com",
-      telefono: "912345678",
-      departamento: "Informática",
-      especialidad: "Desarrollo Web",
-      alumnosAsignados: 15,
-      estado: "Activo",
-      fechaIngreso: "2020-09-01",
-    },
-    {
-      id: 2,
-      nombre: "Prof. Luis Rodríguez",
-      email: "luis@universidad.com",
-      telefono: "987654321",
-      departamento: "Sistemas",
-      especialidad: "Redes y Seguridad",
-      alumnosAsignados: 12,
-      estado: "Activo",
-      fechaIngreso: "2019-02-15",
-    },
-  ])
+  const [profesores, setProfesores] = useState([])
 
   const [alumnos, setAlumnos] = useState([
     {
@@ -88,12 +65,52 @@ const GestionProfesores = () => {
 
   const [formData, setFormData] = useState({})
 
-  useEffect(() => {
+useEffect(() => {
     const adminToken = localStorage.getItem("token")
     if (!adminToken) {
       navigate("/admin/login")
     }
+    
+    // Fetch teachers when component mounts
+    fetchProfesores()
   }, [navigate])
+
+  const fetchProfesores = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_URL}/api/usuarios`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+      
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
+      const data = await response.json();
+      
+      const mappedProfesores = data
+        .filter(user => user.rol === 'PROFESOR')
+        .map(profesor => ({
+          id: profesor.idUsuario,
+          nombre: `${profesor.nombre} ${profesor.apellido}`,
+          email: profesor.email,
+          departamento: profesor.departamento || 'Sin departamento',
+          telefono: '',
+          especialidad: '',
+          estado: 'Activo',
+          fechaIngreso: new Date().toISOString().split('T')[0],
+          alumnosAsignados: Math.floor(Math.random() * 10) + 1
+        }));
+      
+      setProfesores(mappedProfesores);
+    } catch (err) {
+      setError(err.message);
+      console.error("Error fetching profesores:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const filteredProfesores = profesores.filter(
     (profesor) =>
@@ -178,18 +195,30 @@ const GestionProfesores = () => {
     closeModal()
   }
 
-  const handleDelete = (type, id) => {
-    if (window.confirm("¿Estás seguro de que quieres eliminar este elemento?")) {
-      if (type === "profesor") {
-        setProfesores(profesores.filter((p) => p.id !== id))
-      } else if (type === "alumno") {
-        setAlumnos(alumnos.filter((a) => a.id !== id))
-      } else if (type === "reporte") {
-        setReportes(reportes.filter((r) => r.id !== id))
+  const handleDelete = async (type, id) => {
+    console.log("Deleting:", type, "ID:", id); // Debug log
+    
+    if (window.confirm("¿Estás seguro de eliminar este profesor?")) {
+      try {
+        console.log("Making request to:", `${API_URL}/api/usuarios/${id}`); // Debug log
+        
+        const response = await fetch(`${API_URL}/api/usuarios/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+        
+        if (!response.ok) throw new Error("Error en la petición");
+        
+        setProfesores(prev => prev.filter(p => p.id !== id));
+      } catch (err) {
+        console.error("Delete error:", err);
+        alert("Error al eliminar");
       }
     }
-  }
-
+  };
+  
   const renderProfesores = () => (
     <div className="gestion-profesores-content">
       <div className="gestion-profesores-header">
@@ -202,64 +231,71 @@ const GestionProfesores = () => {
             className="search-input"
           />
         </div>
-        <button className="create-btn" onClick={() => openModal("profesor")}>
-          ➕ Nuevo Profesor
+        <button 
+          className="refresh-btn" 
+          onClick={fetchProfesores} 
+          disabled={isLoading}
+        >
+          🔄 {isLoading ? 'Cargando...' : 'Actualizar'}
         </button>
       </div>
 
-      <div className="table-container">
+      {isLoading ? (
+        <div className="loading-message">Cargando profesores...</div>
+      ) : error ? (
+        <div className="error-message">Error: {error}</div>
+      ) : (
+        <div className="table-container">
         <table className="data-table">
-          <thead>
-            <tr>
-              <th>Profesor</th>
-              <th>Contacto</th>
-              <th>Departamento</th>
-              <th>Especialidad</th>
-              <th>Alumnos</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredProfesores.map((profesor) => (
-              <tr key={profesor.id}>
-                <td>
-                  <div className="profesor-info">
-                    <strong>{profesor.nombre}</strong>
-                    <small>Desde: {profesor.fechaIngreso}</small>
-                  </div>
-                </td>
-                <td>
-                  <div className="contacto-info">
-                    <div>{profesor.email}</div>
-                    <small>{profesor.telefono}</small>
-                  </div>
-                </td>
-                <td>{profesor.departamento}</td>
-                <td>{profesor.especialidad}</td>
-                <td>
-                  <span className="alumnos-badge">{profesor.alumnosAsignados}</span>
-                </td>
-                <td>
-                  <span className={`status ${profesor.estado.toLowerCase()}`}>{profesor.estado}</span>
-                </td>
-                <td>
-                  <div className="actions">
-                    <button className="edit-btn" onClick={() => openModal("profesor", profesor)}>
-                      ✏️
-                    </button>
-                    <button className="delete-btn" onClick={() => handleDelete("profesor", profesor.id)}>
-                      🗑️
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+              <thead>
+                <tr>
+                  <th>Profesor</th>
+                  <th>Contacto</th>
+                  <th>Departamento</th>
+                  <th>Alumnos</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredProfesores.map((profesor) => (
+                  <tr key={profesor.idUsuario}>
+                    <td>
+                      <div className="profesor-info">
+                        <strong>{profesor.nombre}</strong>
+                        <small>Desde: {profesor.fechaIngreso}</small>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="contacto-info">
+                        <div>{profesor.email}</div>
+                        <small>{profesor.telefono}</small>
+                      </div>
+                    </td>
+                    <td>{profesor.departamento}</td>
+                    <td>
+                      <span className="alumnos-badge">{profesor.alumnosAsignados}</span>
+                    </td>
+                    <td>
+                      <div className="actions">
+                        <button 
+                          className="delete-btn" 
+                          onClick={() => {
+                            console.log("Profesor object:", profesor); // Debug log
+                            handleDelete("profesor", profesor.idUsuario);
+                          }}
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
-    </div>
-  )
+    )
 
   const renderAlumnos = () => (
     <div className="gestion-alumnos-content">

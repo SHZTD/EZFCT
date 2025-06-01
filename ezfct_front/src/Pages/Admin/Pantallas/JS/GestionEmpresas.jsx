@@ -13,32 +13,7 @@ const GestionEmpresas = () => {
 
   const [empresas, setEmpresas] = useState([])
 
-  const [practicas, setPracticas] = useState([
-    {
-      id: 1,
-      titulo: "Desarrollador Frontend",
-      empresa: "TechCorp",
-      descripcion: "Desarrollo de interfaces web modernas",
-      modalidad: "Presencial",
-      vacantes: 3,
-      fechaInicio: "2024-03-01",
-      fechaFin: "2024-06-01",
-      requisitos: "React, JavaScript, CSS",
-      estado: "Activa",
-    },
-    {
-      id: 2,
-      titulo: "Analista de Datos",
-      empresa: "DataSoft",
-      descripcion: "Análisis y visualización de datos",
-      modalidad: "Remoto",
-      vacantes: 2,
-      fechaInicio: "2024-04-01",
-      fechaFin: "2024-07-01",
-      requisitos: "Python, SQL, Power BI",
-      estado: "Activa",
-    },
-  ])
+  const [practicas, setPracticas] = useState([])
 
   const [formData, setFormData] = useState({})
 
@@ -61,6 +36,28 @@ const GestionEmpresas = () => {
 
     fetchEmpresas()
   }, [])
+
+  const fetchPracticas = async () => {
+    try {
+      const response = await fetch(API_URL + "/api/practicas");
+      if (!response.ok) throw new Error("Failed to fetch prácticas");
+      const data = await response.json();
+      setPracticas(data);
+    } catch (error) {
+      console.error("Error fetching prácticas:", error);
+      alert("Error al cargar las prácticas");
+    }
+  };
+
+    useEffect(() => {
+    const adminToken = localStorage.getItem("token");
+    if (!adminToken) {
+      navigate("/admin/login");
+      return;
+    }
+
+    fetchPracticas(); 
+  }, [navigate]);
 
   const filteredEmpresas = empresas.filter(
     (empresa) =>
@@ -104,35 +101,41 @@ const GestionEmpresas = () => {
     closeModal()
   }
 
-  const handleDelete = async (type, id) => {
-    if (type !== "empresa") return; // Only handle empresa deletion
-    
-    if (window.confirm("¿Estás seguro de que quieres eliminar esta empresa?")) {
-      try {
-        const response = await fetch(API_URL + `/api/empresa/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            // Add authorization header if needed
-            'Authorization': `Bearer ${localStorage.getItem("token")}`
-          }
-        });
+const handleDelete = async (type, id) => {
+  if (!window.confirm(`¿Estás seguro de que quieres eliminar esta ${type}?`)) {
+    return;
+  }
 
-        if (response.ok) {
-          // Remove the empresa from the local state if the API call succeeds
-          setEmpresas(empresas.filter((empresa) => empresa.idEmpresa !== id));
-          // You might want to show a success message here
-          alert("Empresa eliminada correctamente");
-        } else {
-          const errorData = await response.json();
-          throw new Error(errorData.message || "Error al eliminar la empresa");
-        }
-      } catch (error) {
-        console.error("Error deleting empresa:", error);
-        alert(error.message || "Ocurrió un error al eliminar la empresa");
+  try {
+    const endpoint = type === "empresa" 
+      ? `/api/empresa/${id}`
+      : `/api/practicas/${id}`;
+
+    const response = await fetch(API_URL + endpoint, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
       }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || `Error al eliminar ${type}`);
     }
-  };
+
+    if (type === "empresa") {
+      setEmpresas(empresas.filter(e => e.id !== id));
+    } else {
+      setPracticas(practicas.filter(p => p.id !== id));
+    }
+
+    alert(`${type === "empresa" ? "Empresa" : "Práctica"} eliminada correctamente`);
+
+  } catch (error) {
+    console.error(`Error deleting ${type}:`, error);
+    alert(error.message || "Ocurrió un error al eliminar");
+  }
+};
 
   const renderEmpresas = () => (
     <div className="gestion-empresas-content">
@@ -220,37 +223,39 @@ const GestionEmpresas = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredPracticas.map((practica) => (
-              <tr key={practica.id}>
-                <td>
-                  <div className="practica-info">
-                    <strong>{practica.titulo}</strong>
-                    <small>{practica.descripcion}</small>
-                  </div>
-                </td>
-                <td>{practica.empresa}</td>
-                <td>
-                  <span className={`modalidad ${practica.modalidad.toLowerCase()}`}>{practica.modalidad}</span>
-                </td>
-                <td>
-                  <span className="vacantes-badge">{practica.vacantes}</span>
-                </td>
-                <td>
-                  <div className="periodo-info">
-                    <small>{practica.fechaInicio}</small>
-                    <small>{practica.fechaFin}</small>
-                  </div>
-                </td>
-                <td>
-                  <div className="actions">
-                    <button className="delete-btn" onClick={() => handleDelete("practica", practica.id)}>
-                      🗑️
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+          {filteredPracticas.map((practica) => (
+            <tr key={practica.id}>  {/* Using id as key */}
+              <td>
+                <div className="practica-info">
+                  <strong>{practica.titulo}</strong>
+                  <small>{practica.descripcion}</small>
+                </div>
+              </td>
+              <td>{practica.empresa?.nombre || "N/A"}</td> {/* Access nested empresa object */}
+              <td>
+                <span className={`modalidad ${practica.modalidad?.toLowerCase() || ""}`}>
+                  {practica.modalidad || "N/A"}
+                </span>
+              </td>
+              <td>
+                <span className="vacantes-badge">{practica.vacantes || 0}</span>
+              </td>
+              <td>
+                <div className="periodo-info">
+                  <small>{practica.fechaInicio || "N/A"}</small>
+                  <small>{practica.fechaFin || "N/A"}</small>
+                </div>
+              </td>
+              <td>
+                <div className="actions">
+                  <button className="delete-btn" onClick={() => handleDelete("practica", practica.id)}>
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
         </table>
       </div>
     </div>

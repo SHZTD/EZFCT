@@ -1,8 +1,7 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../CSS/GestionAlumnos.css"
+import { API_URL } from "../../../../constants"
 
 const GestionAlumnos = () => {
   const [activeTab, setActiveTab] = useState("alumnos")
@@ -27,21 +26,7 @@ const GestionAlumnos = () => {
       estado: "En Prácticas",
       progreso: 75,
       calificacion: null,
-    },
-    {
-      id: 2,
-      nombre: "María García",
-      email: "maria@email.com",
-      telefono: "687654321",
-      curso: "DAW",
-      empresa: "DataSoft",
-      profesor: "Dr. Ana Martín",
-      fechaInicio: "2024-02-15",
-      fechaFin: "2024-05-15",
-      estado: "Finalizado",
-      progreso: 100,
-      calificacion: 8.5,
-    },
+    }
   ])
 
   const [diarios, setDiarios] = useState([
@@ -53,16 +38,7 @@ const GestionAlumnos = () => {
       horas: 8,
       observaciones: "Buen progreso en el desarrollo frontend",
       estado: "Aprobado",
-    },
-    {
-      id: 2,
-      alumno: "María García",
-      fecha: "2024-01-16",
-      actividades: "Configuración de base de datos",
-      horas: 6,
-      observaciones: "Excelente trabajo con SQL",
-      estado: "Pendiente",
-    },
+    }
   ])
 
   const [postulaciones, setPostulaciones] = useState([
@@ -74,16 +50,7 @@ const GestionAlumnos = () => {
       fechaPostulacion: "2024-01-10",
       estado: "En Revisión",
       motivacion: "Interesado en desarrollo con Node.js",
-    },
-    {
-      id: 2,
-      alumno: "Ana Ruiz",
-      oferta: "Diseñadora UX/UI",
-      empresa: "DesignStudio",
-      fechaPostulacion: "2024-01-12",
-      estado: "Aceptada",
-      motivacion: "Experiencia en Figma y Adobe XD",
-    },
+    }
   ])
 
   const [formData, setFormData] = useState({})

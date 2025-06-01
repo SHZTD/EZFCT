@@ -1,9 +1,8 @@
-"use client"
-
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { ArrowLeft, Search, Filter, GraduationCap, User, LogOut, Edit, ChevronDown, UserPlus } from "lucide-react"
 import "../CSS/AlumnosProfesor.css"
+import { API_URL } from "../../../../constants"
 
 const EstudiantesProfesor = () => {
   const [loaded, setLoaded] = useState(false)
@@ -12,6 +11,10 @@ const EstudiantesProfesor = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const [showProfileModal, setShowProfileModal] = useState(false)
+  const [students, setStudents] = useState([]) // Changed from static data to state
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
+
   const [profileData, setProfileData] = useState({
     nombre: "Prof. García",
     apellido: "Martínez",
@@ -26,98 +29,54 @@ const EstudiantesProfesor = () => {
   const profileMenuRef = useRef(null)
   const profileButtonRef = useRef(null)
 
-  // Datos de estudiantes
-  const students = [
-    {
-      id: 1,
-      name: "Jaydon Herwitz",
-      school: "Ins Puig Castellar",
-      age: 17,
-      education: "High School",
-      competencies: "Problem Solving",
-      occupation: "Student",
-      location: "Barcelona",
-      techLiterate: "High",
-      image: "/usuario1.jpg",
-    },
-    {
-      id: 2,
-      name: "Giana Herwitz",
-      school: "Ins Puig Castellar",
-      age: 18,
-      education: "High School",
-      competencies: "Creativity, Teamwork",
-      occupation: "Student",
-      location: "Barcelona",
-      techLiterate: "Medium",
-      image: "/usuario2.jpg",
-    },
-    {
-      id: 3,
-      name: "Messi",
-      school: "Ins Puig Castellar",
-      age: 17,
-      education: "High School",
-      competencies: "Critical Thinking, Leadership",
-      occupation: "Student",
-      location: "Barcelona",
-      techLiterate: "High",
-      image: "/usuario3.png",
-    },
-    {
-      id: 4,
-      name: "Laura Sánchez",
-      school: "Ins Puig Castellar",
-      age: 18,
-      education: "High School",
-      competencies: "Communication, Organization",
-      occupation: "Student",
-      location: "Barcelona",
-      techLiterate: "Medium",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-    {
-      id: 5,
-      name: "Carlos Martínez",
-      school: "Ins Puig Castellar",
-      age: 17,
-      education: "High School",
-      competencies: "Analytical Thinking, Attention to Detail",
-      occupation: "Student",
-      location: "Barcelona",
-      techLiterate: "High",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-    {
-      id: 6,
-      name: "Ana García",
-      school: "Ins Puig Castellar",
-      age: 19,
-      education: "High School",
-      competencies: "Adaptability, Time Management",
-      occupation: "Student",
-      location: "Barcelona",
-      techLiterate: "Medium",
-      image: "/placeholder.svg?height=200&width=200",
-    },
-  ]
-
-  // Efecto para la animación de entrada y partículas
+  // Fetch students from API
   useEffect(() => {
-    // Marcar como cargado para iniciar animaciones
-    setTimeout(() => setLoaded(true), 100)
+    const fetchStudents = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/alumnos`)
+        if (!response.ok) {
+          throw new Error('Failed to fetch students')
+        }
+        const data = await response.json()
+        setStudents(data.map(student => ({
+          id: student.idAlumno,
+          name: student.usuario?.nombre || 'Nombre no disponible',
+          school: "Ins Puig Castellar", // You might want to get this from student data
+          age: student.edad || 'N/A',
+          education: student.educacion || 'N/A',
+          competencies: student.competencias || 'N/A',
+          occupation: 'Student',
+          location: 'Barcelona',
+          techLiterate: student.nivelTecnico || 'N/A',
+          image: "/usuario1.jpg",
+          estadoPractica: student.estadoPractica || 'N/A',
+          biografia: student.biografia || '',
+          habilidades: student.habilidades || '',
+          portfolio: student.portfolio || ''
+        })))
+      } catch (err) {
+        setError(err.message)
+        console.error('Error fetching students:', err)
+      } finally {
+        setIsLoading(false)
+        setLoaded(true)
+      }
+    }
 
-    // Crear partículas iniciales
+    fetchStudents()
+  }, [])
+
+  // Rest of your existing useEffect for animations
+  useEffect(() => {
+    setTimeout(() => setLoaded(true), 100)
     createInitialParticles()
 
-    // Seguimiento del ratón
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.pageX, y: e.pageY })
     }
 
     window.addEventListener("mousemove", handleMouseMove)
 
-    // Intervalo para animar partículas
     const interval = setInterval(() => {
       setParticles((prevParticles) =>
         prevParticles.map((particle) => ({
@@ -128,12 +87,10 @@ const EstudiantesProfesor = () => {
       )
     }, 50)
 
-    // Ajustar partículas al cambiar el tamaño de la ventana
     const handleResize = () => {
       createInitialParticles()
     }
 
-    // Cerrar menú de perfil al hacer clic fuera
     const handleClickOutsideProfileMenu = (e) => {
       if (
         profileMenuRef.current &&
@@ -149,13 +106,11 @@ const EstudiantesProfesor = () => {
     window.addEventListener("resize", handleResize)
     document.addEventListener("mousedown", handleClickOutsideProfileMenu)
 
-    // Cargar datos del perfil desde localStorage
     const savedProfile = localStorage.getItem("profesorProfileData")
     if (savedProfile) {
       setProfileData(JSON.parse(savedProfile))
     }
 
-    // Limpieza al desmontar
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("resize", handleResize)
@@ -240,9 +195,31 @@ const EstudiantesProfesor = () => {
       student.school.toLowerCase().includes(searchTerm.toLowerCase()),
   )
 
-  return (
+  if (isLoading) {
+    return (
+      <div className="estudiantes-page">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading students...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="estudiantes-page">
+        <div className="error-container">
+          <p>Error loading students: {error}</p>
+          <button onClick={() => window.location.reload()}>Try Again</button>
+        </div>
+      </div>
+    )
+  }
+
+return (
     <div className="estudiantes-page">
-      {/* Partículas de fondo */}
+      {/* Particles container */}
       <div className="particles-container">
         {particles.map((particle) => (
           <div
