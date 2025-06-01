@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import "../CSS/CreacionOfertas.css"
 
@@ -32,6 +32,9 @@ const OfertasPage = () => {
   // Add these state variables at the top of the component with the other useState declarations:
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedOffer, setSelectedOffer] = useState(null)
+  const [showUserMenu, setShowUserMenu] = useState(false)
+
+  const userMenuRef = useRef(null)
 
   // Efecto para la animación de entrada
   useEffect(() => {
@@ -40,6 +43,18 @@ const OfertasPage = () => {
 
     // Cargar ofertas desde el backend
     fetchOffers()
+
+    // Cerrar menú de usuario al hacer clic fuera
+    const handleClickOutside = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setShowUserMenu(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
   }, [])
 
   // Función para obtener ofertas del backend
@@ -65,6 +80,11 @@ const OfertasPage = () => {
 
   const navigateTo = (route) => {
     navigate(`/${route}`)
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    navigate("/")
   }
 
   const handleInputChange = (e) => {
@@ -210,13 +230,26 @@ const OfertasPage = () => {
   }
 
   return (
+    
+    
     <div className="empresa-offers-page">
+        <div className="user-icon" onClick={() => setShowUserMenu(!showUserMenu)}>
+            🙎🏻‍♂️
+        </div>
+
+       {showUserMenu && (
+          <div ref={userMenuRef} className="user-menu">
+            <div className="user-menu-item" onClick={handleLogout}>
+              <span>Cerrar Sesión</span>
+            </div>
+          </div>
+        )}
+
       <div className="empresa-offers-container">
         {/* Header con título */}
         <div className={`empresa-offers-header ${loaded ? "empresa-loaded" : ""}`}>
           <div className="empresa-decorative-circle empresa-circle-1"></div>
           <div className="empresa-decorative-circle empresa-circle-2"></div>
-
           <h1 className={`empresa-title ${loaded ? "empresa-loaded" : ""}`}>OFERTAS</h1>
           <div className={`empresa-divider ${loaded ? "empresa-loaded" : ""}`}></div>
           <p className={`empresa-subtitle ${loaded ? "empresa-loaded" : ""}`}>Crea y gestiona tus ofertas de trabajo</p>
@@ -543,7 +576,13 @@ const OfertasPage = () => {
         {isModalOpen && selectedOffer && (
           <div className="empresa-modal-overlay" onClick={() => setIsModalOpen(false)}>
             <div className="empresa-modal-content" onClick={(e) => e.stopPropagation()}>
-              <button className="empresa-modal-close" onClick={() => setIsModalOpen(false)}>
+              <button
+                className="empresa-modal-close"
+                onClick={() => setIsModalOpen(false)}
+                style={{ transform: "none !important" }}
+                onMouseEnter={(e) => (e.target.style.transform = "none")}
+                onMouseLeave={(e) => (e.target.style.transform = "none")}
+              >
                 ✕
               </button>
 
