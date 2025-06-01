@@ -55,19 +55,18 @@ const Students = () => {
       const applicantsResults = await Promise.all(applicantsPromises)
 
       // Combine all applicants into one array
-      const allApplicants = applicantsResults.flat()
-      setApplicantStudents(
-        allApplicants.map((applicant) => ({
-          id: applicant.idEstudiante,
-          name: `${applicant.nombre} ${applicant.apellidos}`,
-          time: new Date(applicant.fechaPostulacion).toLocaleDateString(),
-          avatar: applicant.foto || "/usuario1.jpg",
-          offerId: applicant.idPractica,
-          status: applicant.estado || "pending",
-          cvFileName: applicant.cvFileName,
-          motivacion: applicant.motivacion,
-        })),
-      )
+      const allApplicants = applicantsResults.flat();
+      setApplicantStudents(allApplicants.map(applicant => ({
+        id: applicant.idEstudiante,
+        name: `${applicant.nombre} ${applicant.apellido}`,
+        time: new Date(applicant.fechaPostulacion).toLocaleDateString(),
+        avatar: applicant.foto || "/usuario1.jpg",
+        offerId: applicant.idPractica,
+        status: applicant.estado || "pending",
+        cvFileName: applicant.cvFileName,
+        motivacion: applicant.motivacion
+      })));
+
     } catch (err) {
       setError(err.message)
       console.error("Error fetching offers:", err)

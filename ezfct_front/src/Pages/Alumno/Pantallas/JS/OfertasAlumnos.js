@@ -134,6 +134,7 @@ const fetchAppliedOffers = async () => {
           alumno: { idAlumno: profileData.idAlumno },
           practica: { idPractica: offerId },
           estado: "PENDIENTE",
+          fechaPostulacion: new Date()
         }),
       });
 
