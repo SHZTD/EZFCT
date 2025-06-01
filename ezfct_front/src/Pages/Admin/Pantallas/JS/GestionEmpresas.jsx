@@ -1,8 +1,7 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../CSS/GestionEmpresas.css"
+import { API_URL } from "../../../../constants"
 
 const GestionEmpresas = () => {
   const [activeTab, setActiveTab] = useState("empresas")
@@ -12,33 +11,7 @@ const GestionEmpresas = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const navigate = useNavigate()
 
-  // Estados para datos
-  const [empresas, setEmpresas] = useState([
-    {
-      id: 1,
-      nombre: "TechCorp",
-      nif: "A12345678",
-      email: "contact@techcorp.com",
-      telefono: "912345678",
-      direccion: "Calle Tech 123, Madrid",
-      sector: "Tecnología",
-      ofertas: 5,
-      estado: "Activa",
-      fechaRegistro: "2024-01-15",
-    },
-    {
-      id: 2,
-      nombre: "DataSoft",
-      nif: "B87654321",
-      email: "hr@datasoft.com",
-      telefono: "987654321",
-      direccion: "Avenida Data 456, Barcelona",
-      sector: "Software",
-      ofertas: 3,
-      estado: "Activa",
-      fechaRegistro: "2024-02-20",
-    },
-  ])
+  const [empresas, setEmpresas] = useState([])
 
   const [practicas, setPracticas] = useState([
     {
@@ -74,7 +47,20 @@ const GestionEmpresas = () => {
     if (!adminToken) {
       navigate("/admin/login")
     }
-  }, [navigate])
+
+      const fetchEmpresas = async () => {
+      try {
+        const response = await fetch(API_URL + "/api/empresa")
+        if (!response.ok) throw new Error("Error fetching empresas.")
+        const data = await response.json()
+        setEmpresas(data)
+      } catch (error) {
+        console.error("Error fetching empresas:", error)
+      }
+    }
+
+    fetchEmpresas()
+  }, [])
 
   const filteredEmpresas = empresas.filter(
     (empresa) =>
@@ -88,14 +74,7 @@ const GestionEmpresas = () => {
       practica.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
       practica.empresa.toLowerCase().includes(searchTerm.toLowerCase()),
   )
-
-  const openModal = (type, item = null) => {
-    setModalType(type)
-    setEditingItem(item)
-    setFormData(item || {})
-    setShowModal(true)
-  }
-
+  
   const closeModal = () => {
     setShowModal(false)
     setEditingItem(null)
@@ -125,20 +104,35 @@ const GestionEmpresas = () => {
     closeModal()
   }
 
-  const handleDelete = (type, id) => {
-    if (window.confirm("¿Estás seguro de que quieres eliminar este elemento?")) {
-      if (type === "empresa") {
-        setEmpresas(empresas.filter((e) => e.id !== id))
-        // También eliminar las prácticas de esta empresa
-        const empresaEliminada = empresas.find((e) => e.id === id)
-        if (empresaEliminada) {
-          setPracticas(practicas.filter((p) => p.empresa !== empresaEliminada.nombre))
+  const handleDelete = async (type, id) => {
+    if (type !== "empresa") return; // Only handle empresa deletion
+    
+    if (window.confirm("¿Estás seguro de que quieres eliminar esta empresa?")) {
+      try {
+        const response = await fetch(API_URL + `/api/empresa/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add authorization header if needed
+            'Authorization': `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+
+        if (response.ok) {
+          // Remove the empresa from the local state if the API call succeeds
+          setEmpresas(empresas.filter((empresa) => empresa.idEmpresa !== id));
+          // You might want to show a success message here
+          alert("Empresa eliminada correctamente");
+        } else {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Error al eliminar la empresa");
         }
-      } else if (type === "practica") {
-        setPracticas(practicas.filter((p) => p.id !== id))
+      } catch (error) {
+        console.error("Error deleting empresa:", error);
+        alert(error.message || "Ocurrió un error al eliminar la empresa");
       }
     }
-  }
+  };
 
   const renderEmpresas = () => (
     <div className="gestion-empresas-content">
@@ -152,9 +146,6 @@ const GestionEmpresas = () => {
             className="search-input"
           />
         </div>
-        <button className="create-btn" onClick={() => openModal("empresa")}>
-          ➕ Nueva Empresa
-        </button>
       </div>
 
       <div className="table-container">
@@ -164,15 +155,13 @@ const GestionEmpresas = () => {
               <th>Empresa</th>
               <th>NIF</th>
               <th>Contacto</th>
-              <th>Sector</th>
               <th>Ofertas</th>
-              <th>Estado</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {filteredEmpresas.map((empresa) => (
-              <tr key={empresa.id}>
+              <tr key={empresa.idEmpresa}>
                 <td>
                   <div className="empresa-info">
                     <strong>{empresa.nombre}</strong>
@@ -186,19 +175,12 @@ const GestionEmpresas = () => {
                     <small>{empresa.telefono}</small>
                   </div>
                 </td>
-                <td>{empresa.sector}</td>
                 <td>
                   <span className="ofertas-badge">{empresa.ofertas}</span>
                 </td>
                 <td>
-                  <span className={`status ${empresa.estado.toLowerCase()}`}>{empresa.estado}</span>
-                </td>
-                <td>
                   <div className="actions">
-                    <button className="edit-btn" onClick={() => openModal("empresa", empresa)}>
-                      ✏️
-                    </button>
-                    <button className="delete-btn" onClick={() => handleDelete("empresa", empresa.id)}>
+                    <button className="delete-btn" onClick={() => handleDelete("empresa", empresa.idEmpresa)}>
                       🗑️
                     </button>
                   </div>
@@ -223,9 +205,6 @@ const GestionEmpresas = () => {
             className="search-input"
           />
         </div>
-        <button className="create-btn" onClick={() => openModal("practica")}>
-          ➕ Nueva Práctica
-        </button>
       </div>
 
       <div className="table-container">
@@ -237,7 +216,6 @@ const GestionEmpresas = () => {
               <th>Modalidad</th>
               <th>Vacantes</th>
               <th>Período</th>
-              <th>Estado</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -264,13 +242,7 @@ const GestionEmpresas = () => {
                   </div>
                 </td>
                 <td>
-                  <span className={`status ${practica.estado.toLowerCase()}`}>{practica.estado}</span>
-                </td>
-                <td>
                   <div className="actions">
-                    <button className="edit-btn" onClick={() => openModal("practica", practica)}>
-                      ✏️
-                    </button>
                     <button className="delete-btn" onClick={() => handleDelete("practica", practica.id)}>
                       🗑️
                     </button>
