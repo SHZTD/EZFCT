@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import "../CSS/Estudiantes.css"
@@ -268,6 +266,14 @@ const Students = () => {
 
     setParticles(newParticles)
   }
+
+  const formatRejectionDate = (student) => {
+    if (student.rejectionDate) {
+      return new Date(student.rejectionDate).toLocaleDateString();
+    }
+    
+    return student.time;
+  };
 
   // Create particle explosion effect
   const createExplosionEffect = (x, y, color) => {
@@ -569,10 +575,16 @@ const Students = () => {
               <div className="stud-modal-body">
                 <div className="stud-modal-section">
                   <h3 className="stud-modal-section-title">Students in Internship</h3>
-                  {assignedStudents.filter((student) => student.offerId === selectedOffer.idPractica).length > 0 ? (
+                  {assignedStudents.filter(student => 
+                    student.offerId === selectedOffer.idPractica && 
+                    student.status === "ACEPTADA"
+                  ).length > 0 ? (
                     <div className="stud-modal-students-grid">
                       {assignedStudents
-                        .filter((student) => student.offerId === selectedOffer.idPractica)
+                        .filter(student => 
+                          student.offerId === selectedOffer.idPractica && 
+                          student.status === "ACEPTADA"
+                        )
                         .map((student) => (
                           <div
                             key={student.postulacionId}
@@ -582,7 +594,7 @@ const Students = () => {
                             <div className="stud-student-avatar">{getUserIcon(student.postulacionId)}</div>
                             <div className="stud-student-info">
                               <h3>{student.name}</h3>
-                              <p>{student.time}</p>
+                              <p>Assigned on: {student.time}</p>
                             </div>
                             <div className="stud-student-status stud-assigned">Assigned</div>
                           </div>
@@ -596,85 +608,72 @@ const Students = () => {
                 </div>
 
                 <div className="stud-modal-section">
-                  <h3 className="stud-modal-section-title">Applicants</h3>
-                  {applicantStudents.length > 0 ? (
-                    <div className="stud-modal-students-grid">
-                      {applicantStudents.map((student) => (
-                        <div
-                          key={student.postulacionId}
-                          className="stud-modal-student-card"
-                          onClick={() => selectStudent(student)}
-                        >
-                          <div className="stud-student-avatar">{getUserIcon(student.postulacionId)}</div>
-                          <div className="stud-student-info">
-                            <h3>{student.name}</h3>
-                            <p>Applied: {student.time}</p>
-                            <div className="stud-student-details">
-                              <span>CV: {student.cvFileName || "Not provided"}</span>
-                              <span>Motivation: {student.motivacion?.substring(0, 50)}...</span>
+                    <h3 className="stud-modal-section-title">Applicants</h3>
+                    {applicantStudents.filter(student => 
+                      student.offerId === selectedOffer.idPractica && 
+                      student.status !== "ACEPTADA"
+                    ).length > 0 ? (
+                      <div className="stud-modal-students-grid">
+                        {applicantStudents
+                          .filter(student => 
+                            student.offerId === selectedOffer.idPractica && 
+                            student.status !== "ACEPTADA"
+                          )
+                          .map((student) => (
+                            <div
+                              key={student.postulacionId}
+                              className={`stud-modal-student-card ${
+                                student.status === "RECHAZADA" ? "stud-rejected-card" : ""
+                              }`}
+                              onClick={() => student.status !== "RECHAZADA" && selectStudent(student)}
+                            >
+                              <div className="stud-student-avatar">{getUserIcon(student.postulacionId)}</div>
+                              <div className="stud-student-info">
+                                <h3>{student.name}</h3>
+                                <p>Applied: {student.time}</p>
+                                {student.status === "RECHAZADA" && (
+                                  <p className="stud-rejection-date">Rejected on: {formatRejectionDate(student)}</p>
+                                )}
+                              </div>
+                              
+                              {/* Status Badge */}
+                              <div className={`stud-student-status ${
+                                student.status === "RECHAZADA" ? "stud-rejected" : "stud-pending"
+                              }`}>
+                                {student.status === "RECHAZADA" ? "Rejected" : "Pending"}
+                              </div>
+
+                              {/* Action Buttons - Only show for pending applications */}
+                              {student.status !== "RECHAZADA" && (
+                                <div className="stud-student-actions">
+                                  <button
+                                    className="stud-action-button stud-accept"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleAcceptApplicant(student.postulacionId);
+                                    }}
+                                  >
+                                    Accept
+                                  </button>
+                                  <button
+                                    className="stud-action-button stud-reject"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleRejectApplicant(student.postulacionId);
+                                    }}
+                                  >
+                                    Reject
+                                  </button>
+                                </div>
+                              )}
                             </div>
-                          </div>
-                          <div
-                            className="stud-student-actions"
-                            style={{
-                              display: "flex",
-                              gap: "8px",
-                              marginTop: "8px",
-                              justifyContent: "flex-end",
-                            }}
-                          >
-                            <button
-                              className={`stud-action-button stud-accept ${student.status === "accepted" ? "stud-disabled" : ""}`}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                handleAcceptApplicant(student.postulacionId)
-                              }}
-                              disabled={student.status === "accepted"}
-                              style={{
-                                padding: "8px 16px",
-                                borderRadius: "6px",
-                                backgroundColor: student.status === "accepted" ? "#9ca3af" : "#10b981",
-                                color: "white",
-                                fontWeight: "600",
-                                marginRight: "8px",
-                                border: "none",
-                                cursor: student.status === "accepted" ? "not-allowed" : "pointer",
-                                fontSize: "14px",
-                                transition: "all 0.2s ease",
-                              }}
-                            >
-                              {student.status === "accepted" ? "Accepted" : "Accept"}
-                            </button>
-                            <button
-                              className={`stud-action-button stud-reject ${student.status === "rejected" ? "stud-disabled" : ""}`}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                handleRejectApplicant(student.postulacionId)
-                              }}
-                              disabled={student.status === "rejected"}
-                              style={{
-                                padding: "8px 16px",
-                                borderRadius: "6px",
-                                backgroundColor: student.status === "rejected" ? "#9ca3af" : "#ef4444",
-                                color: "white",
-                                fontWeight: "600",
-                                border: "none",
-                                cursor: student.status === "rejected" ? "not-allowed" : "pointer",
-                                fontSize: "14px",
-                                transition: "all 0.2s ease",
-                              }}
-                            >
-                              {student.status === "rejected" ? "Rejected" : "Reject"}
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="stud-no-students">
-                      <p>No applicants for this internship yet</p>
-                    </div>
-                  )}
+                          ))}
+                      </div>
+                    ) : (
+                      <div className="stud-no-students">
+                        <p>No applicants for this internship yet</p>
+                      </div>
+                    )}
                 </div>
               </div>
 
