@@ -77,7 +77,6 @@ const Students = () => {
           id: applicant.idEstudiante,
           name: `${applicant.nombre} ${applicant.apellido}`,
           time: new Date(applicant.fechaPostulacion).toLocaleDateString(),
-          avatar: applicant.foto || "/usuario1.jpg",
           offerId: applicant.idPractica,
           status: applicant.estado || "pending",
           cvFileName: applicant.cvFileName,
@@ -150,6 +149,8 @@ const Students = () => {
     } catch (err) {
       setError(err.message)
     }
+
+    console.log(postulacionId)
   }
 
   // Handle rejecting an applicant
@@ -197,7 +198,6 @@ const Students = () => {
           id: student.idEstudiante,
           name: `${student.nombre} ${student.apellido}`,
           time: new Date(student.fechaAsignacion).toLocaleDateString(),
-          avatar: student.foto || "/usuario1.jpg",
           offerId: student.idPractica,
           postulacionId: student.idPostulacion,
         })),
