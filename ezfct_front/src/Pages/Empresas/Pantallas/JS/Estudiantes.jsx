@@ -456,9 +456,6 @@ const Students = () => {
                           <div className="stud-offer-header">
                             <h3 className="stud-offer-title">{offer.titulo}</h3>
                             <div className="stud-offer-badges">
-                              <span className={`stud-status-badge stud-${offer.estado?.toLowerCase()}`}>
-                                {offer.estado === "ACTIVA" ? "Active" : "Inactive"}
-                              </span>
                             </div>
                           </div>
 
@@ -567,9 +564,6 @@ const Students = () => {
 
               <div className="stud-modal-header">
                 <h2 className="stud-modal-title">{selectedOffer.titulo}</h2>
-                <span className={`stud-status-badge stud-${selectedOffer.estado?.toLowerCase()}`}>
-                  {selectedOffer.estado === "ACTIVA" ? "Active" : "Inactive"}
-                </span>
               </div>
 
               <div className="stud-modal-body">
