@@ -81,7 +81,7 @@ const Students = () => {
           status: applicant.estado || "pending",
           cvFileName: applicant.cvFileName,
           motivacion: applicant.motivacion,
-          postulacionId: applicant.idPostulacion,
+          postulacionId: applicant.postulacionId,
         })),
       )
     } catch (err) {

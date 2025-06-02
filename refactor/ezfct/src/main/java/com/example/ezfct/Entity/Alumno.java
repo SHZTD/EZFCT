@@ -1,6 +1,7 @@
 package com.example.ezfct.Entity;
 import com.example.ezfct.Model.Enums.EstadoPractica;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class Alumno {
     private String portfolio;
 
     @OneToMany(mappedBy = "alumno", cascade = CascadeType.ALL)
+    @JsonManagedReference("alumno-diario")
     private List<Diario> diarios;
 
     public int getIdAlumno() {

@@ -1,4 +1,5 @@
 package com.example.ezfct.Entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.Date;
 
@@ -8,13 +9,16 @@ public class Diario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idDiario;
-    
+
+    // ──> This back-reference must match “practica-diario”
     @ManyToOne
     @JoinColumn(name = "id_practica", nullable = false)
+    @JsonBackReference("practica-diario")
     private Practicas practica;
 
     @ManyToOne
     @JoinColumn(name = "id_alumno", nullable = false)
+    @JsonBackReference("alumno-diario")
     private Alumno alumno;
 
     @Lob private String resumen;

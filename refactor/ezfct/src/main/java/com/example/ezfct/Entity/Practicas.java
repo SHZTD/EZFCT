@@ -1,6 +1,7 @@
 package com.example.ezfct.Entity;
 import com.example.ezfct.Model.Enums.Modalidad;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,14 +16,15 @@ public class Practicas {
 
     @ManyToOne
     @JoinColumn(name = "id_empresa", nullable = false)
+    // (unchanged; this is already its own pair with Empresa.practicas)
     @JsonBackReference
     private Empresa empresa;
 
     private String titulo;
     private String descripcion;
     private String requisitos;
-    private Date fechaInicio;
-    private Date fechaFin;
+    private java.util.Date fechaInicio;
+    private java.util.Date fechaFin;
     private int vacantes;
     private int vecesPostulada;
 
@@ -31,10 +33,11 @@ public class Practicas {
     private Modalidad modalidad;
 
     @OneToMany(mappedBy = "practica", cascade = CascadeType.ALL)
-    private List<Postulacion> postulaciones;
+    @JsonManagedReference("practica-diario")
+    private List<Diario> diarios;
 
     @OneToMany(mappedBy = "practica", cascade = CascadeType.ALL)
-    private List<Diario> diarios;
+    private List<Postulacion> postulaciones;
 
     public int getIdPractica() {
         return idPractica;
