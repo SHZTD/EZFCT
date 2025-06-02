@@ -44,7 +44,7 @@ const InfoEstudiante = () => {
   // Datos de ejemplo para estudiantes (en una aplicación real, esto vendría de una API)
 
   // Función para obtener datos del estudiante desde el backend
-  const fetchStudentData = async (studentId) => {
+  const fetchStudentData = async (studentId) => {              
     setIsLoading(true)
     setError(null)
     try {
