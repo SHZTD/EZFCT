@@ -914,23 +914,6 @@ const fetchProfileData = async () => {
                         }
                       />
                     </div>
-                    <div className="oa-form-group">
-                      <label htmlFor="nivelTecnico">Nivel técnico</label>
-                      <select
-                        id="nivelTecnico"
-                        value={profileData.nivelTecnico}
-                        onChange={(e) =>
-                          setProfileData({
-                            ...profileData,
-                            nivelTecnico: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="Bajo">Bajo</option>
-                        <option value="Medio">Medio</option>
-                        <option value="Alto">Alto</option>
-                      </select>
-                    </div>
                   </div>
                 </div>
               </div>

@@ -441,22 +441,6 @@ const RegistroProfesor = ({ onRegister = () => {}, onBack = () => {}, logoSrc })
           </div>
         </form>
 
-        {/* Mensaje de respuesta */}
-        {respuesta && (
-          <div
-            className={`profesor-respuesta ${respuesta.tipo} ${loaded ? "loaded" : ""}`}
-            style={{ opacity: 1, transform: "translateY(0)" }}
-          >
-            {respuesta.tipo === "success" ? (
-              <>
-                <p style={{ color: "green" }}>Profesor registrado con éxito!</p>
-                <pre>{JSON.stringify(respuesta.data, null, 2)}</pre>
-              </>
-            ) : (
-              <p style={{ color: "red" }}>Error: {respuesta.message}</p>
-            )}
-          </div>
-        )}
 
         {/* Pie de página */}
         <div className="profesor-footer">

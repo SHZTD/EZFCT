@@ -5,6 +5,11 @@
   padding: 0;
 }
 
+html, body {
+  overflow-x: hidden; /* Prevenir scroll horizontal */
+  height: 100%;
+}
+
 .oferta-detalle-page {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -14,19 +19,20 @@
   justify-content: center;
   padding: 20px;
   position: relative;
-  overflow: auto;
+  overflow-x: hidden; /* Prevenir scroll horizontal */
   perspective: 1000px;
 }
 
-/* Partículas de fondo */
+/* Partículas de fondo - Asegurar que no causen scroll */
 .particles-container {
-  position: fixed;
+  position: fixed !important;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   z-index: 0;
   pointer-events: none;
+  overflow: hidden !important; /* Importante: ocultar cualquier overflow */
 }
 
 .particle {
@@ -34,6 +40,7 @@
   border-radius: 50%;
   pointer-events: none;
   transition: opacity 0.5s ease;
+  will-change: transform; /* Optimización para animaciones */
 }
 
 /* Pantalla de carga */

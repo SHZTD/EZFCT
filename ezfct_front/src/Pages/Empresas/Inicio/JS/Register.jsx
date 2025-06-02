@@ -399,7 +399,7 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? "🔒" : "👁️"}
-                  </button>
+                  </button>9
                 </div>
               </div>
 
@@ -426,20 +426,7 @@ const RegistroEmpresa = ({ onRegister = () => {}, onBack = () => {}, logoSrc }) 
           </div>
         </form>
 
-        {/* Mensaje de respuesta */}
-        {respuesta && (
-          <div className={`empresa-respuesta ${respuesta.tipo} empresa-loaded`} style={{ opacity: 1 }}>
-            {respuesta.tipo === "success" ? (
-              <>
-                <p style={{ color: "green" }}>Empresa registrada con éxito!</p>
-                <pre>{JSON.stringify(respuesta.data, null, 2)}</pre>
-              </>
-            ) : (
-              <p style={{ color: "red" }}>Error: {respuesta.message}</p>
-            )}
-          </div>
-        )}
-
+        
         {/* Pie de página */}
         <div className="empresa-footer">
           <p className="empresa-loaded" style={{ opacity: 1 }}>
