@@ -177,6 +177,37 @@ body {
   margin-bottom: 20px;
 }
 
+
+/* ===================================
+   BOTONES LOGIN Y REGISTER
+=================================== */
+.btn--login-empresa {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.btn--login-empresa.btn--hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+/* Botón Register - Verde */
+.btn--register-empresa {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.btn--register-empresa.btn--hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
 /* === Animaciones === */
 @keyframes float {
   0%, 100% {
