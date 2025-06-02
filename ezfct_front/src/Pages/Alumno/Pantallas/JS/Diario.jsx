@@ -14,6 +14,7 @@ import {
   ChevronDown,
 } from "lucide-react"
 import "../CSS/Diario.css"
+import { API_URL } from "../../../../constants.js"
 
 const DiarioAlumno = () => {
   const [loaded, setLoaded] = useState(false)
@@ -39,35 +40,42 @@ const DiarioAlumno = () => {
     ubicacion: "Barcelona",
     nivelTecnico: "Alto",
   })
+  const [practicaId, setPracticaId] = useState(null) // Add state for practica ID
+  const [alumnoId, setAlumnoId] = useState(null) // Add state for alumno ID
 
   const modalRef = useRef(null)
   const textareaRef = useRef(null)
   const profileMenuRef = useRef(null)
   const profileButtonRef = useRef(null)
   const navigate = useNavigate()
-
+  
   // Efecto para la animación de entrada y partículas
   useEffect(() => {
-    // Marcar como cargado para iniciar animaciones
-    setTimeout(() => setLoaded(true), 100)
-
-    // Crear partículas iniciales
-    createInitialParticles()
-
-    // Cargar entradas del diario desde localStorage
-    const savedEntries = localStorage.getItem("diaryEntries")
-    if (savedEntries) {
-      setDiaryEntries(JSON.parse(savedEntries))
+const token = localStorage.getItem("token")
+    if (!token) {
+      navigate("/login")
+      return
     }
 
-    // Seguimiento del ratón
+    // Mark as loaded for animations
+    setTimeout(() => setLoaded(true), 100)
+
+    // Create initial particles
+    createInitialParticles()
+
+    // Load user data (assuming you have an endpoint for this)
+    fetchUserData(token)
+    
+    // Load diary entries
+    fetchDiaryEntries(token)
+
+    // Mouse tracking and other effects...
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.pageX, y: e.pageY })
     }
 
     window.addEventListener("mousemove", handleMouseMove)
 
-    // Intervalo para animar partículas
     const interval = setInterval(() => {
       setParticles((prevParticles) =>
         prevParticles.map((particle) => ({
@@ -78,12 +86,10 @@ const DiarioAlumno = () => {
       )
     }, 50)
 
-    // Ajustar partículas al cambiar el tamaño de la ventana
     const handleResize = () => {
       createInitialParticles()
     }
 
-    // Cerrar modal al hacer clic fuera
     const handleClickOutside = (e) => {
       if (modalRef.current && !modalRef.current.contains(e.target) && showModal) {
         closeModal()
@@ -93,15 +99,7 @@ const DiarioAlumno = () => {
     window.addEventListener("resize", handleResize)
     document.addEventListener("mousedown", handleClickOutside)
 
-    // Cargar datos del perfil desde localStorage
-    const savedProfile = localStorage.getItem("profileData")
-    if (savedProfile) {
-      setProfileData(JSON.parse(savedProfile))
-    }
-
-    // Cerrar menú de perfil al hacer clic fuera
     const handleClickOutsideProfileMenu = (e) => {
-      // Verificar que el clic no sea en el botón de perfil ni en el menú
       if (
         profileMenuRef.current &&
         !profileMenuRef.current.contains(e.target) &&
@@ -115,7 +113,6 @@ const DiarioAlumno = () => {
 
     document.addEventListener("mousedown", handleClickOutsideProfileMenu)
 
-    // Limpieza al desmontar
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("resize", handleResize)
@@ -124,6 +121,70 @@ const DiarioAlumno = () => {
       clearInterval(interval)
     }
   }, [showModal, showProfileMenu])
+  
+  /*******************/
+    const fetchUserData = async (token) => {
+    try {
+      const response = await fetch(`${API_URL}/api/alumno`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
+      
+      if (!response.ok) throw new Error("Failed to fetch user data")
+      
+      const userData = await response.json()
+      setProfileData({
+        nombre: userData.nombre,
+        apellido: userData.apellido,
+        email: userData.email,
+        escuela: userData.escuela || "Ins Puig Castellar",
+        edad: userData.edad || 17,
+        competencias: userData.competencias || "Problem Solving, Critical Thinking",
+        ubicacion: userData.ubicacion || "Barcelona",
+        nivelTecnico: userData.nivelTecnico || "Alto",
+      })
+      
+      if (userData.alumnoId) setAlumnoId(userData.alumnoId)
+      if (userData.practicaId) setPracticaId(userData.practicaId)
+    } catch (error) {
+      console.error("Error fetching user data:", error)
+    }
+  }
+
+  const fetchDiaryEntries = async (token) => {
+      try {
+        const response = await fetch(`${API_URL}/api/diario/diarios`, {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) throw new Error("Failed to fetch diary entries");
+        
+        const entries = await response.json();
+        
+        // Transform the array of entries into an object keyed by date
+        const entriesByDate = entries.reduce((acc, entry) => {
+          const date = new Date(entry.fecha);
+          const dateKey = formatDateKey(
+            date.getDate(),
+            date.getMonth(),
+            date.getFullYear()
+          );
+          acc[dateKey] = {
+            id: entry.idDiario,
+            resumen: entry.resumen,
+            practicaId: entry.idPractica
+          };
+          return acc;
+        }, {});
+        
+        setDiaryEntries(entriesByDate);
+      } catch (error) {
+        console.error("Error fetching diary entries:", error);
+      }
+  };
 
   // Función para crear partículas iniciales
   const createInitialParticles = () => {
@@ -256,19 +317,21 @@ const DiarioAlumno = () => {
 
   // Función para manejar el clic en un día
   const handleDayClick = (day, month, year) => {
-    const dateKey = formatDateKey(day, month, year)
-    setSelectedDate({ day, month, year, dateKey })
-    setCurrentEntry(diaryEntries[dateKey] || "")
-    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
-    setShowModal(true)
+      const dateKey = formatDateKey(day, month, year);
+      setSelectedDate({ day, month, year, dateKey });
+      
+      // Set current entry from diaryEntries or empty string
+      setCurrentEntry(diaryEntries[dateKey]?.resumen || "");
+      
+      createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981");
+      setShowModal(true);
 
-    // Enfocar el textarea después de abrir el modal
-    setTimeout(() => {
-      if (textareaRef.current) {
-        textareaRef.current.focus()
-      }
-    }, 300)
-  }
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.focus();
+        }
+      }, 300);
+  };
 
   // Función para cambiar de mes
   const changeMonth = (increment) => {
@@ -297,29 +360,56 @@ const DiarioAlumno = () => {
   }
 
   // Función para guardar la entrada del diario
-  const saveDiaryEntry = () => {
-    if (!selectedDate) return
+  const saveDiaryEntry = async () => {
+    if (!selectedDate || !currentEntry.trim()) return;
 
-    setIsSaving(true)
-    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981")
+    setIsSaving(true);
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981");
 
-    // Simular guardado
-    setTimeout(() => {
-      const newEntries = {
-        ...diaryEntries,
-        [selectedDate.dateKey]: currentEntry,
+    try {
+      // Format the date in ISO format (YYYY-MM-DD)
+      const formattedDate = `${selectedDate.year}-${String(selectedDate.month + 1).padStart(2, '0')}-${String(selectedDate.day).padStart(2, '0')}T00:00:00.000+00:00`;
+      
+      // Get the token from localStorage
+      const token = localStorage.getItem("token");
+      
+      // Prepare the request body
+      const requestBody = {
+        practica: { idPractica: practicaId }, 
+        alumno: { idAlumno: alumnoId },
+        resumen: currentEntry,
+        fecha: formattedDate
+      };
+
+      const response = await fetch(`${API_URL}/api/diario`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save diary entry");
       }
 
-      setDiaryEntries(newEntries)
+      const savedEntry = await response.json();
 
-      // Guardar en localStorage
-      localStorage.setItem("diaryEntries", JSON.stringify(newEntries))
+      // Update local state with the new entry
+      setDiaryEntries(prev => ({
+        ...prev,
+        [selectedDate.dateKey]: currentEntry
+      }));
 
-      setIsSaving(false)
-      closeModal()
-    }, 800)
-  }
-
+      setIsSaving(false);
+      closeModal();
+    } catch (error) {
+      console.error("Error saving diary entry:", error);
+      setIsSaving(false);
+      // You might want to show an error message to the user here
+    }
+  };
   // Función para guardar los datos del perfil
   const saveProfileData = () => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6")
@@ -352,9 +442,9 @@ const DiarioAlumno = () => {
 
   // Verificar si un día tiene entrada en el diario
   const hasEntry = (day, month, year) => {
-    const dateKey = formatDateKey(day, month, year)
-    return !!diaryEntries[dateKey]
-  }
+      const dateKey = formatDateKey(day, month, year);
+      return diaryEntries[dateKey] && diaryEntries[dateKey].resumen;
+  };
 
   // Verificar si un día es hoy
   const isToday = (day, month, year) => {

@@ -11,7 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/diario")
@@ -42,8 +45,35 @@ public class DiarioController {
     // obtener todos los diarios
     @GetMapping("/diarios")
     public ResponseEntity<?> getMisDiarios(Authentication auth) {
-        String email = auth.getName();
-        return ResponseEntity.ok(email);
+        try {
+            String email = auth.getName();
+
+            // Find the alumno by email (assuming email is in Usuario which is linked to Alumno)
+            Alumno alumno = alumnoRepository.findByUsuarioEmail(email);
+
+            if (alumno == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            List<Diario> diarios = diarioRepository.findByAlumnoUsuarioEmail(email);
+
+            // internal dto
+            List<Map<String, Object>> response = diarios.stream()
+                    .map(d -> {
+                        Map<String, Object> entry = new HashMap<>();
+                        entry.put("idDiario", d.getIdDiario());
+                        entry.put("resumen", d.getResumen());
+                        entry.put("fecha", d.getFecha());
+                        entry.put("idPractica", d.getPractica().getIdPractica());
+                        return entry;
+                    })
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Error al obtener los diarios.");
+        }
     }
 
     // crear el diario
