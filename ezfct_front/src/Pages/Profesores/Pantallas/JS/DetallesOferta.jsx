@@ -5,67 +5,99 @@ import { useNavigate, useParams } from "react-router-dom"
 import "../CSS/DetallesOferta.css"
 import { ArrowLeft, Calendar, MapPin, Users, Building, GraduationCap, Clock, Mail, Phone } from "lucide-react"
 import ButtonComp from "../../../../Components/JSX/ButtonComp"
+import { API_URL } from "../../../../constants"
 
 const OfertaDetalleProfesor = () => {
   const [loaded, setLoaded] = useState(false)
   const [particles, setParticles] = useState([])
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [oferta, setOferta] = useState(null)
+  const [error, setError] = useState(null)
   const navigate = useNavigate()
   const { id } = useParams()
 
-  // Datos simulados de ofertas
-  const ofertas = [
-    {
-      id: 1,
-      title: "Programmer Database",
-      subtitle: "For students DAM",
-      category: "programming",
-      company: "TechSolutions",
-      companyLogo: "https://via.placeholder.com/100",
-      companyDescription:
-        "TechSolutions is a leading technology company specializing in database solutions and cloud infrastructure.",
-      location: "Madrid",
-      address: "Calle Gran Vía 28, 28013 Madrid",
-      date: "2025-04-15",
-      startDate: "2025-05-01",
-      endDate: "2025-07-30",
-      students: 3,
-      description:
-        "We are looking for a talented database programmer to join our team for a 3-month internship. The candidate will work on designing, implementing, and optimizing database solutions for our enterprise clients. This is a great opportunity to gain hands-on experience in a professional environment.",
-      requirements: [
-        "Knowledge of SQL and relational databases",
-        "Basic understanding of database design principles",
-        "Familiarity with at least one programming language (Java, Python, etc.)",
-        "Good problem-solving skills",
-        "Ability to work in a team environment",
-      ],
-      contactPerson: "María García",
-      contactEmail: "m.garcia@techsolutions.example",
-      contactPhone: "+34 912 345 678",
+  // Función para formatear la fecha
+  const formatDate = (date) => {
+    if (!date) return ""
+    const d = new Date(date)
+    return d.toISOString().split('T')[0]
+  }
+
+  const calculateDuration = (startDateStr, endDateStr) => {
+    try {
+      const startDate = new Date(startDateStr);
+      const endDate = new Date(endDateStr);
+      
+      if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+        return "Invalid dates";
+      }
+  
+      const diffMs = endDate - startDate;
+      
+      const months = Math.round(diffMs / (1000 * 60 * 60 * 24 * 30));
+      
+      if (months < 1) {
+        const weeks = Math.round(diffMs / (1000 * 60 * 60 * 24 * 7));
+        return `${weeks} week${weeks !== 1 ? 's' : ''}`;
+      }
+      
+      return `${months} month${months !== 1 ? 's' : ''}`;
+    } catch (error) {
+      console.error("Error calculating duration:", error);
+      return "Error calculating";
     }
-  ]
+  };
 
-  // Efecto para la animación de entrada y partículas
+  // Efecto para cargar los datos de la oferta
   useEffect(() => {
-    // Buscar la oferta por ID
-    const ofertaEncontrada = ofertas.find((o) => o.id === Number.parseInt(id))
-    setOferta(ofertaEncontrada)
+    const fetchOferta = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/practicas/${id}`)
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        const data = await response.json()
+        
+        // Mapear los datos del backend al formato esperado por el componente
+        const mappedOferta = {
+          id: data.idPractica,
+          title: data.titulo,
+          subtitle: "Internship Opportunity", // Puedes ajustar esto según necesites
+          category: data.modalidad, // Asumiendo que modalidad es un string
+          company: data.empresa?.nombre || "Company Name", // Asegúrate de que empresa.nombre existe
+          companyLogo: "https://via.placeholder.com/100", // Puedes añadir esto a tu modelo si lo necesitas
+          companyDescription: data.empresa?.descripcion || "Company description", // Añade este campo a tu modelo Empresa si es necesario
+          location: data.empresa?.ciudad || "City", // Añade ciudad a tu modelo Empresa
+          address: data.empresa?.direccion || "Address", // Añade dirección a tu modelo Empresa
+          date: formatDate(new Date()), // Fecha de publicación (puedes añadir este campo a tu modelo)
+          startDate: formatDate(data.fechaInicio),
+          endDate: formatDate(data.fechaFin),
+          students: data.vacantes,
+          description: data.descripcion,
+          requirements: data.requisitos ? data.requisitos.split('\n') : [], // Asume que requisitos es un string con saltos de línea
+          contactPerson: data.empresa?.contactoNombre || "Contact Person", // Añade estos campos a Empresa
+          contactEmail: data.empresa?.contactoEmail || "contact@example.com",
+          contactPhone: data.empresa?.contactoTelefono || "+34 000 000 000",
+        }
+        
+        setOferta(mappedOferta)
+        setTimeout(() => setLoaded(true), 100)
+      } catch (err) {
+        setError(err.message)
+        console.error("Error fetching offer:", err)
+      }
+    }
 
-    // Marcar como cargado para iniciar animaciones
-    setTimeout(() => setLoaded(true), 100)
-
-    // Crear partículas iniciales
+    fetchOferta()
     createInitialParticles()
 
-    // Seguimiento del ratón
+    // Resto del código para las partículas y seguimiento del ratón
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.pageX, y: e.pageY })
     }
 
     window.addEventListener("mousemove", handleMouseMove)
 
-    // Intervalo para animar partículas
     const interval = setInterval(() => {
       setParticles((prevParticles) =>
         prevParticles.map((particle) => ({
@@ -76,14 +108,12 @@ const OfertaDetalleProfesor = () => {
       )
     }, 50)
 
-    // Ajustar partículas al cambiar el tamaño de la ventana
     const handleResize = () => {
       createInitialParticles()
     }
 
     window.addEventListener("resize", handleResize)
 
-    // Limpieza al desmontar
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("resize", handleResize)
@@ -91,7 +121,7 @@ const OfertaDetalleProfesor = () => {
     }
   }, [id])
 
-  // Función para crear partículas iniciales
+  // Resto del código permanece igual...
   const createInitialParticles = () => {
     const newParticles = Array.from({ length: 50 }, () => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -107,7 +137,6 @@ const OfertaDetalleProfesor = () => {
     setParticles(newParticles)
   }
 
-  // Función para crear efecto de explosión de partículas
   const createExplosionEffect = (x, y, color) => {
     const explosionParticles = Array.from({ length: 30 }, () => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -122,7 +151,6 @@ const OfertaDetalleProfesor = () => {
 
     setParticles((prev) => [...prev, ...explosionParticles])
 
-    // Eliminar partículas de explosión después de un tiempo
     setTimeout(() => {
       setParticles((prev) => prev.slice(0, 50))
     }, 1000)
@@ -138,6 +166,17 @@ const OfertaDetalleProfesor = () => {
     setTimeout(() => navigate("/profesores/alumnos"), 300)
   }
 
+  if (error) {
+    return (
+      <div className="oferta-detalle-page">
+        <div className="error-container">
+          <p>Error loading offer: {error}</p>
+          <button onClick={() => window.location.reload()}>Try Again</button>
+        </div>
+      </div>
+    )
+  }
+
   if (!oferta) {
     return (
       <div className="oferta-detalle-page">
@@ -149,6 +188,7 @@ const OfertaDetalleProfesor = () => {
     )
   }
 
+  // El resto del return permanece igual...
   return (
     <div className="oferta-detalle-page">
       {/* Partículas de fondo */}
@@ -226,8 +266,7 @@ const OfertaDetalleProfesor = () => {
               </ul>
             </section>
 
-         
- {/* Información de la empresa */}
+            {/* Información de la empresa */}
             <div className={`sidebar-card company-card ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.2s" }}>
               <h3 className="sidebar-title">Company Information</h3>
               <div className="company-info">
@@ -243,7 +282,7 @@ const OfertaDetalleProfesor = () => {
 
           {/* Sidebar con información adicional */}
           <div className="oferta-sidebar">
-              {/* Sección de periodo de prácticas */}
+            {/* Sección de periodo de prácticas */}
             <section className={`oferta-section ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.3s" }}>
               <h2 className="section-title">Internship Period</h2>
               <div className="period-info">
@@ -266,15 +305,18 @@ const OfertaDetalleProfesor = () => {
                   <div>
                     <span className="period-label">Duration</span>
                     <span className="period-value">
-                      {Math.round((new Date(oferta.endDate) - new Date(oferta.startDate)) / (1000 * 60 * 60 * 24 * 30))}{" "}
-                      months
+                      {oferta.startDate && oferta.endDate ? (
+                        calculateDuration(oferta.startDate, oferta.endDate)
+                      ) : (
+                        "Not specified"
+                      )}
                     </span>
                   </div>
                 </div>
               </div>
             </section>
 
-  {/* Sección de información de contacto */}
+            {/* Sección de información de contacto */}
             <section className={`oferta-section ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.4s" }}>
               <h2 className="section-title">Contact Information</h2>
               <div className="contact-info">
