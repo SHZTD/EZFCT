@@ -367,20 +367,34 @@ const token = localStorage.getItem("token")
     createExplosionEffect(mousePosition.x, mousePosition.y, "#10b981");
 
     try {
-      // Format the date in ISO format (YYYY-MM-DD)
+      // 1. Get profile data from localStorage
+      const savedProfile = localStorage.getItem("profileData");
+      if (!savedProfile) {
+        throw new Error("No profile data found in localStorage");
+      }
+      
+      const profileData = JSON.parse(savedProfile);
+      
+      // 2. Verify we have the required IDs
+      if (!profileData.idPractica || !profileData.idAlumno) {
+        throw new Error("Missing practice or student ID in profile data");
+      }
+
+      // 3. Format the date in ISO format (YYYY-MM-DD)
       const formattedDate = `${selectedDate.year}-${String(selectedDate.month + 1).padStart(2, '0')}-${String(selectedDate.day).padStart(2, '0')}T00:00:00.000+00:00`;
       
-      // Get the token from localStorage
+      // 4. Get the token from localStorage
       const token = localStorage.getItem("token");
       
-      // Prepare the request body
+      // 5. Prepare the request body using IDs from localStorage
       const requestBody = {
-        practica: { idPractica: practicaId }, 
-        alumno: { idAlumno: alumnoId },
+        practica: { idPractica: profileData.idPractica }, 
+        alumno: { idAlumno: profileData.idAlumno },
         resumen: currentEntry,
         fecha: formattedDate
       };
 
+      // 6. Make the API call
       const response = await fetch(`${API_URL}/api/diario`, {
         method: "POST",
         headers: {
@@ -396,7 +410,7 @@ const token = localStorage.getItem("token")
 
       const savedEntry = await response.json();
 
-      // Update local state with the new entry
+      // 7. Update local state with the new entry
       setDiaryEntries(prev => ({
         ...prev,
         [selectedDate.dateKey]: currentEntry
@@ -407,7 +421,7 @@ const token = localStorage.getItem("token")
     } catch (error) {
       console.error("Error saving diary entry:", error);
       setIsSaving(false);
-      // You might want to show an error message to the user here
+      // Optionally show an error message to the user
     }
   };
   // Función para guardar los datos del perfil

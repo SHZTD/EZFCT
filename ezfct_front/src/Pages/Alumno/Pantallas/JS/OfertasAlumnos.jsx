@@ -33,17 +33,19 @@ const OfertasAlumnos = () => {
   const [error, setError] = useState(null);
 
   const [profileData, setProfileData] = useState({
-    idAlumno: null, // Make sure to include this
+    idUsuario: null,
+    idAlumno: null,
     nombre: "",
     apellido: "",
     email: "",
     escuela: "",
-    edad: 0,
+    edad: 20,
     competencias: "",
     ubicacion: "",
     nivelTecnico: "",
     habilidades: [],
     preferencias: [],
+    idPractica: null
   });
 
   const [ofertas, setOfertas] = useState([]);
@@ -149,11 +151,11 @@ const fetchAppliedOffers = async () => {
     }
   };
 
-const fetchProfileData = async () => {
+  const fetchProfileData = async () => {
     try {
       const token = localStorage.getItem("token");
       
-      // 1. Get user data first
+      // 1. Get user data
       const userResponse = await fetch(`${API_URL}/api/usuarios/current`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -161,7 +163,7 @@ const fetchProfileData = async () => {
       if (!userResponse.ok) throw new Error('Failed to fetch user data');
       const userData = await userResponse.json();
 
-      // 2. Get student data using user ID
+      // 2. Get student data
       const alumnoResponse = await fetch(`${API_URL}/api/alumnos/by-user/${userData.idUsuario}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -169,7 +171,21 @@ const fetchProfileData = async () => {
       if (!alumnoResponse.ok) throw new Error('Failed to fetch student data');
       const alumnoData = await alumnoResponse.json();
 
-      // 3. Set profile data with all required fields
+      // 3. Get all applications for this student
+      const postulacionesResponse = await fetch(
+        `${API_URL}/api/postulaciones/alumno/${alumnoData.idAlumno}`,
+        { headers: { 'Authorization': `Bearer ${token}` } }
+      );
+
+      let idPracticaAceptada = null;
+      if (postulacionesResponse.ok) {
+        const postulaciones = await postulacionesResponse.json();
+        // Find the accepted application
+        const practicaAceptada = postulaciones.find(p => p.estado === "ACEPTADA");
+        idPracticaAceptada = practicaAceptada?.practica?.idPractica || null;
+      }
+
+      // 4. Set complete profile data
       const newProfileData = {
         idUsuario: userData.idUsuario,
         idAlumno: alumnoData.idAlumno,
@@ -184,7 +200,8 @@ const fetchProfileData = async () => {
         habilidades: alumnoData.competencias ? 
           alumnoData.competencias.split(',').map(s => s.trim()) : [],
         preferencias: alumnoData.preferencias ? 
-          alumnoData.preferencias.split(',').map(s => s.trim()) : []
+          alumnoData.preferencias.split(',').map(s => s.trim()) : [],
+        idPractica: idPracticaAceptada
       };
 
       setProfileData(newProfileData);
