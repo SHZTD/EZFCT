@@ -56,8 +56,8 @@ const Inicio = () => {
   };
 
   const actions = [
-    { text: 'Login',    route: '/profesores/login',    icon:'🔑'},
-    { text: 'Register', route: '/profesores/register', icon:'✨'}
+    { text: 'Login',    route: '/profesores/login',    icon:'🔑', className: 'btn--login-profesores'},
+    { text: 'Register', route: '/profesores/register', icon:'✨', className: 'btn--register-profesores'}
   ];
 
   return (
@@ -95,7 +95,7 @@ const Inicio = () => {
             {actions.map((btn,i)=>(
               <ButtonComp
                 key={i}
-                className={`btn--${btn.route}`}
+                className={btn.className}
                 icon={btn.icon}
                 onClick={()=>navigate(btn.route)}
                 transitionDelay={`${1.4 + i*0.1}s`}
