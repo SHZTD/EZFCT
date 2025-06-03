@@ -31,7 +31,7 @@ public class UsuarioController {
     public ResponseEntity<List<UsuarioDTO>> getAllUsuarios() {
         List<Usuario> usuarios = usuarioRepository.findAll();
         List<UsuarioDTO> usuariosDTO = usuarios.stream()
-                .map(u -> new UsuarioDTO(u.getNombre(), u.getApellido(), u.getEmail()))
+                .map(u -> new UsuarioDTO(u.getNombre(), u.getApellido(), u.getEmail(), u.getRol()))
                 .toList();
 
         return ResponseEntity.ok(usuariosDTO);
@@ -46,7 +46,7 @@ public class UsuarioController {
         }
 
         Usuario u = usuarioOpt.get();
-        UsuarioDTO dto = new UsuarioDTO(u.getNombre(), u.getApellido(), u.getEmail());
+        UsuarioDTO dto = new UsuarioDTO(u.getNombre(), u.getApellido(), u.getEmail(), u.getRol());
         return ResponseEntity.ok(dto);
     }
 

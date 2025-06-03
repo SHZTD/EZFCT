@@ -5,12 +5,14 @@ import com.example.ezfct.Model.Enums.EstadoPostulacion;
 import java.util.Date;
 
 public class PracticaDTO {
+    private int idEmpresa;
     private String titulo, descripcion, requisitos, emailContacto, telefono;
     private Date fecha_inicio, fecha_final;
     private EstadoPostulacion estadoPostulacion;
     private int vacantes;
 
-    public PracticaDTO(String titulo, String descripcion, String requisitos, String emailContacto, String telefono, Date fecha_inicio, Date fecha_final, EstadoPostulacion estadoPostulacion, int vacantes) {
+    public PracticaDTO(int idEmpresa, String titulo, String descripcion, String requisitos, String emailContacto, String telefono, Date fecha_inicio, Date fecha_final, EstadoPostulacion estadoPostulacion, int vacantes) {
+        this.idEmpresa = idEmpresa;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.requisitos = requisitos;
@@ -20,6 +22,14 @@ public class PracticaDTO {
         this.fecha_final = fecha_final;
         this.estadoPostulacion = estadoPostulacion;
         this.vacantes = vacantes;
+    }
+
+    public int getIdEmpresa() {
+        return idEmpresa;
+    }
+
+    public void setIdEmpresa(int idEmpresa) {
+        this.idEmpresa = idEmpresa;
     }
 
     public String getTitulo() {

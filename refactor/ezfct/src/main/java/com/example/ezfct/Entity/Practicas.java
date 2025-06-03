@@ -1,4 +1,5 @@
 package com.example.ezfct.Entity;
+import com.example.ezfct.Model.Enums.EstadoPostulacion;
 import com.example.ezfct.Model.Enums.Modalidad;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

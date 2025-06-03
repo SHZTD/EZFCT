@@ -158,4 +158,22 @@ public class EmpresaController {
                     .body("Error al aplicar cambios a la empresa.");
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EmpresaDTO> getEmpresaById(@PathVariable int id) {
+        Empresa empresa = empresaRepository.findById(id).orElse(null);
+        if (empresa == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        EmpresaDTO dto = new EmpresaDTO(
+                empresa.getNIF(),
+                empresa.getNombre(),
+                empresa.getDireccion(),
+                empresa.getEmailContacto(),
+                empresa.getTelefono()
+        );
+
+        return ResponseEntity.ok(dto);
+    }
 }

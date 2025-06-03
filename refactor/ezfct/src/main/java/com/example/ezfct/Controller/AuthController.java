@@ -89,7 +89,8 @@ public class AuthController {
             UsuarioDTO dto = new UsuarioDTO(
                     nuevoUsuario.getNombre(),
                     nuevoUsuario.getApellido(),
-                    nuevoUsuario.getEmail()
+                    nuevoUsuario.getEmail(),
+                    nuevoUsuario.getRol()
             );
 
             return ResponseEntity.ok(dto);

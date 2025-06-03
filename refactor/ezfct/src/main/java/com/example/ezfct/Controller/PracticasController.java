@@ -245,4 +245,22 @@ public class PracticasController {
             return ResponseEntity.internalServerError().body("Error rejecting application");
         }
     }
+
+    @GetMapping("/postulaciones/alumno/{idAlumno}")
+    public ResponseEntity<?> getPostulacionesByAlumnoId(@PathVariable int idAlumno) {
+        try {
+            List<Postulacion> postulaciones = postulacionRepository.findByAlumnoIdAlumno(idAlumno);
+
+            Optional<Postulacion> activePostulacion = postulaciones.stream()
+                    .filter(p -> p.getEstado() == EstadoPostulacion.PENDIENTE)
+                    .findFirst();
+
+            if (activePostulacion.isPresent()) {
+                return ResponseEntity.ok(activePostulacion.get().getIdPostulacion());
+            }
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error fetching student applications");
+        }
+    }
 }
