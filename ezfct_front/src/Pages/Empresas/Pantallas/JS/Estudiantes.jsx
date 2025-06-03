@@ -7,32 +7,32 @@ import usersIcon from "../../../Imagenes/users.png"
 import { API_URL } from "../../../../constants"
 import { User, UserRound, UserCircle } from "lucide-react"
 
-const Students = () => {
+const Estudiantes = () => {
   const navigate = useNavigate()
   const [loaded, setLoaded] = useState(false)
-  const [activeTab, setActiveTab] = useState("students")
+  const [activeTab, setActiveTab] = useState("estudiantes")
   const [particles, setParticles] = useState([])
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // Modal state
+  // Estado del modal
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedOffer, setSelectedOffer] = useState(null)
 
-  // State for offers (fetched from API)
+  // Estado para las ofertas (obtenidas de la API)
   const [offers, setOffers] = useState([])
 
-  // State for assigned students
+  // Estado para estudiantes asignados
   const [assignedStudents, setAssignedStudents] = useState([])
 
-  // State for applicant students
+  // Estado para estudiantes postulados
   const [applicantStudents, setApplicantStudents] = useState([])
 
   const [showUserMenu, setShowUserMenu] = useState(false)
   const userMenuRef = useRef(null)
 
-  // Function to get random user icon based on ID
+  // Función para obtener un icono de usuario aleatorio basado en ID
   const getUserIcon = (id) => {
     const randomNum = id % 3
     switch (randomNum) {
@@ -47,7 +47,7 @@ const Students = () => {
     }
   }
 
-  // Fetch offers from API
+  // Obtener ofertas de la API
   const fetchOffers = async () => {
     setIsLoading(true)
     setError(null)
@@ -59,16 +59,16 @@ const Students = () => {
         },
       })
 
-      if (!response.ok) throw new Error("Failed to fetch offers")
+      if (!response.ok) throw new Error("Error al cargar las ofertas")
 
       const data = await response.json()
       setOffers(data)
 
-      // Fetch applicants for each offer
+      // Obtener postulantes para cada oferta
       const applicantsPromises = data.map((offer) => fetchApplicants(offer.idPractica))
       const applicantsResults = await Promise.all(applicantsPromises)
 
-      // Combine all applicants into one array
+      // Combinar todos los postulantes en un solo array
       const allApplicants = applicantsResults.flat()
       setApplicantStudents(
         allApplicants.map((applicant) => ({
@@ -76,7 +76,7 @@ const Students = () => {
           name: `${applicant.nombre} ${applicant.apellido}`,
           time: new Date(applicant.fechaPostulacion).toLocaleDateString(),
           offerId: applicant.idPractica,
-          status: applicant.estado || "pending",
+          status: applicant.estado || "pendiente",
           cvFileName: applicant.cvFileName,
           motivacion: applicant.motivacion,
           postulacionId: applicant.postulacionId,
@@ -84,13 +84,13 @@ const Students = () => {
       )
     } catch (err) {
       setError(err.message)
-      console.error("Error fetching offers:", err)
+      console.error("Error al obtener ofertas:", err)
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Fetch applicants for a specific offer
+  // Obtener postulantes para una oferta específica
   const fetchApplicants = async (offerId) => {
     try {
       const response = await fetch(`${API_URL}/api/practicas/${offerId}/postulaciones`, {
@@ -100,7 +100,7 @@ const Students = () => {
         },
       })
 
-      if (!response.ok) throw new Error("Failed to fetch applicants")
+      if (!response.ok) throw new Error("Error al cargar postulantes")
 
       const data = await response.json()
 
@@ -109,23 +109,23 @@ const Students = () => {
         estado: postulacion.estado,
         fechaPostulacion: postulacion.fechaPostulacion,
 
-        // Student info (from Usuario via Alumno)
-        nombre: postulacion.nombre || "Unknown",
-        apellido: postulacion.apellido || "Student",
+        // Información del estudiante (de Usuario via Alumno)
+        nombre: postulacion.nombre || "Desconocido",
+        apellido: postulacion.apellido || "Estudiante",
         email: postulacion.email,
 
-        // Student profile (from Alumno)
+        // Perfil del estudiante (de Alumno)
         biografia: postulacion.biografia,
         habilidades: postulacion.habilidades,
         educacion: postulacion.educacion,
 
-        // Offer info
+        // Información de la oferta
         idPractica: offerId,
-        tituloPractica: postulacion.tituloPractica || "Unknown Offer",
+        tituloPractica: postulacion.tituloPractica || "Oferta desconocida",
 
       }))
     } catch (err) {
-      console.error("Error fetching applicants:", err)
+      console.error("Error al obtener postulantes:", err)
       return []
     }
   }
@@ -140,9 +140,9 @@ const Students = () => {
         },
       })
 
-      if (!response.ok) throw new Error("Failed to accept applicant")
+      if (!response.ok) throw new Error("Error al aceptar postulante")
 
-      // Refresh the data
+      // Actualizar los datos
       await fetchOffers()
     } catch (err) {
       setError(err.message)
@@ -151,7 +151,7 @@ const Students = () => {
     console.log(postulacionId)
   }
 
-  // Handle rejecting an applicant
+  // Manejar el rechazo de un postulante
   const handleRejectApplicant = async (postulacionId) => {
     try {
       console.log(postulacionId)
@@ -163,9 +163,9 @@ const Students = () => {
         },
       })
 
-      if (!response.ok) throw new Error("Failed to reject applicant")
+      if (!response.ok) throw new Error("Error al rechazar postulante")
 
-      // Refresh all data
+      // Actualizar todos los datos
       await fetchOffers()
       await fetchStudents()
     } catch (err) {
@@ -178,7 +178,7 @@ const Students = () => {
     navigate("/")
   }
 
-  // Fetch students data (mock data for now)
+  // Obtener datos de estudiantes (datos de prueba por ahora)
   const fetchStudents = async () => {
     try {
       const response = await fetch(API_URL + "/api/practicas/asignados", {
@@ -188,7 +188,7 @@ const Students = () => {
         },
       })
 
-      if (!response.ok) throw new Error("Failed to fetch assigned students")
+      if (!response.ok) throw new Error("Error al cargar estudiantes asignados")
 
       const data = await response.json()
       setAssignedStudents(
@@ -202,11 +202,11 @@ const Students = () => {
       )
     } catch (err) {
       setError(err.message)
-      console.error("Error fetching assigned students:", err)
+      console.error("Error al obtener estudiantes asignados:", err)
     }
   }
 
-  // Initial load effect
+  // Efecto de carga inicial
   useEffect(() => {
     setTimeout(() => setLoaded(true), 100)
     createInitialParticles()
@@ -251,7 +251,7 @@ const Students = () => {
     }
   }, [])
 
-  // Create initial particles
+  // Crear partículas iniciales
   const createInitialParticles = () => {
     const newParticles = Array.from({ length: 50 }, () => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -275,7 +275,7 @@ const Students = () => {
     return student.time;
   };
 
-  // Create particle explosion effect
+  // Crear efecto de explosión de partículas
   const createExplosionEffect = (x, y, color) => {
     const explosionParticles = Array.from({ length: 30 }, () => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -295,7 +295,7 @@ const Students = () => {
     }, 1000)
   }
 
-  // Handle tab change
+  // Manejar cambio de pestaña
   const handleTabChange = (tabKey, route) => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#f59e0b")
     if (route) {
@@ -305,14 +305,14 @@ const Students = () => {
     }
   }
 
-  // Select student - FIXED ROUTE
+  // Seleccionar estudiante - RUTA FIJADA
   const selectStudent = (student) => {
     createExplosionEffect(mousePosition.x, mousePosition.y, "#6366f1")
-    // Use the actual student ID from the postulation data
+    // Usar el ID real del estudiante desde los datos de postulación
     setTimeout(() => navigate(`/empresas/InforEstudiante/${student.postulacionId}`), 300)
   }
 
-  // Open offer modal and fetch applicants
+  // Abrir modal de oferta y obtener postulantes
   const openOfferModal = async (offer) => {
     setSelectedOffer(offer)
     setIsModalOpen(true)
@@ -323,13 +323,13 @@ const Students = () => {
     return applicantStudents.filter((student) => student.offerId === offerId).length
   }
 
-  // Close modal
+  // Cerrar modal
   const closeModal = () => {
     setIsModalOpen(false)
     setSelectedOffer(null)
   }
 
-  // Get modality color
+  // Obtener color de modalidad
   const getModalityColor = (modality) => {
     switch (modality?.toLowerCase()) {
       case "presencial":
@@ -344,7 +344,7 @@ const Students = () => {
     }
   }
 
-  // Get modality icon
+  // Obtener icono de modalidad
   const getModalityIcon = (modality) => {
     switch (modality?.toLowerCase()) {
       case "presencial":
@@ -359,7 +359,7 @@ const Students = () => {
     }
   }
 
-  // Format date
+  // Formatear fecha
   const formatDate = (dateString) => {
     if (!dateString) return ""
     const date = new Date(dateString)
@@ -368,7 +368,7 @@ const Students = () => {
 
   return (
     <div className="stud-page">
-      {/* Background particles */}
+      {/* Partículas de fondo */}
       <div className="stud-particles-container">
         {particles.map((particle) => (
           <div
@@ -399,54 +399,54 @@ const Students = () => {
       )}
 
       <div className="stud-container">
-        {/* Header */}
+        {/* Encabezado */}
         <div className={`stud-header ${loaded ? "stud-loaded" : ""}`}>
           <div className="stud-decorative-circle stud-circle-1"></div>
           <div className="stud-decorative-circle stud-circle-2"></div>
-          <h1 className={`stud-title ${loaded ? "stud-loaded" : ""}`}>STUDENTS</h1>
+          <h1 className={`stud-title ${loaded ? "stud-loaded" : ""}`}>ESTUDIANTES</h1>
           <div className={`stud-divider ${loaded ? "stud-loaded" : ""}`}></div>
-          <p className={`stud-subtitle ${loaded ? "stud-loaded" : ""}`}>Find and connect with talented students</p>
+          <p className={`stud-subtitle ${loaded ? "stud-loaded" : ""}`}>Encuentra y conecta con estudiantes talentosos</p>
         </div>
 
-        {/* Navigation tabs */}
+        {/* Pestañas de navegación */}
         <div className={`stud-nav-tabs ${loaded ? "stud-loaded" : ""}`}>
           <button
-            className={`stud-tab-button ${activeTab === "offers" ? "stud-active" : ""}`}
-            onClick={() => handleTabChange("offers", "/empresas/OfertasE")}
+            className={`stud-tab-button ${activeTab === "ofertas" ? "stud-active" : ""}`}
+            onClick={() => handleTabChange("ofertas", "/empresas/OfertasE")}
           >
-            <img src={paperIcon || "/placeholder.svg"} alt="Offers" className="stud-tab-icon" />
-            <span>Offers</span>
+            <img src={paperIcon || "/placeholder.svg"} alt="Ofertas" className="stud-tab-icon" />
+            <span>Ofertas</span>
           </button>
           <button
-            className={`stud-tab-button ${activeTab === "students" ? "stud-active" : ""}`}
-            onClick={() => handleTabChange("students", "/empresas/Estudiantes")}
+            className={`stud-tab-button ${activeTab === "estudiantes" ? "stud-active" : ""}`}
+            onClick={() => handleTabChange("estudiantes", "/empresas/Estudiantes")}
           >
-            <img src={usersIcon || "/placeholder.svg"} alt="Students" className="stud-tab-icon" />
-            <span>Students</span>
+            <img src={usersIcon || "/placeholder.svg"} alt="Estudiantes" className="stud-tab-icon" />
+            <span>Estudiantes</span>
           </button>
         </div>
 
-        {/* Main content */}
+        {/* Contenido principal */}
         <div className="stud-main-content" style={{ borderRadius: "0 0 0 0" }}>
           <div className="stud-split-layout" style={{ minHeight: "520px" }}>
             {isLoading ? (
               <div className="stud-loading">
                 <div className="stud-spinner"></div>
-                <p>Loading offers...</p>
+                <p>Cargando ofertas...</p>
               </div>
             ) : error ? (
               <div className="stud-error">
-                <p>Error loading offers: {error}</p>
-                <button onClick={fetchOffers}>Retry</button>
+                <p>Error al cargar ofertas: {error}</p>
+                <button onClick={fetchOffers}>Reintentar</button>
               </div>
             ) : (
               <>
-                {/* Left column: My Offers */}
+                {/* Columna izquierda: Mis Ofertas */}
                 <div className="stud-split-column stud-offers-column" style={{ maxHeight: "520px" }}>
                   <div className="stud-slide-content" style={{ height: "100%", borderRadius: "0" }}>
                     <h2 className="stud-section-title">
                       <span className="stud-section-icon">📋</span>
-                      My Offers
+                      Mis Ofertas
                     </h2>
                     <div className="stud-offers-list">
                       {offers.map((offer, index) => (
@@ -490,13 +490,13 @@ const Students = () => {
                           <div className="stud-offer-stats">
                             <div className="stud-stat">
                               <span className="stud-stat-number">{countApplicantsForOffer(offer.idPractica)}</span>
-                              <span className="stud-stat-label">Applicants</span>
+                              <span className="stud-stat-label">Postulantes</span>
                             </div>
                           </div>
 
                           <div className="stud-view-details">
                             <span className="stud-view-icon">👁️</span>
-                            <span>View Students</span>
+                            <span>Ver Estudiantes</span>
                           </div>
                         </div>
                       ))}
@@ -504,12 +504,12 @@ const Students = () => {
                   </div>
                 </div>
 
-                {/* Right column: Applicants */}
+                {/* Columna derecha: Postulantes */}
                 <div className="stud-split-column stud-applicants-column" style={{ maxHeight: "520px" }}>
                   <div className="stud-slide-content" style={{ height: "100%", borderRadius: "0" }}>
                     <h2 className="stud-section-title">
                       <span className="stud-section-icon">👨‍🎓</span>
-                      All Applicants
+                      Todos los Postulantes
                     </h2>
                     <div style={{ flex: 1, overflow: "hidden" }}>
                       <div className="stud-students-grid">
@@ -534,7 +534,7 @@ const Students = () => {
                               <p>{student.time}</p>
                               <div className="stud-student-offer-badge">
                                 {offers.find((offer) => offer.idPractica === student.offerId)?.titulo ||
-                                  "Unknown Offer"}
+                                  "Oferta desconocida"}
                               </div>
                             </div>
                             <div className="stud-selection-indicator"></div>
@@ -549,12 +549,12 @@ const Students = () => {
           </div>
         </div>
 
-        {/* Footer unificado */}
+        {/* Pie de página unificado */}
         <div className="stud-footer" style={{ borderRadius: "0 0 24px 24px" }}>
           <p className={loaded ? "stud-loaded" : ""}>© 2025 EasyFCT - Innovación Educativa</p>
         </div>
 
-        {/* Offer modal */}
+        {/* Modal de oferta */}
         {isModalOpen && selectedOffer && (
           <div className="stud-modal-overlay" onClick={closeModal}>
             <div className="stud-modal-content" onClick={(e) => e.stopPropagation()}>
@@ -574,7 +574,7 @@ const Students = () => {
 
               <div className="stud-modal-body">
                 <div className="stud-modal-section">
-                  <h3 className="stud-modal-section-title">Students in Internship</h3>
+                  <h3 className="stud-modal-section-title">Estudiantes en Prácticas</h3>
                   {assignedStudents.filter(student => 
                     student.offerId === selectedOffer.idPractica && 
                     student.status === "ACEPTADA"
@@ -594,21 +594,21 @@ const Students = () => {
                             <div className="stud-student-avatar">{getUserIcon(student.postulacionId)}</div>
                             <div className="stud-student-info">
                               <h3>{student.name}</h3>
-                              <p>Assigned on: {student.time}</p>
+                              <p>Asignado el: {student.time}</p>
                             </div>
-                            <div className="stud-student-status stud-assigned">Assigned</div>
+                            <div className="stud-student-status stud-assigned">Asignado</div>
                           </div>
                         ))}
                     </div>
                   ) : (
                     <div className="stud-no-students">
-                      <p>No students currently assigned to this internship</p>
+                      <p>No hay estudiantes asignados actualmente a esta práctica</p>
                     </div>
                   )}
                 </div>
 
                 <div className="stud-modal-section">
-                    <h3 className="stud-modal-section-title">Applicants</h3>
+                    <h3 className="stud-modal-section-title">Postulantes</h3>
                     {applicantStudents.filter(student => 
                       student.offerId === selectedOffer.idPractica && 
                       student.status !== "ACEPTADA"
@@ -630,20 +630,20 @@ const Students = () => {
                               <div className="stud-student-avatar">{getUserIcon(student.postulacionId)}</div>
                               <div className="stud-student-info">
                                 <h3>{student.name}</h3>
-                                <p>Applied: {student.time}</p>
+                                <p>Postulado: {student.time}</p>
                                 {student.status === "RECHAZADA" && (
-                                  <p className="stud-rejection-date">Rejected on: {formatRejectionDate(student)}</p>
+                                  <p className="stud-rejection-date">Rechazado el: {formatRejectionDate(student)}</p>
                                 )}
                               </div>
                               
-                              {/* Status Badge */}
+                              {/* Estado */}
                               <div className={`stud-student-status ${
                                 student.status === "RECHAZADA" ? "stud-rejected" : "stud-pending"
                               }`}>
-                                {student.status === "RECHAZADA" ? "Rejected" : "Pending"}
+                                {student.status === "RECHAZADA" ? "Rechazado" : "Pendiente"}
                               </div>
 
-                              {/* Action Buttons - Only show for pending applications */}
+                              {/* Acciones - Solo mostrar para postulaciones pendientes */}
                               {student.status !== "RECHAZADA" && (
                                 <div className="stud-student-actions">
                                   <button
@@ -653,7 +653,7 @@ const Students = () => {
                                       handleAcceptApplicant(student.postulacionId);
                                     }}
                                   >
-                                    Accept
+                                    Aceptar
                                   </button>
                                   <button
                                     className="stud-action-button stud-reject"
@@ -662,7 +662,7 @@ const Students = () => {
                                       handleRejectApplicant(student.postulacionId);
                                     }}
                                   >
-                                    Reject
+                                    Rechazar
                                   </button>
                                 </div>
                               )}
@@ -671,7 +671,7 @@ const Students = () => {
                       </div>
                     ) : (
                       <div className="stud-no-students">
-                        <p>No applicants for this internship yet</p>
+                        <p>No hay postulantes para esta práctica aún</p>
                       </div>
                     )}
                 </div>
@@ -679,7 +679,7 @@ const Students = () => {
 
               <div className="stud-modal-footer">
                 <button className="stud-modal-button stud-secondary" onClick={closeModal}>
-                  Close
+                  Cerrar
                 </button>
                 <button
                   className="stud-modal-button stud-primary"
@@ -688,7 +688,7 @@ const Students = () => {
                     setTimeout(() => navigate("/empresas/OfertasE"), 300)
                   }}
                 >
-                  View Offer Details
+                  Ver Detalles de Oferta
                 </button>
               </div>
             </div>
@@ -699,4 +699,4 @@ const Students = () => {
   )
 }
 
-export default Students
+export default Estudiantes
