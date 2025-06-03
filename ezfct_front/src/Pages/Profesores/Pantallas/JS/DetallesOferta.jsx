@@ -52,65 +52,42 @@ const OfertaDetalleProfesor = () => {
   }
 
   useEffect(() => {
-const fetchOferta = async () => {
-  try {
-    const response = await fetch(`${API_URL}/api/practicas/${id}`)
-    if (!response.ok) {
-      throw new Error(`Error al cargar: ${response.status}`)
-    }
-    const data = await response.json()
+    const fetchOferta = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/practicas/${id}`)
+        if (!response.ok) {
+          throw new Error(`Error al cargar: ${response.status}`)
+        }
+        const data = await response.json()
 
-    // Fetch empresa data separately if not included in the practica response
-    let empresaData = {
-      nombre: "No disponible",
-      direccion: "No disponible",
-      emailContacto: "No disponible",
-      telefono: "No disponible"
-    };
+        // Verificar si hay datos de empresa
+        if (data.empresa) {
+          setEmpresa({
+            nombre: data.empresa.nombre || "No disponible",
+            direccion: data.empresa.direccion || "No disponible",
+            emailContacto: data.empresa.emailContacto || "No disponible",
+            telefono: data.empresa.telefono || "No disponible"
+          })
+        }
 
-    // If empresa data is included in the practica response
-    if (data.empresa) {
-      empresaData = {
-        nombre: data.empresa.nombre || "No disponible",
-        direccion: data.empresa.direccion || "No disponible",
-        emailContacto: data.empresa.emailContacto || "No disponible",
-        telefono: data.empresa.telefono || "No disponible"
-      };
-    } 
-    // If you need to fetch empresa separately using a different endpoint
-    else if (data.idEmpresa) {
-      const empresaResponse = await fetch(`${API_URL}/api/empresa/${data.idEmpresa}`);
-      if (empresaResponse.ok) {
-        const empresaJson = await empresaResponse.json();
-        empresaData = {
-          nombre: empresaJson.nombre || "No disponible",
-          direccion: empresaJson.direccion || "No disponible",
-          emailContacto: empresaJson.emailContacto || "No disponible",
-          telefono: empresaJson.telefono || "No disponible"
-        };
+        setOferta({
+          id: data.idPractica,
+          title: data.titulo,
+          subtitle: "Oportunidad de Prácticas",
+          category: data.modalidad,
+          startDate: data.fechaInicio,
+          endDate: data.fechaFin,
+          students: data.vacantes,
+          description: data.descripcion,
+          requirements: data.requisitos ? data.requisitos.split(",") : [],
+        })
+
+        setTimeout(() => setLoaded(true), 100)
+      } catch (err) {
+        setError(err.message)
+        console.error("Error:", err)
       }
     }
-
-    setEmpresa(empresaData);
-
-    setOferta({
-      id: data.idPractica,
-      title: data.titulo,
-      subtitle: "Oportunidad de Prácticas",
-      category: data.modalidad,
-      startDate: data.fechaInicio,
-      endDate: data.fechaFin,
-      students: data.vacantes,
-      description: data.descripcion,
-      requirements: data.requisitos ? data.requisitos.split(",") : [],
-    });
-
-    setTimeout(() => setLoaded(true), 100);
-  } catch (err) {
-    setError(err.message)
-    console.error("Error:", err)
-  }
-}
 
     fetchOferta()
 

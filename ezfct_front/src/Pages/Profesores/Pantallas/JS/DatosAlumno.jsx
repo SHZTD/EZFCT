@@ -225,7 +225,7 @@ const DatosAlumno = () => {
             <div className="da-action-buttons">
               <button className="da-action-button da-primary">
                 <span className="da-button-icon">📝</span>
-                Ir al Diario
+                Asignar alumno
               </button>
               <button className="da-action-button da-secondary">
                 <span className="da-button-icon">⭐</span>
