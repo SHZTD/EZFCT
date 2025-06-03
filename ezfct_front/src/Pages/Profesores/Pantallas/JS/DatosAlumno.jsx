@@ -82,7 +82,7 @@ const DatosAlumno = () => {
             availability: data.estadoPractica || 'No disponible',
             portfolio: data.portfolio || '#',
             bio: data.biografia || 'No hay biografía disponible',
-            avatar: "/usuario1.jpg"
+
           })
         } catch (err) {
           setError(err.message)
@@ -204,14 +204,6 @@ const DatosAlumno = () => {
         <div className="da-info-content">
           {/* Panel lateral con foto y datos básicos */}
           <div className={`da-student-sidebar ${loaded ? "loaded" : ""}`}>
-            <div className="da-profile-image-container">
-              <img
-                src={student.avatar || "/placeholder.svg?height=200&width=200"}
-                alt={`${student.name}'s profile`}
-                className="da-profile-image"
-              />
-            </div>
-
             <h2 className="da-student-name">{student.name}</h2>
             <p className="da-student-role">{student.role}</p>
 

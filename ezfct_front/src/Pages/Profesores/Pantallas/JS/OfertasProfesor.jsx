@@ -48,32 +48,32 @@ const ProfesorOffers = () => {
   useEffect(() => {
     const fetchOffers = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/practicas`);
+        const response = await fetch(`${API_URL}/api/practicas`)
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`¡Error HTTP! Estado: ${response.status}`)
         }
-        const data = await response.json();
-        
+        const data = await response.json()
+
         // Transform API data to match frontend structure
-        const transformedOffers = data.map(offer => ({
+        const transformedOffers = data.map((offer) => ({
           id: offer.idPractica,
           title: offer.titulo,
           subtitle: offer.descripcion,
           category: offer.modalidad,
-          company: offer.empresa?.nombre || 'Unknown Company',
-          location: offer.empresa?.ubicacion || 'Remote',
-          date: offer.fechaInicio ? new Date(offer.fechaInicio).toLocaleDateString() : 'Not specified',
-          students: offer.vecesPostulada
-        }));
+          company: offer.empresa?.nombre || "Empresa Desconocida",
+          location: offer.empresa?.ubicacion || "Remoto",
+          date: offer.fechaInicio ? new Date(offer.fechaInicio).toLocaleDateString() : "No especificada",
+          students: offer.vecesPostulada,
+        }))
 
-        setOffers(transformedOffers);
-        setLoading(false);
+        setOffers(transformedOffers)
+        setLoading(false)
       } catch (err) {
-        console.error("Error fetching offers:", err);
-        setError(err.message);
-        setLoading(false);
+        console.error("Error al cargar ofertas:", err)
+        setError(err.message)
+        setLoading(false)
       }
-    };
+    }
 
     fetchOffers()
   }, [])
@@ -81,7 +81,7 @@ const ProfesorOffers = () => {
   const categories = [
     { id: "all", name: "Todas las ofertas", count: offers.length },
     { id: "PRESENCIAL", name: "Presencial", count: offers.filter((o) => o.category === "PRESENCIAL").length },
-    { id: "HIBRIDO", name: "Hibrido", count: offers.filter((o) => o.category === "HIBRIDO").length },
+    { id: "HIBRIDO", name: "Híbrido", count: offers.filter((o) => o.category === "HIBRIDO").length },
     { id: "REMOTO", name: "Remoto", count: offers.filter((o) => o.category === "REMOTO").length },
   ]
 
@@ -229,7 +229,7 @@ const ProfesorOffers = () => {
     return (
       <div className="loading-container">
         <div className="loading-spinner"></div>
-        <p>Loading offers...</p>
+        <p>Cargando ofertas...</p>
       </div>
     )
   }
@@ -237,9 +237,9 @@ const ProfesorOffers = () => {
   if (error) {
     return (
       <div className="error-container">
-        <h2>Error loading offers</h2>
+        <h2>Error al cargar ofertas</h2>
         <p>{error}</p>
-        <button onClick={() => window.location.reload()}>Try Again</button>
+        <button onClick={() => window.location.reload()}>Intentar de Nuevo</button>
       </div>
     )
   }
@@ -290,8 +290,8 @@ const ProfesorOffers = () => {
           {/* Header */}
           <header className={`page-header ${loaded ? "loaded" : ""}`}>
             <div className="header-content">
-              <h1 className="page-title">Available Offers</h1>
-              <p className="page-subtitle">Find and manage internship opportunities for your students</p>
+              <h1 className="page-title">Ofertas Disponibles</h1>
+              <p className="page-subtitle">Encuentra y gestiona oportunidades de prácticas para tus alumnos</p>
             </div>
             <div className="header-gradient"></div>
           </header>
@@ -303,14 +303,14 @@ const ProfesorOffers = () => {
               <input
                 type="text"
                 className="search-input"
-                placeholder="Search offers by title, description or company..."
+                placeholder="Busca ofertas por título, descripción o empresa..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <button className="filter-button" onClick={() => navigate("/profesores/areaContacto")}>
               <HelpCircle size={18} />
-              <span>Help</span>
+              <span>Ayuda</span>
             </button>
           </div>
 
@@ -333,8 +333,8 @@ const ProfesorOffers = () => {
             {filteredOffers.length === 0 ? (
               <div className="no-results">
                 <div className="no-results-icon">🔍</div>
-                <h3>No offers found</h3>
-                <p>Try adjusting your search or filters</p>
+                <h3>No se encontraron ofertas</h3>
+                <p>Intenta ajustar tu búsqueda o filtros</p>
               </div>
             ) : (
               filteredOffers.map((offer, index) => (
@@ -357,14 +357,14 @@ const ProfesorOffers = () => {
                       </div>
                       <div className="detail-item-alt">
                         <Users size={16} />
-                        <span>{offer.students} students</span>
+                        <span>{offer.students} alumnos</span>
                       </div>
                     </div>
                   </div>
 
                   <div className="card-footer">
                     <button className="view-details-button" onClick={() => handleViewOffer(offer.id)}>
-                      <span>View Details</span>
+                      <span>Ver Detalles</span>
                       <ChevronRight size={16} />
                     </button>
                   </div>

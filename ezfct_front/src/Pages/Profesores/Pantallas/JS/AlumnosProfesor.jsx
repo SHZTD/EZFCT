@@ -35,7 +35,7 @@ const EstudiantesProfesor = () => {
       try {
         const response = await fetch(`${API_URL}/api/alumnos`)
         if (!response.ok) {
-          throw new Error('Failed to fetch students')
+          throw new Error('Error al cargar alumnos')
         }
         const data = await response.json()
         setStudents(data.map(student => ({
@@ -44,7 +44,7 @@ const EstudiantesProfesor = () => {
           school: "Ins Puig Castellar",
           education: student.educacion || 'N/A',
           competencies: student.competencias || 'N/A',
-          occupation: 'Student',
+          occupation: 'Estudiante',
           location: 'Barcelona',
           image: "/usuario1.jpg",
           estadoPractica: student.estadoPractica || 'N/A',
@@ -54,7 +54,7 @@ const EstudiantesProfesor = () => {
         })))
       } catch (err) {
         setError(err.message)
-        console.error('Error fetching students:', err)
+        console.error('Error al cargar alumnos:', err)
       } finally {
         setIsLoading(false)
         setLoaded(true)
@@ -198,7 +198,7 @@ const EstudiantesProfesor = () => {
       <div className="estudiantes-page">
         <div className="loading-container">
           <div className="loading-spinner"></div>
-          <p>Loading students...</p>
+          <p>Cargando alumnos...</p>
         </div>
       </div>
     )
@@ -208,8 +208,8 @@ const EstudiantesProfesor = () => {
     return (
       <div className="estudiantes-page">
         <div className="error-container">
-          <p>Error loading students: {error}</p>
-          <button onClick={() => window.location.reload()}>Try Again</button>
+          <p>Error al cargar alumnos: {error}</p>
+          <button onClick={() => window.location.reload()}>Intentar de Nuevo</button>
         </div>
       </div>
     )
@@ -260,8 +260,8 @@ return (
         {/* Header */}
         <header className={`page-header ${loaded ? "loaded" : ""}`}>
           <div className="header-content">
-            <h1 className="page-title">STUDENTS</h1>
-            <p className="page-subtitle">Manage and assign students to internship opportunities</p>
+            <h1 className="page-title">ALUMNOS</h1>
+            <p className="page-subtitle">Gestiona y asigna alumnos a oportunidades de prácticas</p>
           </div>
           <div className="header-gradient"></div>
         </header>
@@ -276,7 +276,7 @@ return (
             }}
           >
             <UserPlus size={20} />
-            <span>Create Student</span>
+            <span>Crear Alumno</span>
           </button>
 
           <div className="search-container">
@@ -285,14 +285,14 @@ return (
               <input
                 type="text"
                 className="search-input"
-                placeholder="Search students by name or school..."
+                placeholder="Buscar alumnos por nombre o centro..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <button className="filter-button">
               <Filter size={18} />
-              <span>Filter</span>
+              <span>Filtrar</span>
             </button>
           </div>
         </div>
@@ -302,8 +302,8 @@ return (
           {filteredStudents.length === 0 ? (
             <div className="no-results">
               <div className="no-results-icon">🔍</div>
-              <h3>No students found</h3>
-              <p>Try adjusting your search criteria</p>
+              <h3>No se encontraron alumnos</h3>
+              <p>Intenta ajustar tus criterios de búsqueda</p>
             </div>
           ) : (
             filteredStudents.map((student, index) => (
@@ -313,13 +313,7 @@ return (
                 onClick={() => handleGoToStudent(student)}
                 style={{ animationDelay: `${0.05 * index}s` }}
               >
-                <div className="student-avatar">
-                  <img
-                    src={student.image || "/placeholder.svg"}
-                    alt={`${student.name}'s avatar`}
-                    className="avatar-img"
-                  />
-                </div>
+               
                 <div className="student-info">
                   <h2 className="student-name">{student.name}</h2>
                   <div className="student-meta">
@@ -329,7 +323,7 @@ return (
                     </div>
                   </div>
                   <p className="student-competencies">
-                    <strong>Skills:</strong> {student.competencies}
+                    <strong>Habilidades:</strong> {student.competencies}
                   </p>
                 </div>
                 <div className="card-arrow">
