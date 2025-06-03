@@ -288,7 +288,7 @@ const DatosAlumno = () => {
         <header className={`page-header ${loaded ? "loaded" : ""}`}>
           <div className="header-content">
             <h1 className="page-title">Mi Perfil</h1>
-            <p className="page-subtitle">Información personal y seguimiento de prácticas</p>
+            <p className="page-subtitle">Información personal </p>
           </div>
           <div className="header-gradient"></div>
         </header>
@@ -344,13 +344,7 @@ const DatosAlumno = () => {
                 <User size={16} />
                 <span>Información</span>
               </button>
-              <button
-                className={`perfil-tab ${activeTab === "practicas" ? "active" : ""}`}
-                onClick={() => setActiveTab("practicas")}
-              >
-                <Briefcase size={16} />
-                <span>Prácticas</span>
-              </button>
+            
 
             </div>
 
@@ -393,76 +387,6 @@ const DatosAlumno = () => {
                           {skill.trim()}
                         </span>
                       ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Pestaña de Prácticas */}
-              {activeTab === "practicas" && (
-                <div className="tab-content practicas-tab">
-                  <div className="info-section">
-                    <h3 className="section-title">Empresa de prácticas</h3>
-                    <div className="info-grid">
-                      <div className="info-item">
-                        <span className="info-label">Nombre de la empresa</span>
-                        <span className="info-value">{profileData.empresa}</span>
-                      </div>
-                      <div className="info-item">
-                        <span className="info-label">Tutor/a</span>
-                        <span className="info-value">{profileData.tutor}</span>
-                      </div>
-                      <div className="info-item">
-                        <span className="info-label">Email del tutor</span>
-                        <span className="info-value">{profileData.tutorEmail}</span>
-                      </div>
-                      <div className="info-item">
-                        <span className="info-label">Nivel técnico</span>
-                        <span className="info-value">{profileData.nivelTecnico}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="info-section">
-                    <h3 className="section-title">Periodo de prácticas</h3>
-                    <div className="info-grid">
-                      <div className="info-item">
-                        <span className="info-label">Fecha de inicio</span>
-                        <span className="info-value">{formatDate(profileData.fechaInicio)}</span>
-                      </div>
-                      <div className="info-item">
-                        <span className="info-label">Fecha de finalización</span>
-                        <span className="info-value">{formatDate(profileData.fechaFin)}</span>
-                      </div>
-                      <div className="info-item">
-                        <span className="info-label">Horas totales</span>
-                        <span className="info-value">{profileData.horasTotales} horas</span>
-                      </div>
-                      <div className="info-item">
-                        <span className="info-label">Horas completadas</span>
-                        <span className="info-value">{profileData.horasCompletadas} horas</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="info-section">
-                    <h3 className="section-title">Progreso</h3>
-                    <div className="progress-container">
-                      <div className="progress-bar">
-                        <div className="progress-fill" style={{ width: `${progressPercentage}%` }}></div>
-                      </div>
-                      <div className="progress-stats">
-                        <span className="progress-percentage">{progressPercentage}% completado</span>
-                        <span className="progress-hours">
-                          {profileData.horasCompletadas} de {profileData.horasTotales} horas
-                        </span>
-                      </div>
-                    </div>
-                    <div className="action-buttons">
-                      <button className="action-button diary-button" onClick={handleNavigateToDiary}>
-                        <BookOpen size={16} />
-                        <span>Ir al diario de prácticas</span>
-                      </button>
                     </div>
                   </div>
                 </div>
