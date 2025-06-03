@@ -67,8 +67,7 @@ const DatosAlumno = () => {
             throw new Error('Failed to fetch student data')
           }
           const data = await response.json()
-          
-          // Map the API response to your student structure
+          console.log(data)
           setStudent({
             id: data.idAlumno,
             name: data.usuario?.nombre || 'Nombre no disponible',
@@ -238,8 +237,8 @@ const DatosAlumno = () => {
           <div className="da-student-details">
             {/* Sección de biografía */}
             <div className={`da-detail-card da-bio-card ${loaded ? "loaded" : ""}`}>
-              <h3 className="da-card-title">Biografía</h3>
-              <p className="da-bio-text">{student.bio}</p>
+              <h3 className="da-card-title">Sobre mí</h3>
+              <p className="da-bio-text">Estudiante de desarrollo web con gran interés en tecnologías frontend. Busco oportunidades para aplicar mis conocimientos en React y mejorar mis habilidades en un entorno profesional.</p>
             </div>
 
             {/* Sección de habilidades */}
@@ -275,7 +274,7 @@ const DatosAlumno = () => {
                 style={{ transitionDelay: "0.3s" }}
               >
                 <h3 className="da-card-title">Experiencia</h3>
-                <p className="da-detail-text">{student.experience}</p>
+                <p className="da-detail-text">Sin experiencia previa.</p>
               </div>
             </div>
 
@@ -286,7 +285,7 @@ const DatosAlumno = () => {
                 style={{ transitionDelay: "0.4s" }}
               >
                 <h3 className="da-card-title">Disponibilidad</h3>
-                <p className="da-detail-text">{student.availability}</p>
+                <p className="da-detail-text">Disponibilidad inmediata</p>
               </div>
 
               <div

@@ -30,16 +30,19 @@ const DiarioAlumno = () => {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear())
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const [showProfileModal, setShowProfileModal] = useState(false)
-  const [profileData, setProfileData] = useState({
-    nombre: "Jaydon",
-    apellido: "Herwitz",
-    email: "jaydon.herwitz@example.com",
-    escuela: "Ins Puig Castellar",
-    edad: 17,
-    competencias: "Problem Solving, Critical Thinking",
-    ubicacion: "Barcelona",
-    nivelTecnico: "Alto",
-  })
+  const [profileData, setProfileData] = useState(() => {
+    const savedProfile = localStorage.getItem("profileData");
+    return savedProfile ? JSON.parse(savedProfile) : {
+      nombre: "",
+      apellido: "",
+      email: "",
+      escuela: "",
+      edad: "",
+      competencias: "",
+      ubicacion: "",
+      nivelTecnico: "",
+    };
+  });
   const [practicaId, setPracticaId] = useState(null) // Add state for practica ID
   const [alumnoId, setAlumnoId] = useState(null) // Add state for alumno ID
 
@@ -123,34 +126,55 @@ const token = localStorage.getItem("token")
   }, [showModal, showProfileMenu])
   
   /*******************/
-    const fetchUserData = async (token) => {
-    try {
-      const response = await fetch(`${API_URL}/api/alumno`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      })
-      
-      if (!response.ok) throw new Error("Failed to fetch user data")
-      
-      const userData = await response.json()
+const fetchUserData = async (token) => {
+  try {
+    // First try to get from localStorage
+    const savedProfile = localStorage.getItem("profileData");
+    if (savedProfile) {
+      const userData = JSON.parse(savedProfile);
       setProfileData({
         nombre: userData.nombre,
         apellido: userData.apellido,
         email: userData.email,
-        escuela: userData.escuela || "Ins Puig Castellar",
-        edad: userData.edad || 17,
-        competencias: userData.competencias || "Problem Solving, Critical Thinking",
-        ubicacion: userData.ubicacion || "Barcelona",
-        nivelTecnico: userData.nivelTecnico || "Alto",
-      })
+        escuela: userData.escuela || "",
+        edad: userData.edad || "",
+        competencias: userData.competencias || "",
+        ubicacion: userData.ubicacion || "",
+        nivelTecnico: userData.nivelTecnico || "",
+      });
       
-      if (userData.alumnoId) setAlumnoId(userData.alumnoId)
-      if (userData.practicaId) setPracticaId(userData.practicaId)
-    } catch (error) {
-      console.error("Error fetching user data:", error)
+      if (userData.idAlumno) setAlumnoId(userData.idAlumno);
+      if (userData.idPractica) setPracticaId(userData.idPractica);
+      return;
     }
+
+    // Fallback to API if not in localStorage
+    const response = await fetch(`${API_URL}/api/alumno`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    
+    if (!response.ok) throw new Error("Failed to fetch user data");
+    
+    const userData = await response.json();
+    setProfileData({
+      nombre: userData.nombre,
+      apellido: userData.apellido,
+      email: userData.email,
+      escuela: userData.escuela || "",
+      edad: userData.edad || "",
+      competencias: userData.competencias || "",
+      ubicacion: userData.ubicacion || "",
+      nivelTecnico: userData.nivelTecnico || "",
+    });
+    
+    if (userData.idAlumno) setAlumnoId(userData.idAlumno);
+    if (userData.idPractica) setPracticaId(userData.idPractica);
+  } catch (error) {
+    console.error("Error fetching user data:", error);
   }
+}
 
   const fetchDiaryEntries = async (token) => {
       try {
@@ -164,7 +188,6 @@ const token = localStorage.getItem("token")
         
         const entries = await response.json();
         
-        // Transform the array of entries into an object keyed by date
         const entriesByDate = entries.reduce((acc, entry) => {
           const date = new Date(entry.fecha);
           const dateKey = formatDateKey(
@@ -424,17 +447,30 @@ const token = localStorage.getItem("token")
       // Optionally show an error message to the user
     }
   };
-  // Función para guardar los datos del perfil
+
   const saveProfileData = () => {
-    createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6")
+    createExplosionEffect(mousePosition.x, mousePosition.y, "#8b5cf6");
 
-    // Guardar en localStorage
-    localStorage.setItem("profileData", JSON.stringify(profileData))
+    // Get the current profile data from localStorage to preserve any additional fields
+    const currentProfile = JSON.parse(localStorage.getItem("profileData")) || {};
+    
+    const updatedProfile = {
+      ...currentProfile,
+      nombre: profileData.nombre,
+      apellido: profileData.apellido,
+      email: profileData.email,
+      escuela: profileData.escuela,
+      edad: profileData.edad,
+      competencias: profileData.competencias,
+      ubicacion: profileData.ubicacion,
+      nivelTecnico: profileData.nivelTecnico,
+    };
 
-    // Cerrar modal
-    setShowProfileModal(false)
+    localStorage.setItem("profileData", JSON.stringify(updatedProfile));
+
+    setShowProfileModal(false);
   }
-
+  
   // Nombres de los meses
   const monthNames = [
     "Enero",
