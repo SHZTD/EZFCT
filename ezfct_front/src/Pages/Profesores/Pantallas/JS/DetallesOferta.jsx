@@ -3,7 +3,17 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import "../CSS/DetallesOferta.css"
-import { ArrowLeft, Calendar, MapPin, Users, Building, GraduationCap, Clock, Mail, Phone } from "lucide-react"
+import {
+  ArrowLeft,
+  Calendar,
+  MapPin,
+  Users,
+  Building,
+  GraduationCap,
+  Clock,
+  Mail,
+  Phone,
+} from "lucide-react"
 import ButtonComp from "../../../../Components/JSX/ButtonComp"
 import { API_URL } from "../../../../constants"
 
@@ -11,12 +21,16 @@ const OfertaDetalleProfesor = () => {
   const [loaded, setLoaded] = useState(false)
   const [particles, setParticles] = useState([])
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+
+  // oferta contendrá los datos de la práctica (sin empresa anidada)
   const [oferta, setOferta] = useState(null)
+
+  // empresa contendrá: nombre, dirección, email, teléfono
   const [empresa, setEmpresa] = useState({
     nombre: "Cargando...",
     direccion: "Cargando...",
     emailContacto: "Cargando...",
-    telefono: "Cargando..."
+    telefono: "Cargando...",
   })
   const [error, setError] = useState(null)
   const navigate = useNavigate()
@@ -25,7 +39,7 @@ const OfertaDetalleProfesor = () => {
   const formatDate = (date) => {
     if (!date) return ""
     const d = new Date(date)
-    return d.toLocaleDateString('es-ES')
+    return d.toLocaleDateString("es-ES")
   }
 
   const calculateDuration = (startDateStr, endDateStr) => {
@@ -45,42 +59,57 @@ const OfertaDetalleProfesor = () => {
       }
 
       return `${months} mes${months !== 1 ? "es" : ""}`
-    } catch (error) {
-      console.error("Error calculando duración:", error)
+    } catch (err) {
+      console.error("Error calculando duración:", err)
       return "Error en cálculo"
     }
   }
 
   useEffect(() => {
-    const fetchOferta = async () => {
+    const fetchOfertaYEmpresa = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/practicas/${id}`)
-        if (!response.ok) {
-          throw new Error(`Error al cargar: ${response.status}`)
+        const respPrac = await fetch(`${API_URL}/api/practicas/${id}`)
+        if (!respPrac.ok) {
+          throw new Error(`Error al cargar práctica: ${respPrac.status}`)
         }
-        const data = await response.json()
+        const dataPrac = await respPrac.json()
 
-        // Verificar si hay datos de empresa
-        if (data.empresa) {
+        // Mapeamos los campos básicos de la práctica
+        setOferta({
+          id: dataPrac.idPractica,
+          title: dataPrac.titulo,
+          subtitle: "Oportunidad de Prácticas",
+          category: dataPrac.modalidad,
+          startDate: dataPrac.fechaInicio,
+          endDate: dataPrac.fechaFin,
+          students: dataPrac.vacantes,
+          description: dataPrac.descripcion,
+          requirements: dataPrac.requisitos
+            ? dataPrac.requisitos.split(",")
+            : [],
+        })
+
+        const idEmpresa = dataPrac.idEmpresa
+        if (idEmpresa) {
+          const respEmp = await fetch(`${API_URL}/api/empresa/${idEmpresa}`)
+          if (!respEmp.ok) {
+            throw new Error(`Error al cargar empresa: ${respEmp.status}`)
+          }
+          const dataEmp = await respEmp.json()
           setEmpresa({
-            nombre: data.empresa.nombre || "No disponible",
-            direccion: data.empresa.direccion || "No disponible",
-            emailContacto: data.empresa.emailContacto || "No disponible",
-            telefono: data.empresa.telefono || "No disponible"
+            nombre: dataEmp.nombre || "No disponible",
+            direccion: dataEmp.direccion || "No disponible",
+            emailContacto: dataEmp.emailContacto || "No disponible",
+            telefono: dataEmp.telefono || "No disponible",
+          })
+        } else {
+          setEmpresa({
+            nombre: "No disponible",
+            direccion: "No disponible",
+            emailContacto: "No disponible",
+            telefono: "No disponible",
           })
         }
-
-        setOferta({
-          id: data.idPractica,
-          title: data.titulo,
-          subtitle: "Oportunidad de Prácticas",
-          category: data.modalidad,
-          startDate: data.fechaInicio,
-          endDate: data.fechaFin,
-          students: data.vacantes,
-          description: data.descripcion,
-          requirements: data.requisitos ? data.requisitos.split(",") : [],
-        })
 
         setTimeout(() => setLoaded(true), 100)
       } catch (err) {
@@ -89,7 +118,7 @@ const OfertaDetalleProfesor = () => {
       }
     }
 
-    fetchOferta()
+    fetchOfertaYEmpresa()
 
     const createInitialParticles = () => {
       const newParticles = Array.from({ length: 50 }, () => ({
@@ -100,7 +129,9 @@ const OfertaDetalleProfesor = () => {
         speedX: (Math.random() - 0.5) * 1,
         speedY: (Math.random() - 0.5) * 1,
         opacity: Math.random() * 0.5 + 0.1,
-        color: ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6"][Math.floor(Math.random() * 4)],
+        color: ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6"][
+          Math.floor(Math.random() * 4)
+        ],
       }))
       setParticles(newParticles)
     }
@@ -135,7 +166,6 @@ const OfertaDetalleProfesor = () => {
     const handleResize = () => {
       createInitialParticles()
     }
-
     window.addEventListener("resize", handleResize)
 
     return () => {
@@ -216,7 +246,10 @@ const OfertaDetalleProfesor = () => {
       </div>
 
       <div className="oferta-detalle-container">
-        <button className={`back-button ${loaded ? "loaded" : ""}`} onClick={handleNavigateBack}>
+        <button
+          className={`back-button ${loaded ? "loaded" : ""}`}
+          onClick={handleNavigateBack}
+        >
           <ArrowLeft size={20} />
         </button>
 
@@ -243,7 +276,9 @@ const OfertaDetalleProfesor = () => {
               </div>
               <div className="meta-item">
                 <Users size={16} />
-                <span>{oferta.students} puesto{oferta.students !== 1 ? 's' : ''}</span>
+                <span>
+                  {oferta.students} puesto{oferta.students !== 1 ? "s" : ""}
+                </span>
               </div>
             </div>
           </div>
@@ -251,12 +286,18 @@ const OfertaDetalleProfesor = () => {
 
         <div className="oferta-content">
           <div className="oferta-main">
-            <section className={`oferta-section ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.1s" }}>
+            <section
+              className={`oferta-section ${loaded ? "loaded" : ""}`}
+              style={{ transitionDelay: "0.1s" }}
+            >
               <h2 className="section-title">Descripción</h2>
               <p className="section-text">{oferta.description}</p>
             </section>
 
-            <section className={`oferta-section ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.2s" }}>
+            <section
+              className={`oferta-section ${loaded ? "loaded" : ""}`}
+              style={{ transitionDelay: "0.2s" }}
+            >
               <h2 className="section-title">Requisitos</h2>
               <ul className="requirements-list">
                 {oferta.requirements.map((req, index) => (
@@ -267,7 +308,12 @@ const OfertaDetalleProfesor = () => {
               </ul>
             </section>
 
-            <div className={`sidebar-card company-card ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.2s" }}>
+            <div
+              className={`sidebar-card company-card ${
+                loaded ? "loaded" : ""
+              }`}
+              style={{ transitionDelay: "0.2s" }}
+            >
               <h3 className="sidebar-title">Información de la Empresa</h3>
               <div className="company-info">
                 <h4 className="company-name">{empresa.nombre}</h4>
@@ -280,21 +326,28 @@ const OfertaDetalleProfesor = () => {
           </div>
 
           <div className="oferta-sidebar">
-            <section className={`oferta-section ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.3s" }}>
+            <section
+              className={`oferta-section ${loaded ? "loaded" : ""}`}
+              style={{ transitionDelay: "0.3s" }}
+            >
               <h2 className="section-title">Periodo de Prácticas</h2>
               <div className="period-info">
                 <div className="period-item">
                   <Calendar size={16} />
                   <div>
                     <span className="period-label">Inicio</span>
-                    <span className="period-value">{formatDate(oferta.startDate)}</span>
+                    <span className="period-value">
+                      {formatDate(oferta.startDate)}
+                    </span>
                   </div>
                 </div>
                 <div className="period-item">
                   <Calendar size={16} />
                   <div>
                     <span className="period-label">Fin</span>
-                    <span className="period-value">{formatDate(oferta.endDate)}</span>
+                    <span className="period-value">
+                      {formatDate(oferta.endDate)}
+                    </span>
                   </div>
                 </div>
                 <div className="period-item">
@@ -311,30 +364,42 @@ const OfertaDetalleProfesor = () => {
               </div>
             </section>
 
-            <section className={`oferta-section ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.4s" }}>
+            <section
+              className={`oferta-section ${loaded ? "loaded" : ""}`}
+              style={{ transitionDelay: "0.4s" }}
+            >
               <h2 className="section-title">Contacto</h2>
               <div className="contact-info">
                 <div className="contact-person">{empresa.nombre}</div>
                 <div className="contact-item">
                   <Mail size={16} />
-                  <a href={`mailto:${empresa.emailContacto}`} className="contact-value">
+                  <a
+                    href={`mailto:${empresa.emailContacto}`}
+                    className="contact-value"
+                  >
                     {empresa.emailContacto}
                   </a>
                 </div>
                 <div className="contact-item">
                   <Phone size={16} />
-                  <a href={`tel:${empresa.telefono}`} className="contact-value">
+                  <a
+                    href={`tel:${empresa.telefono}`}
+                    className="contact-value"
+                  >
                     {empresa.telefono}
                   </a>
                 </div>
               </div>
             </section>
 
-            <div className={`action-buttons ${loaded ? "loaded" : ""}`} style={{ transitionDelay: "0.5s" }}>
-              <ButtonComp 
-                text="Asignar Alumno" 
-                icon={<GraduationCap size={18} />} 
-                onClick={handleNavigateToAssign} 
+            <div
+              className={`action-buttons ${loaded ? "loaded" : ""}`}
+              style={{ transitionDelay: "0.5s" }}
+            >
+              <ButtonComp
+                text="Asignar Alumno"
+                icon={<GraduationCap size={18} />}
+                onClick={handleNavigateToAssign}
               />
             </div>
           </div>

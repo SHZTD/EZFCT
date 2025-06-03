@@ -1,6 +1,7 @@
 package com.example.ezfct.Controller;
 
 import com.example.ezfct.DTO.PostulacionDTO;
+import com.example.ezfct.DTO.PracticaDTO;
 import com.example.ezfct.Entity.*;
 import com.example.ezfct.Model.Enums.EstadoPostulacion;
 import com.example.ezfct.Repository.PostulacionRepository;
@@ -36,9 +37,31 @@ public class PracticasController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Practicas> getPracticaById(@PathVariable int id) {
+    public ResponseEntity<PracticaDTO> getPracticaById(@PathVariable int id) {
         return practicasRepository.findById(id)
-                .map(practica -> ResponseEntity.ok(practica))
+                .map(practica -> {
+                    Empresa e = practica.getEmpresa();
+
+                    int idEmpresa = e.getIdEmpresa();
+                    String emailContacto = e.getEmailContacto();
+                    String telefono = e.getTelefono();
+
+                    PracticaDTO dto = new PracticaDTO(
+                            practica.getIdPractica(),
+                            idEmpresa,
+                            practica.getTitulo(),
+                            practica.getDescripcion(),
+                            practica.getRequisitos(),
+                            practica.getFechaInicio(),
+                            practica.getFechaFin(),
+                            practica.getVacantes(),
+                            practica.getModalidad().name(),  // si tu Modalidad es un enum
+                            emailContacto,
+                            telefono
+                    );
+
+                    return ResponseEntity.ok(dto);
+                })
                 .orElse(ResponseEntity.notFound().build());
     }
 
